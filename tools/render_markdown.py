@@ -9,7 +9,9 @@ lists, pipe tables, links, bold text, and inline code.
 
 from __future__ import annotations
 
+import argparse
 import html
+import json
 import re
 import sys
 from pathlib import Path
@@ -17,6 +19,14 @@ from pathlib import Path
 
 DEFAULT_SOURCE = Path("docs/cpvss-subnet-design.md")
 DEFAULT_OUTPUT = Path("index.html")
+DEFAULT_RELEASE_METADATA = Path("release.json")
+
+
+def load_release_metadata(path: Path = DEFAULT_RELEASE_METADATA) -> dict[str, str] | None:
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {str(key): str(value) for key, value in data.items()}
 
 
 def slugify(text: str, seen: dict[str, int]) -> str:
@@ -230,7 +240,37 @@ def parse_document(markdown: str) -> dict[str, object]:
     return {"title": title, "metadata": metadata, "nav": nav, "body": body}
 
 
-def render_page(document: dict[str, object], source_path: Path) -> str:
+def release_banner(release_info: dict[str, str] | None) -> str:
+    if not release_info:
+        return ""
+
+    release = html.escape(release_info.get("release", "unreleased"))
+    commit = html.escape(release_info.get("commit", "unknown"))
+    release_date = html.escape(release_info.get("release_date", "unknown"))
+    release_page = html.escape(release_info.get("release_page", ""), quote=True)
+    page_link = ""
+    if release_page:
+        page_link = (
+            '<span>Snapshot: '
+            f'<a href="{release_page}">{release_page}</a>'
+            "</span>"
+        )
+
+    return (
+        '<div class="release-banner">'
+        f"<span>Major release: <strong>{release}</strong></span>"
+        f"<span>Source commit: <code>{commit}</code></span>"
+        f"<span>Release date: {release_date}</span>"
+        f"{page_link}"
+        "</div>"
+    )
+
+
+def render_page(
+    document: dict[str, object],
+    source_path: Path,
+    release_info: dict[str, str] | None = None,
+) -> str:
     title = str(document["title"])
     metadata = document["metadata"]
     nav = document["nav"]
@@ -243,6 +283,7 @@ def render_page(document: dict[str, object], source_path: Path) -> str:
         f'<a href="#{slug}">{html.escape(text)}</a>' for text, slug in nav  # type: ignore[misc]
     )
     source_href = html.escape(source_path.as_posix(), quote=True)
+    release_html = release_banner(release_info)
 
     return f"""<!doctype html>
 <html lang="en">
@@ -464,6 +505,25 @@ def render_page(document: dict[str, object], source_path: Path) -> str:
         color: var(--muted);
         font-size: 19px;
       }}
+      .release-banner {{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        max-width: 980px;
+        margin-top: 22px;
+      }}
+      .release-banner span {{
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 5px 10px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--surface);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+      }}
       section {{
         padding: 48px clamp(24px, 5vw, 76px);
         border-bottom: 1px solid var(--line);
@@ -619,6 +679,7 @@ def render_page(document: dict[str, object], source_path: Path) -> str:
             <div class="meta-row">{meta_html}</div>
             <h2>{html.escape(title)}</h2>
             <p>Generated from the Markdown source. Edit the Markdown and run <code>make html</code> to rebuild this page.</p>
+            {release_html}
           </div>
         </header>
         {body}
@@ -667,14 +728,48 @@ def render_page(document: dict[str, object], source_path: Path) -> str:
 """
 
 
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", nargs="?", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("output", nargs="?", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--release", help="Major release name, for example v1.0.0")
+    parser.add_argument("--commit", help="Source commit hash for the release")
+    parser.add_argument("--release-date", help="Release date in YYYY-MM-DD form")
+    parser.add_argument("--release-page", help="Versioned HTML snapshot path")
+    parser.add_argument(
+        "--metadata-out",
+        type=Path,
+        help="Write release metadata for future `make html` runs",
+    )
+    return parser.parse_args(argv[1:])
+
+
+def release_info_from_args(args: argparse.Namespace) -> dict[str, str] | None:
+    if args.release:
+        return {
+            "release": args.release,
+            "commit": args.commit or "unknown",
+            "release_date": args.release_date or "unknown",
+            "release_page": args.release_page or "",
+        }
+    return load_release_metadata()
+
+
 def main(argv: list[str]) -> int:
-    source = Path(argv[1]) if len(argv) > 1 else DEFAULT_SOURCE
-    output = Path(argv[2]) if len(argv) > 2 else DEFAULT_OUTPUT
+    args = parse_args(argv)
+    source = args.source
+    output = args.output
 
     markdown = source.read_text(encoding="utf-8")
     document = parse_document(markdown)
+    release_info = release_info_from_args(args)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(render_page(document, source), encoding="utf-8")
+    output.write_text(render_page(document, source, release_info), encoding="utf-8")
+    if args.metadata_out and release_info:
+        args.metadata_out.write_text(
+            json.dumps(release_info, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     print(f"Rendered {source} -> {output}")
     return 0
 
