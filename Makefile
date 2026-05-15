@@ -19,7 +19,7 @@ major-release:
 	@test -n "$(RELEASE)" || (printf '%s\n' 'Usage: make major-release RELEASE=v1.0.0' && exit 1)
 	@mkdir -p $(RELEASE_DIR)
 	$(PYTHON) tools/render_markdown.py $(MARKDOWN) $(HTML) --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE_DIR)/$(RELEASE).html" --metadata-out $(RELEASE_METADATA)
-	$(PYTHON) tools/render_markdown.py $(MARKDOWN) "$(RELEASE_DIR)/$(RELEASE).html" --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE_DIR)/$(RELEASE).html"
+	$(PYTHON) tools/render_markdown.py $(MARKDOWN) "$(RELEASE_DIR)/$(RELEASE).html" --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE).html"
 
 serve: html
 	$(PYTHON) -m http.server $(PORT)
