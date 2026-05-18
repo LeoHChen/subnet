@@ -67,7 +67,7 @@ Assumption for the baseline estimate:
 
 - Total $POS supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
-- Initial production design target: 8 miner agents per subnet and 15 validation agents per subnet.
+- Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
 - These are starting-point numbers for design discussion, not final launch parameters.
 - Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
 
@@ -75,8 +75,8 @@ Assumption for the baseline estimate:
 |---|---|---:|---|---|---|---|
 | Individual Contributor | No required stake. Optional stake can increase rewards through a capped multiplier. Past contributors can receive an initial airdrop based on verified contribution history. | Required: 0 $POS. Optional: 0-10,000 $POS. Reward multiplier capped at 1.25x so quality still matters more than wealth. | Open participation | Keep contribution open while giving serious contributors a way to signal long-term alignment | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata; penalties should usually reduce rewards before slashing optional stake | Prevent low-cost Sybil supply without blocking useful individual contributors |
 | Collection Operator | Required for large-scale campaigns or professional data suppliers | 50,000 $POS per active campaign, or 0.005% of supply | Campaign-based | Discourage spam, duplicate supply, and rights fraud at scale | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Make professional collection operators internalize the cost of bad supply |
-| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $POS per miner agent. With 8 miner agents per subnet, aggregate miner-agent stake is 400,000 $POS per subnet, or 0.04% of supply | 8 miner agents per subnet for beta production; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Stop miner agents from farming bounties with cheap invalid work |
-| Validation Agent | Required per active validation agent | 20,000 $POS per validation agent. With 15 validation agents per subnet, aggregate validation-agent stake is 300,000 $POS per subnet, or 0.03% of supply | 15 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
+| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $POS per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $POS per subnet, or 0.08% of supply | 16 miner agents per subnet for beta production; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Stop miner agents from farming bounties with cheap invalid work |
+| Validation Agent | Required per active validation agent | 20,000 $POS per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $POS per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
 | Subnet Owner | Required launch bond or quality bond | 2,500,000 $POS per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
 | Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $POS per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
 | Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $POS for normal buyers; 25,000 $POS only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
@@ -95,10 +95,10 @@ Using the 1,000,000,000 $POS supply assumption:
 
 ```text
 miner_agent_stake = 1,000,000,000 x 0.00005 = 50,000 $POS per miner agent
-miner_agent_subnet_stake = 50,000 x 8 = 400,000 $POS per subnet
+miner_agent_subnet_stake = 50,000 x 16 = 800,000 $POS per subnet
 
 validation_agent_stake = 1,000,000,000 x 0.00002 = 20,000 $POS per validation agent
-validation_agent_subnet_stake = 20,000 x 15 = 300,000 $POS per subnet
+validation_agent_subnet_stake = 20,000 x 16 = 320,000 $POS per subnet
 
 subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $POS per subnet
 ```
@@ -170,8 +170,8 @@ Assuming Year 1 weekly emission cap of 865,385 $POS:
 | Pool | Allocation | Weekly Network Cap | With 2 Initial Subnets | Per-Agent or Per-Role Baseline |
 |---|---:|---:|---:|---|
 | Contributor rewards and airdrops | 35% | 302,885 $POS | 151,442 $POS per subnet | Distributed by quality, uniqueness, rights clarity, and optional stake multiplier |
-| Miner agent rewards | 25% | 216,346 $POS | 108,173 $POS per subnet | With 8 miner agents per subnet: up to 13,522 $POS per miner agent per week before quality weighting |
-| Validation agent rewards | 15% | 129,808 $POS | 64,904 $POS per subnet | With 15 validation agents per subnet: up to 4,327 $POS per validation agent per week before quality weighting |
+| Miner agent rewards | 25% | 216,346 $POS | 108,173 $POS per subnet | With 16 miner agents per subnet: up to 6,761 $POS per miner agent per week before quality weighting |
+| Validation agent rewards | 15% | 129,808 $POS | 64,904 $POS per subnet | With 16 validation agents per subnet: up to 4,057 $POS per validation agent per week before quality weighting |
 | Subnet owner quality rewards | 10% | 86,538 $POS | 43,269 $POS per subnet | Paid only when subnet outputs pass owner, validation, and marketplace quality thresholds |
 | Marketplace demand and curation incentives | 10% | 86,538 $POS | Network-level pool | Used for demand bootstrapping, curated datasets, and buyer activation with anti-wash checks |
 | Security, audits, and challenge rewards | 5% | 43,269 $POS | Network-level pool | Funds successful challenges, fraud reports, red-herring creation, and emergency review |
