@@ -57,18 +57,47 @@ $PSDN should support five core utilities:
 
 ### Role-Based Staking Model
 
+> **Skin in the game principle:** any actor who can impose cost on the network should have enough $PSDN at risk that honest behavior is economically better than spam, laziness, collusion, or fraud.
+
+The role-based staking model is one of the most important pieces of the tokenomics design because it makes participation economically accountable.
+
 Not every actor should stake the same way. Staking should be required where the actor can impose real cost on the network, and optional or lightweight where high friction would block useful growth.
 
-| Role | Stake Requirement | Why Stake Exists | Slash or Penalty Condition | Game-Theory Purpose |
-|---|---|---|---|---|
-| Contributor | Optional for individuals; required for large operators or campaign participants | Discourage spam, duplicates, and rights fraud | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Prevent low-cost Sybil supply while keeping casual contribution possible |
-| Parser Miner | Required per subnet, per epoch, or per job batch | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output | Stop miners from farming bounties with cheap invalid work |
-| Validator | Required per epoch or assignment pool | Ensure validators take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
-| Subnet Owner | Required launch bond or quality bond | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
-| Curator/Search Participant | Required only for promoted listings or curation markets | Align discovery influence with quality | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam |
-| Buyer | Usually no stake | Buyers should face low friction | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
+Assumption for the baseline estimate:
 
-The beta should probably use simulated or capped staking for most roles. Mainnet can harden staking once the actual attack patterns are visible.
+- Total $PSDN supply: 1,000,000,000 tokens.
+- Proposed stake amount = total supply x role stake rate.
+- These are starting-point numbers for design discussion, not final launch parameters.
+- Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
+
+| Role | Stake Requirement | Proposed Stake With 1B $PSDN Supply | Why Stake Exists | Slash or Penalty Condition | Game-Theory Purpose |
+|---|---|---:|---|---|---|
+| Contributor | Optional for individuals; required for large operators or campaign participants | Individual: 0-1,000 $PSDN; campaign operator: 50,000 $PSDN, or 0.005% of supply | Discourage spam, duplicates, and rights fraud | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Prevent low-cost Sybil supply while keeping casual contribution possible |
+| Parser Miner | Required per subnet, per epoch, or per job batch | 250,000 $PSDN per active subnet, or 0.025% of supply | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output | Stop miners from farming bounties with cheap invalid work |
+| Validator | Required per epoch or assignment pool | 100,000 $PSDN per validation pool, or 0.01% of supply | Ensure validators take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
+| Subnet Owner | Required launch bond or quality bond | 5,000,000 $PSDN per subnet launch, or 0.5% of supply | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
+| Curator/Search Participant | Required only for promoted listings or curation markets | 100,000 $PSDN per promoted dataset or curation pool, or 0.01% of supply | Align discovery influence with quality | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam |
+| Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $PSDN for normal buyers; 25,000 $PSDN only for subsidized buyer programs, or 0.0025% of supply | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
+
+The beta should probably use simulated or capped staking for most roles. Mainnet can harden staking once the actual attack patterns are visible. A practical beta approach is to record the required stake in the ledger and enforce only lightweight penalties until the team has enough data to tune slashing severity.
+
+#### Staking Amount Formula
+
+For each role:
+
+```text
+role_stake_tokens = total_psdn_supply x role_stake_rate
+```
+
+Using the 1,000,000,000 $PSDN supply assumption:
+
+```text
+validator_stake = 1,000,000,000 x 0.0001 = 100,000 $PSDN
+parser_miner_stake = 1,000,000,000 x 0.00025 = 250,000 $PSDN
+subnet_owner_stake = 1,000,000,000 x 0.005 = 5,000,000 $PSDN
+```
+
+The stake should be high enough to make malicious behavior expensive, but not so high that only whales can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
 
 ### Emission Philosophy
 

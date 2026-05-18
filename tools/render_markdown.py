@@ -4,7 +4,7 @@
 This intentionally avoids third-party dependencies so `make html` works on a
 fresh machine with only Python available. It supports the Markdown features used
 by the design doc: headings, paragraphs, blockquotes, ordered and unordered
-lists, pipe tables, links, bold text, and inline code.
+lists, pipe tables, fenced code blocks, links, bold text, and inline code.
 """
 
 from __future__ import annotations
@@ -86,6 +86,8 @@ def is_block_start(lines: list[str], index: int) -> bool:
         return True
     if re.match(r"\d+\.\s+", stripped):
         return True
+    if stripped.startswith("```"):
+        return True
     if is_table_start(lines, index):
         return True
     return False
@@ -162,6 +164,22 @@ def render_markdown_body(lines: list[str], heading_slugs: dict[int, str]) -> str
         if is_table_start(lines, i):
             table_html, i = render_table(lines, i)
             output.append(table_html)
+            continue
+
+        if stripped.startswith("```"):
+            language = stripped[3:].strip()
+            i += 1
+            code_lines = []
+            while i < len(lines) and not lines[i].strip().startswith("```"):
+                code_lines.append(lines[i])
+                i += 1
+            if i < len(lines):
+                i += 1
+            language_class = ""
+            if language:
+                language_class = f' class="language-{html.escape(language, quote=True)}"'
+            code = html.escape("\n".join(code_lines))
+            output.append(f"<pre><code{language_class}>{code}</code></pre>")
             continue
 
         if stripped.startswith(">"):
@@ -598,6 +616,22 @@ def render_page(
         background: var(--surface);
         font-size: 0.92em;
       }}
+      pre {{
+        max-width: 880px;
+        margin: 18px 0;
+        padding: 16px 18px;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+      }}
+      pre code {{
+        padding: 0;
+        border: 0;
+        background: transparent;
+        font-size: 13px;
+        line-height: 1.55;
+      }}
       .footer {{
         padding: 36px clamp(24px, 5vw, 76px);
         background: var(--quote-bg);
@@ -639,6 +673,10 @@ def render_page(
         .page-shell {{ display: block; }}
         .hero, section, .footer {{ padding: 24px 0; }}
         blockquote {{ font-size: 18px; }}
+        pre {{
+          white-space: pre-wrap;
+          break-inside: avoid;
+        }}
         .table-wrap {{
           overflow: visible;
           break-inside: avoid;
