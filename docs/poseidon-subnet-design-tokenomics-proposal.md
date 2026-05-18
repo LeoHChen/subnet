@@ -292,18 +292,22 @@ Recommended epoch structure:
 
 The CPVSS allocation vector should default to the same 35/25/15/10/10/5 split in Years 2-4 unless governance or Poseidon policy explicitly changes it before the relevant year starts. The annual cap declines each year, but the stage mix remains constant by default so the reward model does not drift silently. Any future shift, such as reducing parsing subsidies as fee revenue grows or increasing security/challenge funding after observed attacks, should be published as an updated allocation table.
 
-#### Year 1 CPVSS Incentive and Emission Schedule
+#### Canonical CPVSS Incentive, Emission, and Revenue-Sharing Schedule
 
-Assuming Year 1 weekly emission cap of 865,385 $PSDN and four mainnet launch subnets, rounded to the nearest whole token:
+The same top-level CPVSS allocation should govern both emission-funded incentives and fee-funded marketplace revenue. This avoids two competing reward systems. Emissions bootstrap the pool when buyer revenue is not yet sufficient; marketplace revenue later offsets or replaces the matching emission pool.
 
-| CPVSS Stage or Network Pool | Year 1 Allocation | Weekly Network Cap | Four-Subnet Launch Baseline | Incentive Mechanism and Penalty Rule |
-|---|---:|---:|---:|---|
-| Collection | 35% | 302,885 $PSDN | 75,721 $PSDN per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
-| Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per registered miner-agent slot per week before utilization controls | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
-| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per registered validation-agent slot per week before utilization controls | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, low-effort validation, or collusion reduce rewards and can slash stake. |
-| Score | 10% | 86,538 $PSDN | 21,635 $PSDN per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
-| Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
-| Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
+Assuming a Year 1 weekly emission cap of 865,385 $PSDN and a four-subnet target baseline, rounded to the nearest whole token:
+
+| CPVSS Pool | Canonical Share | Year 1 Weekly Emission Cap | Four-Subnet Weekly Cap Diagnostic | Marketplace Revenue Recipients | Incentive and Penalty Logic |
+|---|---:|---:|---:|---|---|
+| Collection | 35% | 302,885 $PSDN | 75,721 $PSDN per subnet | Contributors, data rights holders, collection operators | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
+| Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per registered miner-agent slot per week before utilization controls | Miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
+| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per registered validation-agent slot per week before utilization controls | Validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, low-effort validation, or collusion reduce rewards and can slash stake. |
+| Score | 10% | 86,538 $PSDN | 21,635 $PSDN per subnet owner | Subnet owner/operator | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
+| Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Poseidon marketplace, curators/search partners, buyer-demand programs | Supports discovery, dataset packaging, marketplace operations, buyer support, demand routing, and capped demand incentives. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
+| Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Challengers, red-herring/audit programs, insurance/burn/buyback reserve | Funds audits, red-herring creation, successful challenges, fraud reports, emergency reviews, and long-term token-value support. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
+
+This table is the single source of truth for the top-level CPVSS split. If the mainnet launches with two signed production subnets rather than the four-subnet target, Poseidon should rerun the model with the active subnet count and either scale the launch emission budget to active capacity or publish explicit subnet weights.
 
 These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the unspent incentive reserve by default. There should be no automatic roll-forward and no automatic redistribution to active participants. Reallocation should require a quarterly governance or Poseidon policy decision with a public rationale, because roll-forward, burn, and cross-subnet reallocation have different token-supply and incentive effects.
 
@@ -330,7 +334,7 @@ Recommended APY guardrails:
 - If trailing four-week realized APY exceeds the guardrail without a clear capacity shortage, new rewards should be throttled, staked requirements should rise, or unused emissions should return to reserve.
 - Fee-funded revenue should first replace emissions for the same CPVSS pool. It should not automatically stack on top of the full emission cap unless Poseidon explicitly chooses a temporary growth subsidy.
 
-The table above replaces the separate incentive design summary: incentive mechanism, penalty design, and emission budget must be changed together.
+The table above replaces separate incentive and revenue-share summaries: incentive mechanism, penalty design, emission budget, and fee-funded revenue split must be changed together.
 
 #### Reward Formula by Epoch
 
@@ -441,22 +445,9 @@ net_pressure_year_1 = -1,837,500 $PSDN
 
 This is acceptable for bootstrap if emissions are capped, locked, and tied to useful work. The design goal is for revenue growth, fee routing, and reduced emissions to move net pressure positive over time.
 
-#### Revenue Sharing Model
+#### Revenue Sharing Rules
 
-Marketplace revenue should follow the same top-level CPVSS allocation vector as the Year 1 incentive and emission schedule. Otherwise, the model creates two inconsistent reward systems: one for emissions and another for fee-funded payouts.
-
-Recommended default split for marketplace revenue:
-
-| CPVSS Revenue Pool | Default Share | Primary Recipients | Rationale |
-|---|---:|---|---|
-| Collection | 35% | Contributors, data rights holders, collection operators | Keeps original data supply economically meaningful and aligns contributors with long-term dataset value |
-| Parsing | 25% | Miner agents | Compensates parsing, transcription, segmentation, labeling, and metadata work |
-| Validation | 15% | Validation agents | Funds quality control, red-herring review, and validation-agent availability |
-| Score | 10% | Subnet owner/operator | Rewards scoring, quality policy, partner operations, and subnet-specific business development |
-| Search and Marketplace Demand | 10% | Poseidon marketplace, curators/search partners, buyer-demand programs | Supports discovery, dataset packaging, marketplace operations, buyer support, and demand routing |
-| Network Security and Challenges | 5% | Challengers, red-herring/audit programs, insurance/burn/buyback reserve | Funds dispute handling, slashing events, audits, challenge rewards, and long-term token-value support |
-
-This table intentionally mirrors the Year 1 emission schedule. Any future change to one table should update the other, or the proposal should explicitly explain why fee-funded revenue and emission-funded incentives should diverge.
+Marketplace revenue should use the canonical CPVSS allocation table above. Revenue sharing is therefore not a separate schedule; it is the fee-funded version of the same Collection, Parsing, Validation, Score, Search, and Security pools.
 
 Internal sub-allocations can still vary by contract. For example, the 10% Search and Marketplace Demand pool can be split between Poseidon marketplace operations, curators, search partners, and buyer incentives. The 5% Network Security and Challenges pool can be split between challenger rewards, audit programs, red-herring generation, insurance, buyback, or burn policy. Those internal choices should not create new top-level pools unless the emission schedule is also changed.
 
@@ -478,7 +469,7 @@ Open questions:
 
 - Should Poseidon marketplace operations be funded entirely from the Search and Marketplace Demand pool, or should there be an explicit off-top platform fee later?
 - Should contributors receive recurring royalties forever, or should some datasets use a capped royalty model?
-- Should revenue splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
+- Should internal revenue sub-splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
 - Should burn/buyback policy be automatic, or discretionary during the first year to preserve operational flexibility?
 
 ### Bootstrap Phases
