@@ -36,6 +36,10 @@ TOKENOMICS_SIMULATOR_SECTION = """
     <div class="sim-kpi"><span>4-year effective emission</span><strong data-kpi="effectiveEmission">-</strong></div>
     <div class="sim-kpi"><span>Launch bonded stake</span><strong data-kpi="launchStake">-</strong></div>
     <div class="sim-kpi"><span>Bonded stake share</span><strong data-kpi="stakeShare">-</strong></div>
+    <div class="sim-kpi"><span>Year 1 buy pressure</span><strong data-kpi="buyPressure">-</strong></div>
+    <div class="sim-kpi"><span>Year 1 sell pressure</span><strong data-kpi="sellPressure">-</strong></div>
+    <div class="sim-kpi"><span>Year 1 net pressure</span><strong data-kpi="netPressure">-</strong></div>
+    <div class="sim-kpi"><span>Fee-funded coverage</span><strong data-kpi="feeCoverage">-</strong></div>
   </div>
   <div class="simulator-grid">
     <div class="sim-panel sim-controls" aria-label="Tokenomics simulator controls">
@@ -70,6 +74,24 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <label class="sim-control"><span><span>Security</span><strong data-output="securityAlloc"></strong></span><input type="range" data-param="securityAlloc" min="0" max="70" step="1" value="5"></label>
         <p class="sim-note" data-output="poolAllocTotal"></p>
       </div>
+      <div class="sim-control-group">
+        <h3>Revenue and Pressure</h3>
+        <label class="sim-control"><span><span>Annual revenue / subnet</span><strong data-output="revenuePerSubnet"></strong></span><input type="range" data-param="revenuePerSubnet" min="0" max="25000000" step="250000" value="3000000"></label>
+        <label class="sim-control"><span><span>Annual revenue growth</span><strong data-output="revenueGrowth"></strong></span><input type="range" data-param="revenueGrowth" min="-50" max="200" step="5" value="50"></label>
+        <label class="sim-control"><span><span>Revenue touching $POS</span><strong data-output="posSettlement"></strong></span><input type="range" data-param="posSettlement" min="0" max="100" step="5" value="70"></label>
+        <label class="sim-control"><span><span>Emission sell-through</span><strong data-output="emissionSellThrough"></strong></span><input type="range" data-param="emissionSellThrough" min="0" max="100" step="5" value="65"></label>
+      </div>
+      <div class="sim-control-group">
+        <h3>Revenue Split</h3>
+        <label class="sim-control"><span><span>Contributors</span><strong data-output="contributorRev"></strong></span><input type="range" data-param="contributorRev" min="0" max="60" step="1" value="35"></label>
+        <label class="sim-control"><span><span>Miner agents</span><strong data-output="minerRev"></strong></span><input type="range" data-param="minerRev" min="0" max="60" step="1" value="20"></label>
+        <label class="sim-control"><span><span>Validation agents</span><strong data-output="validationRev"></strong></span><input type="range" data-param="validationRev" min="0" max="60" step="1" value="12"></label>
+        <label class="sim-control"><span><span>Subnet owners</span><strong data-output="ownerRev"></strong></span><input type="range" data-param="ownerRev" min="0" max="60" step="1" value="15"></label>
+        <label class="sim-control"><span><span>Curators/search</span><strong data-output="curatorRev"></strong></span><input type="range" data-param="curatorRev" min="0" max="40" step="1" value="5"></label>
+        <label class="sim-control"><span><span>Poseidon foundation</span><strong data-output="poseidonRev"></strong></span><input type="range" data-param="poseidonRev" min="0" max="40" step="1" value="10"></label>
+        <label class="sim-control"><span><span>Insurance/burn reserve</span><strong data-output="reserveRev"></strong></span><input type="range" data-param="reserveRev" min="0" max="30" step="1" value="3"></label>
+        <p class="sim-note" data-output="revSplitTotal"></p>
+      </div>
     </div>
     <div class="sim-panel sim-results" aria-label="Tokenomics simulator charts">
       <div class="sim-chart-card">
@@ -88,6 +110,13 @@ TOKENOMICS_SIMULATOR_SECTION = """
           <div class="sim-legend" data-legend="stake"></div>
         </div>
       </div>
+      <div class="sim-chart-card">
+        <div class="sim-chart-title"><h3>Buying vs Selling Pressure</h3><span data-chart-note="pressure"></span></div>
+        <svg class="sim-chart sim-pressure-chart" data-chart="pressure-bars" role="img" aria-label="Buying pressure, selling pressure, and net pressure chart"></svg>
+        <p class="sim-note">Buying pressure is modeled revenue touching $POS. Selling pressure is emitted rewards multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
+      </div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-pressure-table"><thead><tr><th>Year</th><th>Network Revenue</th><th>Buying Pressure</th><th>Selling Pressure</th><th>Net Pressure</th></tr></thead><tbody data-pressure-table></tbody></table></div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-revenue-table"><thead><tr><th>Revenue Recipient</th><th>Share</th><th>Year 1 Revenue</th><th>Purpose</th></tr></thead><tbody data-revenue-table></tbody></table></div>
       <div class="sim-chart-card">
         <div class="sim-chart-title"><h3>Role Reward APY</h3><span data-chart-note="role"></span></div>
         <svg class="sim-chart sim-role-chart" data-chart="role-bars" role="img" aria-label="Per-role stake, reward, and APY chart"></svg>
@@ -228,6 +257,7 @@ TOKENOMICS_SIMULATOR_CSS = """
       }
       .sim-line-chart { min-height: 300px; }
       .sim-role-chart { min-height: 280px; }
+      .sim-pressure-chart { min-height: 320px; }
       .sim-pie-chart {
         max-width: 360px;
         margin: 0 auto;
@@ -273,6 +303,8 @@ TOKENOMICS_SIMULATOR_CSS = """
       .sim-table-wrap { margin-bottom: 0; }
       .sim-table { min-width: 680px; }
       .sim-role-table { min-width: 760px; }
+      .sim-revenue-table { min-width: 760px; }
+      .sim-pressure-table { min-width: 720px; }
       .sim-pulse .sim-kpi strong {
         animation: simGlow 420ms ease;
       }
@@ -315,6 +347,8 @@ TOKENOMICS_SIMULATOR_JS = """
             "supply", "reservePct", "feeOffset", "epochDays", "year1Weight", "year2Weight", "year3Weight", "year4Weight",
             "launchSubnets", "minerAgents", "validationAgents", "minerStake", "validationStake", "ownerStake",
             "collectionAlloc", "parsingAlloc", "validationAlloc", "scoreAlloc", "searchAlloc", "securityAlloc",
+            "revenuePerSubnet", "revenueGrowth", "posSettlement", "emissionSellThrough",
+            "contributorRev", "minerRev", "validationRev", "ownerRev", "curatorRev", "poseidonRev", "reserveRev",
           ];
           const inputs = new Map(paramNames.map((name) => [name, root.querySelector(`[data-param="${name}"]`)]));
           const value = (name) => Number(inputs.get(name)?.value || 0);
@@ -427,6 +461,47 @@ TOKENOMICS_SIMULATOR_JS = """
             svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
             svg.innerHTML = `<rect x="0" y="0" width="${width}" height="${height}" fill="transparent"/>${legend}${rows}`;
           };
+          const drawPressureChart = (rows) => {
+            const svg = root.querySelector('[data-chart="pressure-bars"]');
+            if (!svg) return;
+            const width = 760;
+            const height = 330;
+            const pad = { left: 76, right: 28, top: 40, bottom: 54 };
+            const innerW = width - pad.left - pad.right;
+            const innerH = height - pad.top - pad.bottom;
+            const maxAbs = Math.max(1, ...rows.flatMap((row) => [row.buying, row.selling, Math.abs(row.net)]));
+            const y = (amount) => pad.top + innerH - ((amount + maxAbs) / (maxAbs * 2)) * innerH;
+            const zeroY = y(0);
+            const groupW = innerW / rows.length;
+            const barW = Math.min(34, groupW / 4);
+            const grid = [-1, -0.5, 0, 0.5, 1].map((ratio) => {
+              const amount = ratio * maxAbs;
+              const gy = y(amount);
+              return `<line x1="${pad.left}" y1="${gy}" x2="${pad.left + innerW}" y2="${gy}" stroke="var(--line)" stroke-width="${ratio === 0 ? 1.8 : 1}"/><text x="${pad.left - 10}" y="${gy + 4}" text-anchor="end" fill="var(--muted)" font-size="12">${compact(amount)}</text>`;
+            }).join("");
+            const legend = `<g><rect x="${pad.left}" y="14" width="12" height="12" rx="3" fill="var(--teal)"/><text x="${pad.left + 18}" y="25" fill="var(--muted)" font-size="12">Buying</text><rect x="${pad.left + 92}" y="14" width="12" height="12" rx="3" fill="var(--coral)"/><text x="${pad.left + 110}" y="25" fill="var(--muted)" font-size="12">Selling</text><line x1="${pad.left + 188}" y1="20" x2="${pad.left + 224}" y2="20" stroke="var(--amber)" stroke-width="4" stroke-linecap="round"/><text x="${pad.left + 232}" y="25" fill="var(--muted)" font-size="12">Net</text></g>`;
+            const bars = rows.map((row, index) => {
+              const center = pad.left + groupW * index + groupW / 2;
+              const buyY = y(row.buying);
+              const sellY = y(row.selling);
+              return `
+                <g>
+                  <rect x="${center - barW - 4}" y="${Math.min(buyY, zeroY)}" width="${barW}" height="${Math.abs(zeroY - buyY)}" rx="5" fill="var(--teal)" opacity="0.82"><title>${row.label} buying pressure: ${token(row.buying)}</title></rect>
+                  <rect x="${center + 4}" y="${Math.min(sellY, zeroY)}" width="${barW}" height="${Math.abs(zeroY - sellY)}" rx="5" fill="var(--coral)" opacity="0.78"><title>${row.label} selling pressure: ${token(row.selling)}</title></rect>
+                  <text x="${center}" y="${height - 18}" text-anchor="middle" fill="var(--muted)" font-size="12">${row.label}</text>
+                </g>`;
+            }).join("");
+            const netPoints = rows.map((row, index) => {
+              const center = pad.left + groupW * index + groupW / 2;
+              return `${center.toFixed(2)},${y(row.net).toFixed(2)}`;
+            }).join(" ");
+            const netDots = rows.map((row, index) => {
+              const center = pad.left + groupW * index + groupW / 2;
+              return `<circle cx="${center}" cy="${y(row.net)}" r="5" fill="var(--amber)"><title>${row.label} net pressure: ${token(row.net)}</title></circle>`;
+            }).join("");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            svg.innerHTML = `<rect x="0" y="0" width="${width}" height="${height}" fill="transparent"/>${grid}${legend}${bars}<polyline pathLength="1" points="${netPoints}" fill="none" stroke="var(--amber)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${netDots}`;
+          };
           const update = () => {
             const supply = value("supply");
             const reservePct = value("reservePct");
@@ -461,6 +536,39 @@ TOKENOMICS_SIMULATOR_JS = """
               { key: "security", label: "Security", value: value("securityAlloc") },
             ];
             const pools = normalized(poolInputs).map((item) => ({ ...item, value: annualEffective[0] * item.share }));
+            const revenueSplitInputs = [
+              { key: "contributor", label: "Contributors and data rights holders", value: value("contributorRev"), purpose: "Original data supply and recurring dataset value" },
+              { key: "miner", label: "Miner agents", value: value("minerRev"), purpose: "Parsing, transcription, labeling, and metadata work" },
+              { key: "validation", label: "Validation agents", value: value("validationRev"), purpose: "Quality control, red-herring work, and review labor" },
+              { key: "owner", label: "Subnet owners", value: value("ownerRev"), purpose: "Scoring, quality policy, partner operations, and subnet BD" },
+              { key: "curator", label: "Curators/search partners", value: value("curatorRev"), purpose: "Discovery, packaging, buyer support, and demand routing" },
+              { key: "poseidon", label: "Poseidon team/foundation", value: value("poseidonRev"), purpose: "Marketplace operation, protocol development, grants, and compliance" },
+              { key: "reserve", label: "Insurance/burn reserve", value: value("reserveRev"), purpose: "Disputes, slashing events, buyback, burn, or token-value support" },
+            ];
+            const revenueSplits = normalized(revenueSplitInputs);
+            const participantRevenueShare = revenueSplits
+              .filter((item) => !["poseidon", "reserve"].includes(item.key))
+              .reduce((sum, item) => sum + item.share, 0);
+            const revenuePerSubnet = value("revenuePerSubnet");
+            const revenueGrowth = value("revenueGrowth") / 100;
+            const posSettlement = value("posSettlement") / 100;
+            const emissionSellThrough = value("emissionSellThrough") / 100;
+            const annualNetworkRevenue = annualEffective.map((_, index) => (
+              revenuePerSubnet * launchSubnets * Math.pow(1 + revenueGrowth, index)
+            ));
+            const pressureRows = annualNetworkRevenue.map((revenue, index) => {
+              const buying = revenue * posSettlement;
+              const selling = annualEffective[index] * emissionSellThrough;
+              return {
+                label: `Y${index + 1}`,
+                revenue,
+                buying,
+                selling,
+                net: buying - selling,
+              };
+            });
+            const year1ParticipantRevenue = annualNetworkRevenue[0] * participantRevenueShare;
+            const feeCoverage = annualEffective[0] > 0 ? year1ParticipantRevenue / annualEffective[0] * 100 : 0;
             const poolValue = (key) => pools.find((item) => item.key === key)?.value || 0;
             const minerCount = Math.max(1, launchSubnets * value("minerAgents"));
             const validationCount = Math.max(1, launchSubnets * value("validationAgents"));
@@ -499,19 +607,31 @@ TOKENOMICS_SIMULATOR_JS = """
             setOutput("minerStake", token(value("minerStake")));
             setOutput("validationStake", token(value("validationStake")));
             setOutput("ownerStake", token(value("ownerStake")));
+            setOutput("revenuePerSubnet", token(revenuePerSubnet));
+            setOutput("revenueGrowth", pct(value("revenueGrowth"), 0));
+            setOutput("posSettlement", pct(value("posSettlement"), 0));
+            setOutput("emissionSellThrough", pct(value("emissionSellThrough"), 0));
             yearWeights.forEach((year, index) => setOutput(`year${index + 1}Weight`, pct(year.value)));
             poolInputs.forEach((item) => setOutput(`${item.key}Alloc`, pct(item.value, 0)));
+            revenueSplitInputs.forEach((item) => setOutput(`${item.key}Rev`, pct(item.value, 0)));
             const yearWeightTotal = yearWeights.reduce((sum, item) => sum + item.value, 0);
             const poolTotal = poolInputs.reduce((sum, item) => sum + item.value, 0);
+            const revenueSplitTotal = revenueSplitInputs.reduce((sum, item) => sum + item.value, 0);
             setOutput("yearWeightTotal", `Schedule weights sum to ${pct(yearWeightTotal)} and are normalized for the line chart.`);
             setOutput("poolAllocTotal", `Pool sliders sum to ${pct(poolTotal, 0)} and are normalized for the pie chart.`);
+            setOutput("revSplitTotal", `Revenue split sliders sum to ${pct(revenueSplitTotal, 0)} and are normalized for the table.`);
             write('[data-kpi="supply"]', token(supply));
             write('[data-kpi="effectiveEmission"]', `${token(cumulative[cumulative.length - 1])} (${pct(cumulative[cumulative.length - 1] / supply * 100)})`);
             write('[data-kpi="launchStake"]', token(totalStake));
             write('[data-kpi="stakeShare"]', pct(totalStake / supply * 100, 3));
+            write('[data-kpi="buyPressure"]', token(pressureRows[0].buying));
+            write('[data-kpi="sellPressure"]', token(pressureRows[0].selling));
+            write('[data-kpi="netPressure"]', token(pressureRows[0].net));
+            write('[data-kpi="feeCoverage"]', pct(feeCoverage));
             write('[data-chart-note="line"]', `${token(grossReserve)} scheduled before fee offset; ${fmt.format(epochsPerYear)} epochs/year`);
             write('[data-chart-note="pool"]', `${token(annualEffective[0])} effective Year 1 cap`);
             write('[data-chart-note="stake"]', `${fmt.format(launchSubnets)} launch subnets`);
+            write('[data-chart-note="pressure"]', `${token(annualNetworkRevenue[0])} Year 1 network revenue`);
             write('[data-chart-note="role"]', "Year 1 max reward / stake");
             drawLine(annualEffective, cumulative, supply);
             drawPie("pool-pie", "pool", pools);
@@ -520,6 +640,15 @@ TOKENOMICS_SIMULATOR_JS = """
               { label: "Validation agents", value: validationStake },
               { label: "Subnet owners", value: ownerStake },
             ]);
+            drawPressureChart(pressureRows);
+            const pressureTable = root.querySelector("[data-pressure-table]");
+            pressureTable.innerHTML = pressureRows.map((row) => (
+              `<tr><td>${row.label}</td><td>${token(row.revenue)}</td><td>${token(row.buying)}</td><td>${token(row.selling)}</td><td>${token(row.net)}</td></tr>`
+            )).join("");
+            const revenueTable = root.querySelector("[data-revenue-table]");
+            revenueTable.innerHTML = revenueSplits.map((item) => (
+              `<tr><td>${item.label}</td><td>${pct(item.share * 100)}</td><td>${token(annualNetworkRevenue[0] * item.share)}</td><td>${item.purpose}</td></tr>`
+            )).join("");
             drawRoleBars(roleEconomics);
             const roleTable = root.querySelector("[data-role-table]");
             roleTable.innerHTML = roleEconomics.map((role) => (

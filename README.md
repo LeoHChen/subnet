@@ -22,7 +22,7 @@ The generated HTML includes:
 
 - `Export PDF`, which opens the browser print/PDF flow.
 - `Copy to Notion`, which copies clean HTML plus Markdown to the clipboard for pasting into a Notion page.
-- An interactive tokenomics simulator with sliders for emission schedule, staking assumptions, and pool allocations, plus live line, pie, stake/reward, and APY charts.
+- An interactive tokenomics simulator with sliders for emission schedule, staking assumptions, revenue pressure, revenue sharing, and pool allocations, plus live line, pie, buy/sell pressure, stake/reward, and APY charts.
 
 ## Major Releases
 
