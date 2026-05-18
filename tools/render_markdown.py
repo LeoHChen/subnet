@@ -27,7 +27,7 @@ TOKENOMICS_SIMULATOR_SECTION = """
   <div class="simulator-heading">
     <div>
       <h2>Tokenomics Simulator</h2>
-      <p>Adjust the emission, staking, launch, and allocation assumptions to see how $POS supply, emissions, and bonded stake move over the launch timeline.</p>
+      <p>Adjust the emission, staking, launch, and allocation assumptions to see how $PSDN supply, emissions, and bonded stake move over the launch timeline.</p>
     </div>
     <div class="simulator-status" data-sim-status>Live model</div>
   </div>
@@ -78,7 +78,7 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <h3>Revenue and Pressure</h3>
         <label class="sim-control"><span><span>Annual revenue / subnet</span><strong data-output="revenuePerSubnet"></strong></span><input type="range" data-param="revenuePerSubnet" min="0" max="25000000" step="250000" value="3000000"></label>
         <label class="sim-control"><span><span>Annual revenue growth</span><strong data-output="revenueGrowth"></strong></span><input type="range" data-param="revenueGrowth" min="-50" max="200" step="5" value="50"></label>
-        <label class="sim-control"><span><span>Revenue touching $POS</span><strong data-output="posSettlement"></strong></span><input type="range" data-param="posSettlement" min="0" max="100" step="5" value="70"></label>
+        <label class="sim-control"><span><span>Revenue touching $PSDN</span><strong data-output="psdnSettlement"></strong></span><input type="range" data-param="psdnSettlement" min="0" max="100" step="5" value="70"></label>
         <label class="sim-control"><span><span>Emission sell-through</span><strong data-output="emissionSellThrough"></strong></span><input type="range" data-param="emissionSellThrough" min="0" max="100" step="5" value="65"></label>
       </div>
       <div class="sim-control-group">
@@ -113,7 +113,7 @@ TOKENOMICS_SIMULATOR_SECTION = """
       <div class="sim-chart-card">
         <div class="sim-chart-title"><h3>Buying vs Selling Pressure</h3><span data-chart-note="pressure"></span></div>
         <svg class="sim-chart sim-pressure-chart" data-chart="pressure-bars" role="img" aria-label="Buying pressure, selling pressure, and net pressure chart"></svg>
-        <p class="sim-note">Buying pressure is modeled revenue touching $POS. Selling pressure is emitted rewards multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
+        <p class="sim-note">Buying pressure is modeled revenue touching $PSDN. Selling pressure is emitted rewards multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
       </div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table sim-pressure-table"><thead><tr><th>Year</th><th>Network Revenue</th><th>Buying Pressure</th><th>Selling Pressure</th><th>Net Pressure</th></tr></thead><tbody data-pressure-table></tbody></table></div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table sim-revenue-table"><thead><tr><th>Revenue Recipient</th><th>Share</th><th>Year 1 Revenue</th><th>Purpose</th></tr></thead><tbody data-revenue-table></tbody></table></div>
@@ -347,7 +347,7 @@ TOKENOMICS_SIMULATOR_JS = """
             "supply", "reservePct", "feeOffset", "epochDays", "year1Weight", "year2Weight", "year3Weight", "year4Weight",
             "launchSubnets", "minerAgents", "validationAgents", "minerStake", "validationStake", "ownerStake",
             "collectionAlloc", "parsingAlloc", "validationAlloc", "scoreAlloc", "searchAlloc", "securityAlloc",
-            "revenuePerSubnet", "revenueGrowth", "posSettlement", "emissionSellThrough",
+            "revenuePerSubnet", "revenueGrowth", "psdnSettlement", "emissionSellThrough",
             "contributorRev", "minerRev", "validationRev", "ownerRev", "curatorRev", "poseidonRev", "reserveRev",
           ];
           const inputs = new Map(paramNames.map((name) => [name, root.querySelector(`[data-param="${name}"]`)]));
@@ -356,12 +356,12 @@ TOKENOMICS_SIMULATOR_JS = """
           const pct = (number, digits = 1) => `${Number(number).toFixed(digits)}%`;
           const token = (number) => {
             const abs = Math.abs(number);
-            if (abs >= 1_000_000_000) return `${(number / 1_000_000_000).toFixed(2)}B $POS`;
-            if (abs >= 1_000_000) return `${(number / 1_000_000).toFixed(1)}M $POS`;
-            if (abs >= 1_000) return `${(number / 1_000).toFixed(1)}K $POS`;
-            return `${fmt.format(number)} $POS`;
+            if (abs >= 1_000_000_000) return `${(number / 1_000_000_000).toFixed(2)}B $PSDN`;
+            if (abs >= 1_000_000) return `${(number / 1_000_000).toFixed(1)}M $PSDN`;
+            if (abs >= 1_000) return `${(number / 1_000).toFixed(1)}K $PSDN`;
+            return `${fmt.format(number)} $PSDN`;
           };
-          const compact = (number) => token(number).replace(" $POS", "");
+          const compact = (number) => token(number).replace(" $PSDN", "");
           const apy = (reward, stake) => (stake > 0 ? reward / stake * 100 : null);
           const apyText = (number) => (number === null || !Number.isFinite(number) ? "N/A" : pct(number));
           const write = (selector, valueText) => {
@@ -551,13 +551,13 @@ TOKENOMICS_SIMULATOR_JS = """
               .reduce((sum, item) => sum + item.share, 0);
             const revenuePerSubnet = value("revenuePerSubnet");
             const revenueGrowth = value("revenueGrowth") / 100;
-            const posSettlement = value("posSettlement") / 100;
+            const psdnSettlement = value("psdnSettlement") / 100;
             const emissionSellThrough = value("emissionSellThrough") / 100;
             const annualNetworkRevenue = annualEffective.map((_, index) => (
               revenuePerSubnet * launchSubnets * Math.pow(1 + revenueGrowth, index)
             ));
             const pressureRows = annualNetworkRevenue.map((revenue, index) => {
-              const buying = revenue * posSettlement;
+              const buying = revenue * psdnSettlement;
               const selling = annualEffective[index] * emissionSellThrough;
               return {
                 label: `Y${index + 1}`,
@@ -609,7 +609,7 @@ TOKENOMICS_SIMULATOR_JS = """
             setOutput("ownerStake", token(value("ownerStake")));
             setOutput("revenuePerSubnet", token(revenuePerSubnet));
             setOutput("revenueGrowth", pct(value("revenueGrowth"), 0));
-            setOutput("posSettlement", pct(value("posSettlement"), 0));
+            setOutput("psdnSettlement", pct(value("psdnSettlement"), 0));
             setOutput("emissionSellThrough", pct(value("emissionSellThrough"), 0));
             yearWeights.forEach((year, index) => setOutput(`year${index + 1}Weight`, pct(year.value)));
             poolInputs.forEach((item) => setOutput(`${item.key}Alloc`, pct(item.value, 0)));

@@ -43,7 +43,7 @@ It proposes CPVSS as the operating framework for a subnet:
 4. Score
 5. Search
 
-The goal is to make the subnet design legible to both technical and business readers: what each stage does, why decentralization matters, where central authority is still needed, how $POS token incentives fit, how staking and emissions should work, how marketplace revenue can create buying pressure, and what milestones are required for Testnet 1, Beta Testnet, and Mainnet Launch.
+The goal is to make the subnet design legible to both technical and business readers: what each stage does, why decentralization matters, where central authority is still needed, how $PSDN token incentives fit, how staking and emissions should work, how marketplace revenue can create buying pressure, and what milestones are required for Testnet 1, Beta Testnet, and Mainnet Launch.
 
 The subnet design should use crypto where crypto creates a real advantage: coordinating distributed labor, preserving contribution history, proving provenance, creating auditable reward trails, and enabling a marketplace for AI data.
 
@@ -78,29 +78,29 @@ By December 31, 2026, Mainnet Launch should activate the four launch-partner sub
 3. Keep raw data and large artifacts off-chain, but make provenance, commitments, scores, and reward history auditable.
 4. Treat the beta as a working system, not just a protocol demo.
 5. Leave room for design decisions in consensus, scoring, slashing, and marketplace economics.
-6. Use one token, $POS, for the full network. Avoid creating subnet-specific tokens unless there is an overwhelming reason later.
+6. Use one token, $PSDN, for the full network. Avoid creating subnet-specific tokens unless there is an overwhelming reason later.
 7. Reduce long-term emissions to protect token value, but reserve enough targeted incentives to bootstrap contributors, miner agents, validation agents, and early buyers.
 8. Design every reward around game theory: pay for useful verified work, not raw activity.
 
-## $POS Single Token Model
+## $PSDN Single Token Model
 
-Poseidon should use $POS as the single network token for staking, rewards, marketplace settlement, fee routing, and penalty accounting.
+Poseidon should use $PSDN as the single network token for staking, rewards, marketplace settlement, fee routing, and penalty accounting.
 
-The design goal is not maximum token emissions. The design goal is a useful network where $POS captures value because participants need it to access work, stake behind claims, buy data, and receive rewards from real marketplace demand.
+The design goal is not maximum token emissions. The design goal is a useful network where $PSDN captures value because participants need it to access work, stake behind claims, buy data, and receive rewards from real marketplace demand.
 
 ### Token Utility
 
-$POS should support five core utilities:
+$PSDN should support five core utilities:
 
-1. Staking: miner agents, validation agents, subnet owners, and possibly curators stake $POS to participate in roles where bad behavior creates cost.
-2. Rewards: contributors, miner agents, validation agents, and subnet owners receive $POS or $POS-denominated credits for useful verified work.
-3. Settlement: buyers can pay in $POS, or fiat payments can be converted into $POS-denominated marketplace accounting.
-4. Penalties: slashed $POS can be burned, routed to an insurance pool, or redistributed to honest participants.
-5. Access: advanced marketplace placement, priority jobs, or subnet launch rights can require $POS staking or payment.
+1. Staking: miner agents, validation agents, subnet owners, and possibly curators stake $PSDN to participate in roles where bad behavior creates cost.
+2. Rewards: contributors, miner agents, validation agents, and subnet owners receive $PSDN or $PSDN-denominated credits for useful verified work.
+3. Settlement: buyers can pay in $PSDN, or fiat payments can be converted into $PSDN-denominated marketplace accounting.
+4. Penalties: slashed $PSDN can be burned, routed to an insurance pool, or redistributed to honest participants.
+5. Access: advanced marketplace placement, priority jobs, or subnet launch rights can require $PSDN staking or payment.
 
 ### Role-Based Staking Model
 
-> **Skin in the game principle:** any actor who can impose cost on the network should have enough $POS at risk that honest behavior is economically better than spam, laziness, collusion, or fraud.
+> **Skin in the game principle:** any actor who can impose cost on the network should have enough $PSDN at risk that honest behavior is economically better than spam, laziness, collusion, or fraud.
 
 The role-based staking model is one of the most important pieces of the tokenomics design because it makes participation economically accountable.
 
@@ -108,7 +108,7 @@ Not every actor should stake the same way. Staking should be required where the 
 
 Assumption for the baseline estimate:
 
-- Total $POS supply: 1,000,000,000 tokens.
+- Total $PSDN supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
 - Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
 - Testnet 1 target remains two production subnets, likely voice and video.
@@ -118,15 +118,15 @@ Assumption for the baseline estimate:
 - These are starting-point numbers for design discussion, not final launch parameters.
 - Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
 
-| Role | Stake Requirement | Proposed Stake With 1B $POS Supply | Initial Network Count Assumption | Why Stake Exists | Slash or Penalty Condition | Game-Theory Purpose |
+| Role | Stake Requirement | Proposed Stake With 1B $PSDN Supply | Initial Network Count Assumption | Why Stake Exists | Slash or Penalty Condition | Game-Theory Purpose |
 |---|---|---:|---|---|---|---|
-| Individual Contributor | No required stake. Optional stake can increase rewards through a capped multiplier. Past contributors can receive an initial airdrop based on verified contribution history. | Required: 0 $POS. Optional: 0-10,000 $POS. Reward multiplier capped at 1.25x so quality still matters more than wealth. | Open participation | Keep contribution open while giving serious contributors a way to signal long-term alignment | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata; penalties should usually reduce rewards before slashing optional stake | Prevent low-cost Sybil supply without blocking useful individual contributors |
-| Collection Operator | Required for large-scale campaigns or professional data suppliers | 50,000 $POS per active campaign, or 0.005% of supply | Campaign-based | Discourage spam, duplicate supply, and rights fraud at scale | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Make professional collection operators internalize the cost of bad supply |
-| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $POS per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $POS per subnet, or 0.08% of supply | 16 miner agents per subnet for beta production; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Stop miner agents from farming bounties with cheap invalid work |
-| Validation Agent | Required per active validation agent | 20,000 $POS per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $POS per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
-| Subnet Owner | Required launch bond or quality bond | 2,500,000 $POS per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
-| Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $POS per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
-| Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $POS for normal buyers; 25,000 $POS only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
+| Individual Contributor | No required stake. Optional stake can increase rewards through a capped multiplier. Past contributors can receive an initial airdrop based on verified contribution history. | Required: 0 $PSDN. Optional: 0-10,000 $PSDN. Reward multiplier capped at 1.25x so quality still matters more than wealth. | Open participation | Keep contribution open while giving serious contributors a way to signal long-term alignment | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata; penalties should usually reduce rewards before slashing optional stake | Prevent low-cost Sybil supply without blocking useful individual contributors |
+| Collection Operator | Required for large-scale campaigns or professional data suppliers | 50,000 $PSDN per active campaign, or 0.005% of supply | Campaign-based | Discourage spam, duplicate supply, and rights fraud at scale | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Make professional collection operators internalize the cost of bad supply |
+| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $PSDN per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $PSDN per subnet, or 0.08% of supply | 16 miner agents per subnet for beta production; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Stop miner agents from farming bounties with cheap invalid work |
+| Validation Agent | Required per active validation agent | 20,000 $PSDN per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $PSDN per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
+| Subnet Owner | Required launch bond or quality bond | 2,500,000 $PSDN per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
+| Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $PSDN per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
+| Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $PSDN for normal buyers; 25,000 $PSDN only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
 
 The beta should probably use simulated or capped staking for most roles. Mainnet can harden staking once the actual attack patterns are visible. A practical beta approach is to record the required stake in the ledger and enforce only lightweight penalties until the team has enough data to tune slashing severity.
 
@@ -135,19 +135,19 @@ The beta should probably use simulated or capped staking for most roles. Mainnet
 For each role:
 
 ```text
-role_stake_tokens = total_pos_supply x role_stake_rate
+role_stake_tokens = total_psdn_supply x role_stake_rate
 ```
 
-Using the 1,000,000,000 $POS supply assumption:
+Using the 1,000,000,000 $PSDN supply assumption:
 
 ```text
-miner_agent_stake = 1,000,000,000 x 0.00005 = 50,000 $POS per miner agent
-miner_agent_subnet_stake = 50,000 x 16 = 800,000 $POS per subnet
+miner_agent_stake = 1,000,000,000 x 0.00005 = 50,000 $PSDN per miner agent
+miner_agent_subnet_stake = 50,000 x 16 = 800,000 $PSDN per subnet
 
-validation_agent_stake = 1,000,000,000 x 0.00002 = 20,000 $POS per validation agent
-validation_agent_subnet_stake = 20,000 x 16 = 320,000 $POS per subnet
+validation_agent_stake = 1,000,000,000 x 0.00002 = 20,000 $PSDN per validation agent
+validation_agent_subnet_stake = 20,000 x 16 = 320,000 $PSDN per subnet
 
-subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $POS per subnet
+subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $PSDN per subnet
 ```
 
 #### Mainnet Launch Partner Assumption
@@ -168,16 +168,16 @@ mainnet_launch_subnets = 4
 miner_agents_at_launch = 16 x 4 = 64 miner agents
 validation_agents_at_launch = 16 x 4 = 64 validation agents
 
-miner_agent_launch_stake = 800,000 x 4 = 3,200,000 $POS
-validation_agent_launch_stake = 320,000 x 4 = 1,280,000 $POS
-subnet_owner_launch_stake = 2,500,000 x 4 = 10,000,000 $POS
+miner_agent_launch_stake = 800,000 x 4 = 3,200,000 $PSDN
+validation_agent_launch_stake = 320,000 x 4 = 1,280,000 $PSDN
+subnet_owner_launch_stake = 2,500,000 x 4 = 10,000,000 $PSDN
 
-total_role_bonded_launch_stake = 14,480,000 $POS, or 1.448% of total supply
+total_role_bonded_launch_stake = 14,480,000 $PSDN, or 1.448% of total supply
 ```
 
 This is an equal-subnet launch assumption for planning. Actual mainnet reward and stake parameters should be weighted by subnet maturity, commercial demand, task cost, fraud risk, and partner operating capacity.
 
-The stake should be high enough to make malicious behavior expensive, but not so high that only whales can participate. If the market price of $POS rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
+The stake should be high enough to make malicious behavior expensive, but not so high that only whales can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
 
 #### Contributor Airdrop and Stake Multiplier
 
@@ -185,10 +185,10 @@ Individual contributors should be allowed to start with zero stake. The network 
 
 Recommended contributor design:
 
-- Initial retroactive airdrop pool: 5,000,000 $POS, or 0.5% of total supply.
+- Initial retroactive airdrop pool: 5,000,000 $PSDN, or 0.5% of total supply.
 - Eligibility: verified past contribution, uniqueness, rights clarity, and usefulness after parsing and validation.
 - Vesting: 25% liquid at claim, 75% locked for 6 months.
-- Optional stake multiplier: contributors can stake up to 10,000 $POS to increase future contribution rewards.
+- Optional stake multiplier: contributors can stake up to 10,000 $PSDN to increase future contribution rewards.
 - Multiplier cap: maximum 1.25x reward multiplier so staking improves alignment but does not overpower data quality.
 
 Recommended formula:
@@ -221,7 +221,7 @@ Recommended principles:
 
 ### Canonical Emission Schedule
 
-The emission design should bootstrap the network without making emissions the permanent business model. With a 1,000,000,000 $POS supply, the recommended starting point is to reserve 120,000,000 $POS, or 12% of supply, for a four-year network incentive program. This is a maximum cap, not an obligation to emit.
+The emission design should bootstrap the network without making emissions the permanent business model. With a 1,000,000,000 $PSDN supply, the recommended starting point is to reserve 120,000,000 $PSDN, or 12% of supply, for a four-year network incentive program. This is a maximum cap, not an obligation to emit.
 
 #### Epoch Design
 
@@ -237,24 +237,24 @@ Recommended epoch structure:
 
 | Period | Annual Emission Cap | Percent of 1B Supply | Weekly Epoch Cap | Design Purpose |
 |---|---:|---:|---:|---|
-| Year 1 | 45,000,000 $POS | 4.5% | 865,385 $POS per week | Bootstrap supply, miner agents, validation agents, and early demand |
-| Year 2 | 35,000,000 $POS | 3.5% | 673,077 $POS per week | Grow reliable subnets while marketplace revenue starts replacing subsidies |
-| Year 3 | 25,000,000 $POS | 2.5% | 480,769 $POS per week | Shift toward fee-funded rewards |
-| Year 4 | 15,000,000 $POS | 1.5% | 288,462 $POS per week | Maintain strategic incentives only |
-| Total | 120,000,000 $POS | 12.0% | N/A | Four-year maximum emission budget |
+| Year 1 | 45,000,000 $PSDN | 4.5% | 865,385 $PSDN per week | Bootstrap supply, miner agents, validation agents, and early demand |
+| Year 2 | 35,000,000 $PSDN | 3.5% | 673,077 $PSDN per week | Grow reliable subnets while marketplace revenue starts replacing subsidies |
+| Year 3 | 25,000,000 $PSDN | 2.5% | 480,769 $PSDN per week | Shift toward fee-funded rewards |
+| Year 4 | 15,000,000 $PSDN | 1.5% | 288,462 $PSDN per week | Maintain strategic incentives only |
+| Total | 120,000,000 $PSDN | 12.0% | N/A | Four-year maximum emission budget |
 
 #### Year 1 CPVSS Incentive and Emission Schedule
 
-Assuming Year 1 weekly emission cap of 865,385 $POS and four mainnet launch subnets, rounded to the nearest whole token:
+Assuming Year 1 weekly emission cap of 865,385 $PSDN and four mainnet launch subnets, rounded to the nearest whole token:
 
 | CPVSS Stage or Network Pool | Year 1 Allocation | Weekly Network Cap | Four-Subnet Launch Baseline | Incentive Mechanism and Penalty Rule |
 |---|---:|---:|---:|---|
-| Collection | 35% | 302,885 $POS | 75,721 $POS per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
-| Parsing | 25% | 216,346 $POS | 54,087 $POS per subnet; up to 3,380 $POS per miner agent per week with 16 miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
-| Validation | 15% | 129,808 $POS | 32,452 $POS per subnet; up to 2,028 $POS per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, lazy validation, or collusion reduce rewards and can slash stake. |
-| Score | 10% | 86,538 $POS | 21,635 $POS per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
-| Search and Marketplace Demand | 10% | 86,538 $POS | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
-| Network Security and Challenges | 5% | 43,269 $POS | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
+| Collection | 35% | 302,885 $PSDN | 75,721 $PSDN per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
+| Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per miner agent per week with 16 miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
+| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, lazy validation, or collusion reduce rewards and can slash stake. |
+| Score | 10% | 86,538 $PSDN | 21,635 $PSDN per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
+| Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
+| Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
 
 These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. It should not be emitted just because a budget exists.
 
@@ -304,7 +304,7 @@ effective_epoch_emission = max(minimum_security_emission, planned_epoch_emission
 
 Where:
 
-- `planned_epoch_emission` is the scheduled $POS emission for the epoch.
+- `planned_epoch_emission` is the scheduled $PSDN emission for the epoch.
 - `fee_funded_rewards` is the amount of marketplace revenue routed to participants.
 - `minimum_security_emission` keeps validation, challenge, and red-herring systems funded even when demand fluctuates.
 
@@ -312,7 +312,7 @@ This prevents the network from overpaying with new emissions when real buyer dem
 
 #### Revenue, Buying Pressure, and Selling Pressure
 
-Marketplace revenue should be modeled as external demand for $POS. If buyers pay directly in $POS, they create direct buying pressure. If buyers pay in fiat or stablecoins, Poseidon can still create $POS-denominated buying pressure by converting part of marketplace revenue into $POS for settlement, rewards, buybacks, burns, insurance, or treasury routing.
+Marketplace revenue should be modeled as external demand for $PSDN. If buyers pay directly in $PSDN, they create direct buying pressure. If buyers pay in fiat or stablecoins, Poseidon can still create $PSDN-denominated buying pressure by converting part of marketplace revenue into $PSDN for settlement, rewards, buybacks, burns, insurance, or treasury routing.
 
 The core tokenomics question is whether useful subnet demand can eventually exceed the sell pressure created by emissions.
 
@@ -322,15 +322,15 @@ Recommended model:
 annual_subnet_revenue = paid_dataset_accesses x average_dataset_price
 network_revenue_year_n = active_subnets x annual_subnet_revenue x (1 + revenue_growth_rate)^(n - 1)
 
-buying_pressure_year_n = network_revenue_year_n x pos_settlement_ratio
+buying_pressure_year_n = network_revenue_year_n x psdn_settlement_ratio
 selling_pressure_year_n = effective_emission_year_n x emission_sell_through_ratio
 net_pressure_year_n = buying_pressure_year_n - selling_pressure_year_n
 ```
 
 Where:
 
-- `annual_subnet_revenue` is the $POS-equivalent revenue generated by one subnet in a year.
-- `pos_settlement_ratio` is the percentage of revenue that must touch $POS through buyer payment, conversion, settlement, buyback, burn, insurance, or treasury policy.
+- `annual_subnet_revenue` is the $PSDN-equivalent revenue generated by one subnet in a year.
+- `psdn_settlement_ratio` is the percentage of revenue that must touch $PSDN through buyer payment, conversion, settlement, buyback, burn, insurance, or treasury policy.
 - `emission_sell_through_ratio` is the estimated percentage of emitted rewards sold by recipients. This should be treated conservatively because early participants may sell to cover operating costs.
 - `net_pressure_year_n` is not a price prediction. It is a directional health metric: positive means modeled external demand exceeds modeled emission sell pressure.
 
@@ -338,19 +338,19 @@ Recommended beta/mainnet planning assumptions:
 
 | Parameter | Conservative Starting Point | Why |
 |---|---:|---|
-| Annual revenue per production subnet | 3,000,000 $POS-equivalent | Enough to test meaningful buyer demand without assuming immediate marketplace dominance |
+| Annual revenue per production subnet | 3,000,000 $PSDN-equivalent | Enough to test meaningful buyer demand without assuming immediate marketplace dominance |
 | Active mainnet launch subnets | 4 | Matches the launch-partner plan |
 | Annual revenue growth | 50% | Aggressive but plausible if partner-led subnets compound supply and demand |
-| $POS settlement or conversion ratio | 70% | Creates token demand while leaving room for fiat abstraction and operating flexibility |
+| $PSDN settlement or conversion ratio | 70% | Creates token demand while leaving room for fiat abstraction and operating flexibility |
 | Emission sell-through ratio | 65% | Conservative assumption that many early recipients sell some rewards to cover costs |
 
-If Year 1 effective emissions are 45,000,000 $POS, four subnets each generate 3,000,000 $POS-equivalent revenue, 70% of revenue touches $POS, and 65% of emissions are sold, then:
+If Year 1 effective emissions are 45,000,000 $PSDN, four subnets each generate 3,000,000 $PSDN-equivalent revenue, 70% of revenue touches $PSDN, and 65% of emissions are sold, then:
 
 ```text
-network_revenue_year_1 = 4 x 3,000,000 = 12,000,000 $POS-equivalent
-buying_pressure_year_1 = 12,000,000 x 70% = 8,400,000 $POS
-selling_pressure_year_1 = 45,000,000 x 65% = 29,250,000 $POS
-net_pressure_year_1 = -20,850,000 $POS
+network_revenue_year_1 = 4 x 3,000,000 = 12,000,000 $PSDN-equivalent
+buying_pressure_year_1 = 12,000,000 x 70% = 8,400,000 $PSDN
+selling_pressure_year_1 = 45,000,000 x 65% = 29,250,000 $PSDN
+net_pressure_year_1 = -20,850,000 $PSDN
 ```
 
 This is acceptable for bootstrap if emissions are capped, locked, and tied to useful work. The design goal is for revenue growth, fee routing, and reduced emissions to move net pressure positive over time.
@@ -383,7 +383,7 @@ Governance or Poseidon policy should decide whether the insurance/burn reserve i
 
 Open questions:
 
-- Should enterprise buyers be required to buy $POS directly, or should Poseidon abstract payment and convert a policy-defined share into $POS?
+- Should enterprise buyers be required to buy $PSDN directly, or should Poseidon abstract payment and convert a policy-defined share into $PSDN?
 - Should the Poseidon team/foundation share be fixed, or should it decline as subnet revenue grows?
 - Should contributors receive recurring royalties forever, or should some datasets use a capped royalty model?
 - Should revenue splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
@@ -391,11 +391,11 @@ Open questions:
 
 ### Bootstrap Phases
 
-| Phase | Goal | $POS Use | Emission Posture |
+| Phase | Goal | $PSDN Use | Emission Posture |
 |---|---|---|---|
-| Testnet 1 | Prove CPVSS flow with two voice/video subnets | Testnet $POS, off-chain points, or capped internal accounting | No meaningful open-ended emissions |
-| Beta Testnet | Expand to four subnets, run user campaigns, and test partner operations | Non-transferable points, testnet $POS, simulated staking, and anti-abuse accounting | Capped test incentives for verified useful work |
-| Mainnet Launch | Activate four launch-partner subnets with production policy | $POS staking, reward vesting, marketplace fee routing, and published reward rules | Targeted emissions with strict epoch caps and fee-offset rules |
+| Testnet 1 | Prove CPVSS flow with two voice/video subnets | Testnet $PSDN, off-chain points, or capped internal accounting | No meaningful open-ended emissions |
+| Beta Testnet | Expand to four subnets, run user campaigns, and test partner operations | Non-transferable points, testnet $PSDN, simulated staking, and anti-abuse accounting | Capped test incentives for verified useful work |
+| Mainnet Launch | Activate four launch-partner subnets with production policy | $PSDN staking, reward vesting, marketplace fee routing, and published reward rules | Targeted emissions with strict epoch caps and fee-offset rules |
 | Growth | Expand subnet count and marketplace demand | Buyer-funded rewards, subnet owner staking, marketplace fee routing | Declining emissions with demand-based rewards |
 | Mature Network | Preserve token value and quality | Fee-funded payouts, staking, burns or insurance routing | Minimal emissions, mostly market-funded |
 
@@ -415,10 +415,10 @@ The tokenomics must assume rational adversarial behavior.
 
 ### Token Sink Options
 
-To reduce unnecessary emissions and support $POS value capture, Poseidon can combine several sinks:
+To reduce unnecessary emissions and support $PSDN value capture, Poseidon can combine several sinks:
 
 1. Stake locks for miner agents, validation agents, subnet owners, and curators.
-2. Marketplace fees paid in $POS or converted into $POS accounting.
+2. Marketplace fees paid in $PSDN or converted into $PSDN accounting.
 3. Slashed stake burned or routed to an insurance pool.
 4. Subnet launch deposits.
 5. Priority dataset placement fees.
@@ -471,13 +471,13 @@ For beta, the system does not need to put raw data on-chain. It should put hashe
 
 #### Design A: Quality-Weighted Contribution Rewards
 
-Contributors do not receive meaningful $POS rewards at upload time. They receive provisional credit when data enters the system, then final rewards only after parsing, validation, subnet-owner scoring, and potentially marketplace usage.
+Contributors do not receive meaningful $PSDN rewards at upload time. They receive provisional credit when data enters the system, then final rewards only after parsing, validation, subnet-owner scoring, and potentially marketplace usage.
 
 Mechanism:
 
 - Contributor submits data and receives a contribution record.
 - Duplicate, low-rights, or invalid data receives no reward.
-- Useful data earns $POS based on quality score, uniqueness, demand, and rights clarity.
+- Useful data earns $PSDN based on quality score, uniqueness, demand, and rights clarity.
 - Rewards can vest over time or remain clawback-eligible during an audit window.
 
 Pros:
@@ -494,12 +494,12 @@ Cons:
 
 #### Design B: Contributor Bond and Curated Campaigns
 
-Contributors or data collection operators stake a small amount of $POS to submit into a campaign. Campaigns define the exact data type needed, quality bar, rights requirements, and reward budget.
+Contributors or data collection operators stake a small amount of $PSDN to submit into a campaign. Campaigns define the exact data type needed, quality bar, rights requirements, and reward budget.
 
 Mechanism:
 
 - Poseidon or subnet owners create collection campaigns.
-- Contributors stake a small $POS bond to participate.
+- Contributors stake a small $PSDN bond to participate.
 - Valid accepted data earns rewards.
 - Duplicate, fake, or rights-invalid submissions can lose part of the bond.
 - Campaign budgets cap total emissions.
@@ -525,7 +525,7 @@ Cons:
 
 #### Open Questions
 
-- Should small individual contributors be required to stake $POS, or only professional collection operators?
+- Should small individual contributors be required to stake $PSDN, or only professional collection operators?
 - How long should contribution rewards remain clawback-eligible?
 - Should marketplace demand affect contributor rewards, or should rewards be based only on quality score?
 - How should the system distinguish malicious rights fraud from honest metadata mistakes?
@@ -596,11 +596,11 @@ The key design question is how much coordination happens on-chain versus off-cha
 
 #### Design A: Fixed Bounty With Quality Multiplier
 
-Each parsing job has a posted $POS bounty. Miner agents receive the bounty only after the output passes validation. Higher-quality outputs receive a multiplier based on validation result and subnet-owner score.
+Each parsing job has a posted $PSDN bounty. Miner agents receive the bounty only after the output passes validation. Higher-quality outputs receive a multiplier based on validation result and subnet-owner score.
 
 Mechanism:
 
-- Miner agent stakes $POS to accept jobs.
+- Miner agent stakes $PSDN to accept jobs.
 - Job has a base bounty.
 - Output must pass validation before payout.
 - High score increases payout.
@@ -624,7 +624,7 @@ Multiple miner agents can bid for or compete on parsing jobs. The network select
 
 Mechanism:
 
-- Miner agents stake $POS to enter the market.
+- Miner agents stake $PSDN to enter the market.
 - Jobs can be assigned through auction, reputation routing, or random weighted assignment.
 - Miner agents commit output hashes before revealing outputs.
 - Spot audits and validation agent results determine payout.
@@ -709,7 +709,7 @@ Each artifact is reviewed by multiple validation agents. Validation agents earn 
 
 Mechanism:
 
-- Validation agents stake $POS to participate.
+- Validation agents stake $PSDN to participate.
 - Artifacts are randomly assigned.
 - Red-herring tasks with known answers are mixed into the queue.
 - Validation agents earn rewards for timely, accurate validation.
@@ -729,14 +729,14 @@ Cons:
 
 #### Design B: Reputation-Weighted Validation With Challenge Window
 
-Validation agent votes are weighted by historical accuracy, stake, and red-herring performance. Disputed results can enter a challenge window where challengers stake $POS to request owner or expert adjudication.
+Validation agent votes are weighted by historical accuracy, stake, and red-herring performance. Disputed results can enter a challenge window where challengers stake $PSDN to request owner or expert adjudication.
 
 Mechanism:
 
-- Validation agents stake $POS and build reliability reputation.
+- Validation agents stake $PSDN and build reliability reputation.
 - Vote weight depends on accuracy and past behavior.
 - Low-confidence consensus triggers additional review.
-- Challengers can bond $POS to dispute a result.
+- Challengers can bond $PSDN to dispute a result.
 - Correct challenges earn part of the penalty; incorrect challenges lose the bond.
 
 Pros:
@@ -762,7 +762,7 @@ Cons:
 
 - How often should red-herring tasks appear?
 - Should validation agents be rewarded for disagreeing with a wrong majority after adjudication?
-- Should slashing burn $POS, compensate harmed parties, or fund future validation?
+- Should slashing burn $PSDN, compensate harmed parties, or fund future validation?
 - How should the system detect validation-agent collusion beyond red-herring failure?
 
 ## S: Score
@@ -800,13 +800,13 @@ This creates transparency without pretending that quality judgment is fully obje
 
 #### Design A: Owner-Signed Scoring With Challenge Bond
 
-The subnet owner signs final score batches. Participants can challenge a score by posting a $POS bond during a challenge window.
+The subnet owner signs final score batches. Participants can challenge a score by posting a $PSDN bond during a challenge window.
 
 Mechanism:
 
 - Owner publishes signed score batch.
 - Score determines final reward allocation.
-- Any affected participant can challenge by bonding $POS.
+- Any affected participant can challenge by bonding $PSDN.
 - Valid challenge triggers correction and possibly owner penalty or reputation loss.
 - Invalid challenge loses bond.
 
@@ -855,7 +855,7 @@ Cons:
 
 #### Open Questions
 
-- Should subnet owners stake $POS against scoring integrity?
+- Should subnet owners stake $PSDN against scoring integrity?
 - Who adjudicates challenges: Poseidon, expert panel, or subnet owner with public explanation?
 - Should owner penalties be financial, reputational, or marketplace-ranking based?
 - How much scoring transparency is safe before participants start gaming the rubric?
@@ -898,7 +898,7 @@ Dataset buyers pay through the Poseidon marketplace. Fees are split among contri
 
 Mechanism:
 
-- Buyer pays in $POS or a payment rail that maps into $POS accounting.
+- Buyer pays in $PSDN or a payment rail that maps into $PSDN accounting.
 - Marketplace fee is split by policy.
 - Prior CPVSS records determine who receives value.
 - A portion of fees can go to Poseidon, subnet owner, contributors, miner agents, validation agents, and possibly a burn or insurance pool.
@@ -907,7 +907,7 @@ Pros:
 
 - Rewards are backed by real demand rather than emissions.
 - Aligns all actors around commercially useful data.
-- Strong long-term model for preserving $POS value.
+- Strong long-term model for preserving $PSDN value.
 
 Cons:
 
@@ -917,14 +917,14 @@ Cons:
 
 #### Design B: Capped Demand Incentives With Anti-Wash Rules
 
-Poseidon uses capped $POS incentives to bootstrap marketplace activity, but rewards only unlock when there is credible demand, quality, and non-self-dealing behavior.
+Poseidon uses capped $PSDN incentives to bootstrap marketplace activity, but rewards only unlock when there is credible demand, quality, and non-self-dealing behavior.
 
 Mechanism:
 
 - Dataset receives eligibility based on score and provenance.
 - Early buyer activity can unlock capped incentive rewards.
 - Wash-trading signals delay or block rewards.
-- Curators or subnet owners may stake $POS behind featured datasets.
+- Curators or subnet owners may stake $PSDN behind featured datasets.
 - Bad curation or fake demand can lose stake or ranking.
 
 Pros:
@@ -948,7 +948,7 @@ Cons:
 
 #### Open Questions
 
-- Should marketplace fees be paid only in $POS, or can fiat payments be converted into $POS accounting?
+- Should marketplace fees be paid only in $PSDN, or can fiat payments be converted into $PSDN accounting?
 - What percentage of marketplace fees should go to Poseidon versus contributors and subnet operators?
 - Should a portion of revenue be burned, routed to insurance, or used for buyback-style reward pools?
 - How should the marketplace detect and penalize self-dealing or fake demand?
@@ -1007,10 +1007,10 @@ These decisions should remain open during testnet design and be resolved only wh
 7. Whether search ranking should include quality score, commercial demand, freshness, or subnet owner reputation.
 8. Whether score decisions are manually assigned, model-assisted, or hybrid.
 9. Whether buyers transact directly with subnet owners or through Poseidon as marketplace operator.
-10. What minimum $POS stake is required for each role without excluding useful early participants.
-11. Whether slashed $POS should be burned, routed to insurance, or redistributed to honest participants.
+10. What minimum $PSDN stake is required for each role without excluding useful early participants.
+11. Whether slashed $PSDN should be burned, routed to insurance, or redistributed to honest participants.
 12. How quickly emissions should decline as marketplace revenue grows.
-13. Whether fiat buyer payments should be converted into $POS, abstracted behind credits, or kept separate during testnet phases.
+13. Whether fiat buyer payments should be converted into $PSDN, abstracted behind credits, or kept separate during testnet phases.
 14. How to prevent early high-stake actors from capturing validation agent or miner agent reputation permanently.
 
 ## Milestone Roadmap
