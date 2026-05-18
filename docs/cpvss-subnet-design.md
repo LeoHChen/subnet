@@ -353,34 +353,39 @@ This is acceptable for bootstrap if emissions are capped, locked, and tied to us
 
 #### Revenue Sharing Model
 
-Marketplace revenue should pay the actors who created the dataset, while preserving a durable Poseidon-level business model. The split should be transparent enough for contributors and subnet operators to trust, but flexible enough to vary by dataset category, partner agreement, licensing complexity, and buyer contract.
+Marketplace revenue should follow the same top-level CPVSS allocation vector as the Year 1 incentive and emission schedule. Otherwise, the model creates two inconsistent reward systems: one for emissions and another for fee-funded payouts.
 
 Recommended default split for marketplace revenue:
 
-| Recipient | Default Share | Rationale |
-|---|---:|---|
-| Contributors and data rights holders | 35% | Keeps original data supply economically meaningful and aligns contributors with long-term dataset value |
-| Miner agents | 20% | Compensates parsing, transcription, segmentation, labeling, and metadata work |
-| Validation agents | 12% | Funds quality control and keeps validation economically attractive |
-| Subnet owner/operator | 15% | Rewards scoring, quality policy, partner operations, and subnet-specific business development |
-| Curators/search partners | 5% | Supports discovery, dataset packaging, buyer support, and demand routing |
-| Poseidon team/foundation | 10% | Funds marketplace operation, protocol development, ecosystem grants, compliance, and shared infrastructure |
-| Insurance, burn, or buyback reserve | 3% | Creates a sink or protection pool for disputes, slashing events, and long-term token value support |
+| CPVSS Revenue Pool | Default Share | Primary Recipients | Rationale |
+|---|---:|---|---|
+| Collection | 35% | Contributors, data rights holders, collection operators | Keeps original data supply economically meaningful and aligns contributors with long-term dataset value |
+| Parsing | 25% | Miner agents | Compensates parsing, transcription, segmentation, labeling, and metadata work |
+| Validation | 15% | Validation agents | Funds quality control, red-herring review, and validation-agent availability |
+| Score | 10% | Subnet owner/operator | Rewards scoring, quality policy, partner operations, and subnet-specific business development |
+| Search and Marketplace Demand | 10% | Poseidon marketplace, curators/search partners, buyer-demand programs | Supports discovery, dataset packaging, marketplace operations, buyer support, and demand routing |
+| Network Security and Challenges | 5% | Challengers, red-herring/audit programs, insurance/burn/buyback reserve | Funds dispute handling, slashing events, audits, challenge rewards, and long-term token-value support |
 
-Participant revenue can also offset emissions:
+This table intentionally mirrors the Year 1 emission schedule. Any future change to one table should update the other, or the proposal should explicitly explain why fee-funded revenue and emission-funded incentives should diverge.
+
+Internal sub-allocations can still vary by contract. For example, the 10% Search and Marketplace Demand pool can be split between Poseidon marketplace operations, curators, search partners, and buyer incentives. The 5% Network Security and Challenges pool can be split between challenger rewards, audit programs, red-herring generation, insurance, buyback, or burn policy. Those internal choices should not create new top-level pools unless the emission schedule is also changed.
+
+Revenue can also offset emissions:
 
 ```text
-participant_revenue_share = contributor_share + miner_share + validation_share + subnet_owner_share + curator_share
-fee_funded_rewards_year_n = network_revenue_year_n x participant_revenue_share
+fee_offset_eligible_share = collection_share + parsing_share + validation_share + score_share + search_share + security_share
+fee_funded_rewards_year_n = network_revenue_year_n x fee_offset_eligible_share
 emission_offset_ratio_year_n = min(100%, fee_funded_rewards_year_n / planned_emission_year_n)
 ```
 
-Governance or Poseidon policy should decide whether the insurance/burn reserve is burned, retained as an insurance pool, used for buybacks, or routed to ecosystem grants. The safest initial design is to keep it as an insurance pool during testnet and decide burn or buyback policy only after real marketplace behavior is visible.
+Under the default gross-pool model, `fee_offset_eligible_share` is 100% because all marketplace revenue is assigned to the same CPVSS pools used by emissions. If Poseidon later takes an off-top platform fee before CPVSS distribution, that fee should be modeled explicitly by reducing `fee_offset_eligible_share` or by updating both the revenue-sharing table and emission schedule.
+
+Governance or Poseidon policy should decide whether the Network Security and Challenges reserve is burned, retained as an insurance pool, used for buybacks, or routed to ecosystem grants. The safest initial design is to keep it as an insurance pool during testnet and decide burn or buyback policy only after real marketplace behavior is visible.
 
 Open questions:
 
 - Should enterprise buyers be required to buy $PSDN directly, or should Poseidon abstract payment and convert a policy-defined share into $PSDN?
-- Should the Poseidon team/foundation share be fixed, or should it decline as subnet revenue grows?
+- Should Poseidon marketplace operations be funded entirely from the Search and Marketplace Demand pool, or should there be an explicit off-top platform fee later?
 - Should contributors receive recurring royalties forever, or should some datasets use a capped royalty model?
 - Should revenue splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
 - Should burn/buyback policy be automatic, or discretionary during the first year to preserve operational flexibility?
@@ -875,7 +880,7 @@ Search should be centralized at the network level. Poseidon should manage the po
 
 ### Why Crypto Matters
 
-Crypto matters because marketplace transactions can connect back to provenance and contribution history. Revenue can be split between contributors, miner agents, validation agents, subnet owners, and Poseidon according to transparent rules.
+Crypto matters because marketplace transactions can connect back to provenance and contribution history. Revenue can be routed through the same CPVSS pools used by the emission schedule, with transparent records for Collection, Parsing, Validation, Score, Search and Marketplace Demand, and Network Security and Challenges.
 
 The marketplace is where the crypto incentive loop becomes economically meaningful.
 
@@ -893,14 +898,15 @@ The marketplace is where the crypto incentive loop becomes economically meaningf
 
 #### Design A: Marketplace Fee Split
 
-Dataset buyers pay through the Poseidon marketplace. Fees are split among contributors, miner agents, validation agents, subnet owners, and Poseidon according to the dataset's contribution and quality records.
+Dataset buyers pay through the Poseidon marketplace. Fees are routed through the CPVSS revenue pools according to the same top-level allocation used by the Year 1 emission schedule, then distributed internally according to dataset contribution, quality, marketplace, and security records.
 
 Mechanism:
 
 - Buyer pays in $PSDN or a payment rail that maps into $PSDN accounting.
-- Marketplace fee is split by policy.
-- Prior CPVSS records determine who receives value.
-- A portion of fees can go to Poseidon, subnet owner, contributors, miner agents, validation agents, and possibly a burn or insurance pool.
+- Marketplace fees follow the CPVSS revenue policy unless governance explicitly approves an off-top platform fee.
+- Prior CPVSS records determine who receives value inside the Collection, Parsing, Validation, and Score pools.
+- The Search and Marketplace Demand pool funds Poseidon marketplace operations, curators/search partners, buyer support, and demand incentives.
+- The Network Security and Challenges pool funds challengers, audits, red-herring generation, insurance, buyback, or burn policy.
 
 Pros:
 
@@ -948,7 +954,7 @@ Cons:
 #### Open Questions
 
 - Should marketplace fees be paid only in $PSDN, or can fiat payments be converted into $PSDN accounting?
-- What percentage of marketplace fees should go to Poseidon versus contributors and subnet operators?
+- Within the Search and Marketplace Demand pool, what share should fund Poseidon marketplace operations versus curators, search partners, and buyer-demand incentives?
 - Should a portion of revenue be burned, routed to insurance, or used for buyback-style reward pools?
 - How should the marketplace detect and penalize self-dealing or fake demand?
 

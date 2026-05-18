@@ -65,13 +65,13 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <label class="sim-control"><span><span>Subnet-owner stake</span><strong data-output="ownerStake"></strong></span><input type="range" data-param="ownerStake" min="0" max="10000000" step="250000" value="2500000"></label>
       </div>
       <div class="sim-control-group">
-        <h3>Year 1 Pool Allocation</h3>
+        <h3>CPVSS Allocation</h3>
         <label class="sim-control"><span><span>Collection</span><strong data-output="collectionAlloc"></strong></span><input type="range" data-param="collectionAlloc" min="0" max="70" step="1" value="35"></label>
         <label class="sim-control"><span><span>Parsing</span><strong data-output="parsingAlloc"></strong></span><input type="range" data-param="parsingAlloc" min="0" max="70" step="1" value="25"></label>
         <label class="sim-control"><span><span>Validation</span><strong data-output="validationAlloc"></strong></span><input type="range" data-param="validationAlloc" min="0" max="70" step="1" value="15"></label>
         <label class="sim-control"><span><span>Score</span><strong data-output="scoreAlloc"></strong></span><input type="range" data-param="scoreAlloc" min="0" max="70" step="1" value="10"></label>
-        <label class="sim-control"><span><span>Search and demand</span><strong data-output="searchAlloc"></strong></span><input type="range" data-param="searchAlloc" min="0" max="70" step="1" value="10"></label>
-        <label class="sim-control"><span><span>Security</span><strong data-output="securityAlloc"></strong></span><input type="range" data-param="securityAlloc" min="0" max="70" step="1" value="5"></label>
+        <label class="sim-control"><span><span>Search and marketplace demand</span><strong data-output="searchAlloc"></strong></span><input type="range" data-param="searchAlloc" min="0" max="70" step="1" value="10"></label>
+        <label class="sim-control"><span><span>Network security and challenges</span><strong data-output="securityAlloc"></strong></span><input type="range" data-param="securityAlloc" min="0" max="70" step="1" value="5"></label>
         <p class="sim-note" data-output="poolAllocTotal"></p>
       </div>
       <div class="sim-control-group">
@@ -80,17 +80,6 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <label class="sim-control"><span><span>Annual revenue growth</span><strong data-output="revenueGrowth"></strong></span><input type="range" data-param="revenueGrowth" min="-50" max="200" step="5" value="50"></label>
         <label class="sim-control"><span><span>Revenue touching $PSDN</span><strong data-output="psdnSettlement"></strong></span><input type="range" data-param="psdnSettlement" min="0" max="100" step="5" value="70"></label>
         <label class="sim-control"><span><span>Emission sell-through</span><strong data-output="emissionSellThrough"></strong></span><input type="range" data-param="emissionSellThrough" min="0" max="100" step="5" value="65"></label>
-      </div>
-      <div class="sim-control-group">
-        <h3>Revenue Split</h3>
-        <label class="sim-control"><span><span>Contributors</span><strong data-output="contributorRev"></strong></span><input type="range" data-param="contributorRev" min="0" max="60" step="1" value="35"></label>
-        <label class="sim-control"><span><span>Miner agents</span><strong data-output="minerRev"></strong></span><input type="range" data-param="minerRev" min="0" max="60" step="1" value="20"></label>
-        <label class="sim-control"><span><span>Validation agents</span><strong data-output="validationRev"></strong></span><input type="range" data-param="validationRev" min="0" max="60" step="1" value="12"></label>
-        <label class="sim-control"><span><span>Subnet owners</span><strong data-output="ownerRev"></strong></span><input type="range" data-param="ownerRev" min="0" max="60" step="1" value="15"></label>
-        <label class="sim-control"><span><span>Curators/search</span><strong data-output="curatorRev"></strong></span><input type="range" data-param="curatorRev" min="0" max="40" step="1" value="5"></label>
-        <label class="sim-control"><span><span>Poseidon foundation</span><strong data-output="poseidonRev"></strong></span><input type="range" data-param="poseidonRev" min="0" max="40" step="1" value="10"></label>
-        <label class="sim-control"><span><span>Insurance/burn reserve</span><strong data-output="reserveRev"></strong></span><input type="range" data-param="reserveRev" min="0" max="30" step="1" value="3"></label>
-        <p class="sim-note" data-output="revSplitTotal"></p>
       </div>
     </div>
     <div class="sim-panel sim-results" aria-label="Tokenomics simulator charts">
@@ -116,7 +105,7 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <p class="sim-note">Buying pressure is modeled revenue touching $PSDN. Selling pressure is emitted rewards multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
       </div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table sim-pressure-table"><thead><tr><th>Year</th><th>Network Revenue</th><th>Buying Pressure</th><th>Selling Pressure</th><th>Net Pressure</th></tr></thead><tbody data-pressure-table></tbody></table></div>
-      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-revenue-table"><thead><tr><th>Revenue Recipient</th><th>Share</th><th>Year 1 Revenue</th><th>Purpose</th></tr></thead><tbody data-revenue-table></tbody></table></div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-revenue-table"><thead><tr><th>CPVSS Revenue Pool</th><th>Share</th><th>Year 1 Revenue</th><th>Purpose</th></tr></thead><tbody data-revenue-table></tbody></table></div>
       <div class="sim-chart-card">
         <div class="sim-chart-title"><h3>Role Reward APY</h3><span data-chart-note="role"></span></div>
         <svg class="sim-chart sim-role-chart" data-chart="role-bars" role="img" aria-label="Per-role stake, reward, and APY chart"></svg>
@@ -348,7 +337,6 @@ TOKENOMICS_SIMULATOR_JS = """
             "launchSubnets", "minerAgents", "validationAgents", "minerStake", "validationStake", "ownerStake",
             "collectionAlloc", "parsingAlloc", "validationAlloc", "scoreAlloc", "searchAlloc", "securityAlloc",
             "revenuePerSubnet", "revenueGrowth", "psdnSettlement", "emissionSellThrough",
-            "contributorRev", "minerRev", "validationRev", "ownerRev", "curatorRev", "poseidonRev", "reserveRev",
           ];
           const inputs = new Map(paramNames.map((name) => [name, root.querySelector(`[data-param="${name}"]`)]));
           const value = (name) => Number(inputs.get(name)?.value || 0);
@@ -532,23 +520,20 @@ TOKENOMICS_SIMULATOR_JS = """
               { key: "parsing", label: "Parsing", value: value("parsingAlloc") },
               { key: "validation", label: "Validation", value: value("validationAlloc") },
               { key: "score", label: "Score", value: value("scoreAlloc") },
-              { key: "search", label: "Search and demand", value: value("searchAlloc") },
-              { key: "security", label: "Security", value: value("securityAlloc") },
+              { key: "search", label: "Search and marketplace demand", value: value("searchAlloc") },
+              { key: "security", label: "Network security and challenges", value: value("securityAlloc") },
             ];
             const pools = normalized(poolInputs).map((item) => ({ ...item, value: annualEffective[0] * item.share }));
             const revenueSplitInputs = [
-              { key: "contributor", label: "Contributors and data rights holders", value: value("contributorRev"), purpose: "Original data supply and recurring dataset value" },
-              { key: "miner", label: "Miner agents", value: value("minerRev"), purpose: "Parsing, transcription, labeling, and metadata work" },
-              { key: "validation", label: "Validation agents", value: value("validationRev"), purpose: "Quality control, red-herring work, and review labor" },
-              { key: "owner", label: "Subnet owners", value: value("ownerRev"), purpose: "Scoring, quality policy, partner operations, and subnet BD" },
-              { key: "curator", label: "Curators/search partners", value: value("curatorRev"), purpose: "Discovery, packaging, buyer support, and demand routing" },
-              { key: "poseidon", label: "Poseidon team/foundation", value: value("poseidonRev"), purpose: "Marketplace operation, protocol development, grants, and compliance" },
-              { key: "reserve", label: "Insurance/burn reserve", value: value("reserveRev"), purpose: "Disputes, slashing events, buyback, burn, or token-value support" },
+              { key: "collection", label: "Collection", value: value("collectionAlloc"), purpose: "Contributors, data rights holders, and collection operators" },
+              { key: "parsing", label: "Parsing", value: value("parsingAlloc"), purpose: "Miner agents for parsing, transcription, labeling, and metadata work" },
+              { key: "validation", label: "Validation", value: value("validationAlloc"), purpose: "Validation agents, red-herring review, and quality control" },
+              { key: "score", label: "Score", value: value("scoreAlloc"), purpose: "Subnet owner/operator scoring, quality policy, and partner operations" },
+              { key: "search", label: "Search and marketplace demand", value: value("searchAlloc"), purpose: "Poseidon marketplace, curators/search partners, buyer support, and demand incentives" },
+              { key: "security", label: "Network security and challenges", value: value("securityAlloc"), purpose: "Challengers, audits, red-herring generation, insurance, buyback, or burn reserve" },
             ];
             const revenueSplits = normalized(revenueSplitInputs);
-            const participantRevenueShare = revenueSplits
-              .filter((item) => !["poseidon", "reserve"].includes(item.key))
-              .reduce((sum, item) => sum + item.share, 0);
+            const feeOffsetEligibleShare = revenueSplits.reduce((sum, item) => sum + item.share, 0);
             const revenuePerSubnet = value("revenuePerSubnet");
             const revenueGrowth = value("revenueGrowth") / 100;
             const psdnSettlement = value("psdnSettlement") / 100;
@@ -567,8 +552,8 @@ TOKENOMICS_SIMULATOR_JS = """
                 net: buying - selling,
               };
             });
-            const year1ParticipantRevenue = annualNetworkRevenue[0] * participantRevenueShare;
-            const feeCoverage = annualEffective[0] > 0 ? year1ParticipantRevenue / annualEffective[0] * 100 : 0;
+            const year1FeeFundedRewards = annualNetworkRevenue[0] * feeOffsetEligibleShare;
+            const feeCoverage = annualEffective[0] > 0 ? year1FeeFundedRewards / annualEffective[0] * 100 : 0;
             const poolValue = (key) => pools.find((item) => item.key === key)?.value || 0;
             const minerCount = Math.max(1, launchSubnets * value("minerAgents"));
             const validationCount = Math.max(1, launchSubnets * value("validationAgents"));
@@ -613,13 +598,10 @@ TOKENOMICS_SIMULATOR_JS = """
             setOutput("emissionSellThrough", pct(value("emissionSellThrough"), 0));
             yearWeights.forEach((year, index) => setOutput(`year${index + 1}Weight`, pct(year.value)));
             poolInputs.forEach((item) => setOutput(`${item.key}Alloc`, pct(item.value, 0)));
-            revenueSplitInputs.forEach((item) => setOutput(`${item.key}Rev`, pct(item.value, 0)));
             const yearWeightTotal = yearWeights.reduce((sum, item) => sum + item.value, 0);
             const poolTotal = poolInputs.reduce((sum, item) => sum + item.value, 0);
-            const revenueSplitTotal = revenueSplitInputs.reduce((sum, item) => sum + item.value, 0);
             setOutput("yearWeightTotal", `Schedule weights sum to ${pct(yearWeightTotal)} and are normalized for the line chart.`);
-            setOutput("poolAllocTotal", `Pool sliders sum to ${pct(poolTotal, 0)} and are normalized for the pie chart.`);
-            setOutput("revSplitTotal", `Revenue split sliders sum to ${pct(revenueSplitTotal, 0)} and are normalized for the table.`);
+            setOutput("poolAllocTotal", `Allocation sliders sum to ${pct(poolTotal, 0)} and are normalized for both Year 1 emission pools and revenue sharing.`);
             write('[data-kpi="supply"]', token(supply));
             write('[data-kpi="effectiveEmission"]', `${token(cumulative[cumulative.length - 1])} (${pct(cumulative[cumulative.length - 1] / supply * 100)})`);
             write('[data-kpi="launchStake"]', token(totalStake));
