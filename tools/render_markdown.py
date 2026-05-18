@@ -255,7 +255,7 @@ def parse_document(markdown: str) -> dict[str, object]:
             nav.append((text, slug))
 
     body = render_markdown_body(body_lines, heading_slugs)
-    return {"title": title, "metadata": metadata, "nav": nav, "body": body}
+    return {"title": title, "metadata": metadata, "nav": nav, "body": body, "source_markdown": markdown}
 
 
 def release_banner(release_info: dict[str, str] | None) -> str:
@@ -301,6 +301,7 @@ def render_page(
         f'<a href="#{slug}">{html.escape(text)}</a>' for text, slug in nav  # type: ignore[misc]
     )
     source_href = html.escape(source_path.as_posix(), quote=True)
+    notion_markdown = json.dumps(str(document.get("source_markdown", ""))).replace("</", "<\\/")
     release_html = release_banner(release_info)
 
     return f"""<!doctype html>
@@ -435,12 +436,13 @@ def render_page(
         cursor: pointer;
       }}
       .theme-button {{ padding: 5px 10px; }}
-      .theme-button[aria-pressed="true"], .pdf-button, .doc-button {{
+      .theme-button[aria-pressed="true"], .pdf-button, .notion-button {{
         border-color: var(--teal);
         background: var(--teal);
         color: #ffffff;
       }}
-      .pdf-button, .doc-button {{ padding: 5px 12px; }}
+      .pdf-button, .notion-button {{ padding: 5px 12px; }}
+      .notion-button {{ min-width: 112px; }}
       aside {{
         position: sticky;
         top: 0;
@@ -699,7 +701,7 @@ def render_page(
         <button class="theme-button" type="button" data-theme-option="market" aria-pressed="false">Market</button>
       </div>
       <button class="pdf-button" type="button" id="export-pdf">Export PDF</button>
-      <button class="doc-button" type="button" id="export-doc">Export DOCX</button>
+      <button class="notion-button" type="button" id="export-notion">Copy to Notion</button>
     </div>
     <div class="page-shell">
       <aside>
@@ -723,7 +725,7 @@ def render_page(
         </header>
         {body}
         <footer class="footer">
-          <p>Generated from {source_href}. Use the Export PDF or Export DOCX buttons to share this document.</p>
+          <p>Generated from {source_href}. Use the Export PDF or Copy to Notion buttons to share this document.</p>
         </footer>
       </main>
     </div>
@@ -732,7 +734,8 @@ def render_page(
         const storageKey = "cpvss-theme";
         const buttons = Array.from(document.querySelectorAll("[data-theme-option]"));
         const exportButton = document.getElementById("export-pdf");
-        const exportDocButton = document.getElementById("export-doc");
+        const exportNotionButton = document.getElementById("export-notion");
+        const notionMarkdown = {notion_markdown};
         const getSavedTheme = () => {{
           try {{
             return localStorage.getItem(storageKey);
@@ -760,202 +763,82 @@ def render_page(
           button.addEventListener("click", () => setTheme(button.dataset.themeOption));
         }});
         exportButton.addEventListener("click", () => window.print());
-        const filenameSlug = (value) => {{
-          return value
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "") || "poseidon-subnet-design";
-        }};
-        const xmlEscape = (value) => {{
+        const htmlEscape = (value) => {{
           return String(value)
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;");
         }};
-        const normalizeText = (value) => {{
-          return String(value || "").replace(/\\s+/g, " ").trim();
+        const cleanClone = (node) => {{
+          const clone = node.cloneNode(true);
+          clone.querySelectorAll("[class], [id], [style]").forEach((element) => {{
+            element.removeAttribute("class");
+            element.removeAttribute("id");
+            element.removeAttribute("style");
+          }});
+          return clone;
         }};
-        const paragraph = (text, style) => {{
-          const clean = String(text || "");
-          if (!clean.trim()) {{
-            return "";
-          }}
-          const styleXml = style ? `<w:pPr><w:pStyle w:val="${{style}}"/></w:pPr>` : "";
-          const runs = clean
-            .split("\\n")
-            .map((part, index) => `${{index ? "<w:br/>" : ""}}<w:t xml:space="preserve">${{xmlEscape(part)}}</w:t>`)
+        const notionHtml = () => {{
+          const title = document.querySelector(".hero h2")?.textContent?.trim() || document.title;
+          const metadata = Array.from(document.querySelectorAll(".meta-row .pill"))
+            .map((item) => "<p><strong>" + htmlEscape(item.textContent.trim()) + "</strong></p>")
             .join("");
-          return `<w:p>${{styleXml}}<w:r>${{runs}}</w:r></w:p>`;
+          const sections = Array.from(document.querySelectorAll("main > section"))
+            .map((section) => {{
+              const content = section.querySelector(".content") || section;
+              return cleanClone(content).innerHTML;
+            }})
+            .join("\\n");
+          return "<article><h1>" + htmlEscape(title) + "</h1>" + metadata + sections + "</article>";
         }};
-        const tableXml = (table) => {{
-          const rows = Array.from(table.rows).map((row) => {{
-            const cells = Array.from(row.cells).map((cell) => {{
-              const text = normalizeText(cell.innerText);
-              return `<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr>${{paragraph(text, cell.tagName === "TH" ? "TableHeader" : "")}}</w:tc>`;
-            }}).join("");
-            return `<w:tr>${{cells}}</w:tr>`;
-          }}).join("");
-          return `<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/><w:left w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/><w:right w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="cfd7d2"/></w:tblBorders></w:tblPr>${{rows}}</w:tbl>`;
+        const fallbackCopy = (text) => {{
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.left = "-9999px";
+          textarea.style.top = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          const copied = document.execCommand("copy");
+          textarea.remove();
+          if (!copied) {{
+            throw new Error("Clipboard copy failed");
+          }}
         }};
-        const blockXml = (element) => {{
-          const tag = element.tagName;
-          if (tag === "SCRIPT" || tag === "STYLE") {{
-            return "";
-          }}
-          if (tag === "TABLE") {{
-            return tableXml(element);
-          }}
-          if (tag === "H1") {{
-            return paragraph(normalizeText(element.innerText), "Title");
-          }}
-          if (tag === "H2") {{
-            return paragraph(normalizeText(element.innerText), "Heading1");
-          }}
-          if (tag === "H3") {{
-            return paragraph(normalizeText(element.innerText), "Heading2");
-          }}
-          if (tag === "H4") {{
-            return paragraph(normalizeText(element.innerText), "Heading3");
-          }}
-          if (tag === "P") {{
-            return paragraph(normalizeText(element.innerText), "");
-          }}
-          if (tag === "BLOCKQUOTE") {{
-            return paragraph(normalizeText(element.innerText), "Quote");
-          }}
-          if (tag === "PRE") {{
-            return paragraph(element.innerText, "Code");
-          }}
-          if (tag === "UL" || tag === "OL") {{
-            return Array.from(element.children).map((item, index) => {{
-              const prefix = tag === "OL" ? `${{index + 1}}. ` : "- ";
-              return paragraph(prefix + normalizeText(item.innerText), "");
-            }}).join("");
-          }}
-          return Array.from(element.children).map(blockXml).join("");
-        }};
-        const documentXml = (main) => {{
-          const body = Array.from(main.children).map(blockXml).join("");
-          return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-            <w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-              <w:body>
-                ${{body}}
-                <w:sectPr>
-                  <w:pgSz w:w="12240" w:h="15840"/>
-                  <w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="360" w:footer="360" w:gutter="0"/>
-                </w:sectPr>
-              </w:body>
-            </w:document>`;
-        }};
-        const docxStyles = () => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-          <w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-            <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="120"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:sz w:val="22"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:b/><w:sz w:val="40"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="Heading 1"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="32"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="Heading 2"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="28"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="Heading 3"/><w:basedOn w:val="Normal"/><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Quote"><w:name w:val="Quote"/><w:basedOn w:val="Normal"/><w:pPr><w:ind w:left="360"/></w:pPr><w:rPr><w:i/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="Code"><w:name w:val="Code"/><w:basedOn w:val="Normal"/><w:rPr><w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/><w:sz w:val="20"/></w:rPr></w:style>
-            <w:style w:type="paragraph" w:styleId="TableHeader"><w:name w:val="Table Header"/><w:basedOn w:val="Normal"/><w:rPr><w:b/></w:rPr></w:style>
-          </w:styles>`;
-        const crcTable = (() => {{
-          const table = [];
-          for (let n = 0; n < 256; n += 1) {{
-            let c = n;
-            for (let k = 0; k < 8; k += 1) {{
-              c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-            }}
-            table[n] = c >>> 0;
-          }}
-          return table;
-        }})();
-        const crc32 = (bytes) => {{
-          let crc = 0xffffffff;
-          for (const byte of bytes) {{
-            crc = crcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8);
-          }}
-          return (crc ^ 0xffffffff) >>> 0;
-        }};
-        const dosDateTime = (date) => {{
-          const time = (date.getHours() << 11) | (date.getMinutes() << 5) | Math.floor(date.getSeconds() / 2);
-          const day = ((date.getFullYear() - 1980) << 9) | ((date.getMonth() + 1) << 5) | date.getDate();
-          return {{ time, day }};
-        }};
-        const u16 = (value) => [value & 0xff, (value >>> 8) & 0xff];
-        const u32 = (value) => [value & 0xff, (value >>> 8) & 0xff, (value >>> 16) & 0xff, (value >>> 24) & 0xff];
-        const concatParts = (parts) => {{
-          const total = parts.reduce((sum, part) => sum + part.length, 0);
-          const output = new Uint8Array(total);
-          let offset = 0;
-          for (const part of parts) {{
-            output.set(part, offset);
-            offset += part.length;
-          }}
-          return output;
-        }};
-        const zipPackage = (files) => {{
-          const encoder = new TextEncoder();
-          const localParts = [];
-          const centralParts = [];
-          const now = dosDateTime(new Date());
-          let offset = 0;
-          for (const file of files) {{
-            const nameBytes = encoder.encode(file.name);
-            const data = encoder.encode(file.content);
-            const crc = crc32(data);
-            const localHeader = new Uint8Array([
-              ...u32(0x04034b50), ...u16(20), ...u16(0x0800), ...u16(0),
-              ...u16(now.time), ...u16(now.day), ...u32(crc),
-              ...u32(data.length), ...u32(data.length), ...u16(nameBytes.length), ...u16(0),
-            ]);
-            localParts.push(localHeader, nameBytes, data);
-            const centralHeader = new Uint8Array([
-              ...u32(0x02014b50), ...u16(20), ...u16(20), ...u16(0x0800), ...u16(0),
-              ...u16(now.time), ...u16(now.day), ...u32(crc),
-              ...u32(data.length), ...u32(data.length), ...u16(nameBytes.length), ...u16(0),
-              ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(offset),
-            ]);
-            centralParts.push(centralHeader, nameBytes);
-            offset += localHeader.length + nameBytes.length + data.length;
-          }}
-          const localBytes = concatParts(localParts);
-          const centralBytes = concatParts(centralParts);
-          const end = new Uint8Array([
-            ...u32(0x06054b50), ...u16(0), ...u16(0), ...u16(files.length), ...u16(files.length),
-            ...u32(centralBytes.length), ...u32(localBytes.length), ...u16(0),
-          ]);
-          return concatParts([localBytes, centralBytes, end]);
-        }};
-        const exportDoc = () => {{
-          const main = document.querySelector("main");
-          if (!main) {{
+        const writeNotionClipboard = async (markdown, htmlContent) => {{
+          if (navigator.clipboard && window.ClipboardItem && typeof navigator.clipboard.write === "function") {{
+            const item = new ClipboardItem({{
+              "text/html": new Blob([htmlContent], {{ type: "text/html" }}),
+              "text/plain": new Blob([markdown], {{ type: "text/plain" }}),
+            }});
+            await navigator.clipboard.write([item]);
             return;
           }}
-          const title = document.querySelector(".hero h2")?.textContent?.trim() || document.title;
-          const release = document.querySelector(".release-banner strong")?.textContent?.trim();
-          const filename = filenameSlug([title, release].filter(Boolean).join("-"));
-          const created = new Date().toISOString();
-          const files = [
-            {{ name: "[Content_Types].xml", content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>` }},
-            {{ name: "_rels/.rels", content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>` }},
-            {{ name: "word/_rels/document.xml.rels", content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>` }},
-            {{ name: "word/document.xml", content: documentXml(main) }},
-            {{ name: "word/styles.xml", content: docxStyles() }},
-            {{ name: "docProps/core.xml", content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${{xmlEscape(title)}}</dc:title><dc:creator>Poseidon Subnet Design</dc:creator><cp:lastModifiedBy>Poseidon Subnet Design</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${{created}}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${{created}}</dcterms:modified></cp:coreProperties>` }},
-            {{ name: "docProps/app.xml", content: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Poseidon Subnet HTML Export</Application></Properties>` }},
-          ];
-          const blob = new Blob([zipPackage(files)], {{ type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }});
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${{filename}}.docx`;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          window.setTimeout(() => URL.revokeObjectURL(url), 0);
+          if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {{
+            await navigator.clipboard.writeText(markdown);
+            return;
+          }}
+          fallbackCopy(markdown);
         }};
-        exportDocButton.addEventListener("click", exportDoc);
+        const setNotionButtonLabel = (label) => {{
+          const original = "Copy to Notion";
+          exportNotionButton.textContent = label;
+          window.setTimeout(() => {{
+            exportNotionButton.textContent = original;
+          }}, 1800);
+        }};
+        const exportNotion = async () => {{
+          try {{
+            await writeNotionClipboard(notionMarkdown, notionHtml());
+            setNotionButtonLabel("Copied");
+          }} catch (error) {{
+            console.error(error);
+            setNotionButtonLabel("Copy failed");
+          }}
+        }};
+        exportNotionButton.addEventListener("click", exportNotion);
         setTheme(getSavedTheme() || "executive");
       }})();
     </script>
