@@ -88,6 +88,12 @@ TOKENOMICS_SIMULATOR_SECTION = """
           <div class="sim-legend" data-legend="stake"></div>
         </div>
       </div>
+      <div class="sim-chart-card">
+        <div class="sim-chart-title"><h3>Role Reward APY</h3><span data-chart-note="role"></span></div>
+        <svg class="sim-chart sim-role-chart" data-chart="role-bars" role="img" aria-label="Per-role stake, reward, and APY chart"></svg>
+        <p class="sim-note">Year 1 maximum reward at full utilization. Actual payout should still depend on quality points, uptime, lockups, challenge windows, and slashing events.</p>
+      </div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-role-table"><thead><tr><th>Role</th><th>Stake / Participant</th><th>Year 1 Reward</th><th>Reward / Epoch</th><th>APY</th><th>Network Count</th></tr></thead><tbody data-role-table></tbody></table></div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table"><thead><tr><th>Year</th><th>Gross Cap</th><th>Effective Emission</th><th>Effective / Epoch</th><th>Cumulative Effective</th><th>Supply Share</th></tr></thead><tbody data-sim-table></tbody></table></div>
     </div>
   </div>
@@ -221,6 +227,7 @@ TOKENOMICS_SIMULATOR_CSS = """
         overflow: visible;
       }
       .sim-line-chart { min-height: 300px; }
+      .sim-role-chart { min-height: 280px; }
       .sim-pie-chart {
         max-width: 360px;
         margin: 0 auto;
@@ -265,6 +272,7 @@ TOKENOMICS_SIMULATOR_CSS = """
       }
       .sim-table-wrap { margin-bottom: 0; }
       .sim-table { min-width: 680px; }
+      .sim-role-table { min-width: 760px; }
       .sim-pulse .sim-kpi strong {
         animation: simGlow 420ms ease;
       }
@@ -320,6 +328,8 @@ TOKENOMICS_SIMULATOR_JS = """
             return `${fmt.format(number)} $POS`;
           };
           const compact = (number) => token(number).replace(" $POS", "");
+          const apy = (reward, stake) => (stake > 0 ? reward / stake * 100 : null);
+          const apyText = (number) => (number === null || !Number.isFinite(number) ? "N/A" : pct(number));
           const write = (selector, valueText) => {
             root.querySelectorAll(selector).forEach((node) => {
               node.textContent = valueText;
@@ -386,6 +396,37 @@ TOKENOMICS_SIMULATOR_JS = """
             svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
             svg.innerHTML = `<rect x="0" y="0" width="${width}" height="${height}" fill="transparent"/>${grid}${labels}${bars}<path d="${area}" fill="var(--teal)" opacity="0.1"/><polyline pathLength="1" points="${coords}" fill="none" stroke="var(--teal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${circles}`;
           };
+          const drawRoleBars = (roles) => {
+            const svg = root.querySelector('[data-chart="role-bars"]');
+            if (!svg) return;
+            const width = 760;
+            const rowH = 74;
+            const pad = { left: 170, right: 36, top: 46, bottom: 22 };
+            const height = pad.top + pad.bottom + roles.length * rowH;
+            const innerW = width - pad.left - pad.right;
+            const maxTokens = Math.max(1, ...roles.flatMap((role) => [role.stake, role.annualReward]));
+            const scale = (amount) => Math.max(2, amount / maxTokens * innerW);
+            const legend = `<g><rect x="${pad.left}" y="16" width="12" height="12" rx="3" fill="var(--teal)"/><text x="${pad.left + 18}" y="27" fill="var(--muted)" font-size="12">Stake</text><rect x="${pad.left + 86}" y="16" width="12" height="12" rx="3" fill="var(--amber)"/><text x="${pad.left + 104}" y="27" fill="var(--muted)" font-size="12">Year 1 reward</text></g>`;
+            const rows = roles.map((role, index) => {
+              const y = pad.top + index * rowH;
+              const stakeW = scale(role.stake);
+              const rewardW = scale(role.annualReward);
+              const stakeLabelX = Math.min(pad.left + stakeW + 8, width - pad.right - 82);
+              const rewardLabelX = Math.min(pad.left + rewardW + 8, width - pad.right - 82);
+              return `
+                <g>
+                  <text x="12" y="${y + 15}" fill="var(--ink)" font-size="15" font-weight="760">${role.label}</text>
+                  <text x="12" y="${y + 36}" fill="var(--muted)" font-size="12">${fmt.format(role.count)} active at launch</text>
+                  <text x="12" y="${y + 57}" fill="var(--amber)" font-size="13" font-weight="760">APY ${apyText(role.apy)}</text>
+                  <rect x="${pad.left}" y="${y + 2}" width="${stakeW}" height="18" rx="5" fill="var(--teal)" opacity="0.82"><title>${role.label} stake: ${token(role.stake)}</title></rect>
+                  <text x="${stakeLabelX}" y="${y + 16}" fill="var(--muted)" font-size="12">${compact(role.stake)}</text>
+                  <rect x="${pad.left}" y="${y + 30}" width="${rewardW}" height="18" rx="5" fill="var(--amber)" opacity="0.82"><title>${role.label} Year 1 reward: ${token(role.annualReward)}</title></rect>
+                  <text x="${rewardLabelX}" y="${y + 44}" fill="var(--muted)" font-size="12">${compact(role.annualReward)}</text>
+                </g>`;
+            }).join("");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            svg.innerHTML = `<rect x="0" y="0" width="${width}" height="${height}" fill="transparent"/>${legend}${rows}`;
+          };
           const update = () => {
             const supply = value("supply");
             const reservePct = value("reservePct");
@@ -420,6 +461,34 @@ TOKENOMICS_SIMULATOR_JS = """
               { key: "security", label: "Security", value: value("securityAlloc") },
             ];
             const pools = normalized(poolInputs).map((item) => ({ ...item, value: annualEffective[0] * item.share }));
+            const poolValue = (key) => pools.find((item) => item.key === key)?.value || 0;
+            const minerCount = Math.max(1, launchSubnets * value("minerAgents"));
+            const validationCount = Math.max(1, launchSubnets * value("validationAgents"));
+            const ownerCount = Math.max(1, launchSubnets);
+            const roleEconomics = [
+              {
+                label: "Miner agent",
+                stake: value("minerStake"),
+                annualReward: poolValue("parsing") / minerCount,
+                count: minerCount,
+              },
+              {
+                label: "Validation agent",
+                stake: value("validationStake"),
+                annualReward: poolValue("validation") / validationCount,
+                count: validationCount,
+              },
+              {
+                label: "Subnet owner",
+                stake: value("ownerStake"),
+                annualReward: poolValue("score") / ownerCount,
+                count: ownerCount,
+              },
+            ].map((role) => ({
+              ...role,
+              epochReward: role.annualReward / epochsPerYear,
+              apy: apy(role.annualReward, role.stake),
+            }));
             setOutput("supply", token(supply));
             setOutput("reservePct", pct(reservePct));
             setOutput("feeOffset", pct(feeOffset, 0));
@@ -443,6 +512,7 @@ TOKENOMICS_SIMULATOR_JS = """
             write('[data-chart-note="line"]', `${token(grossReserve)} scheduled before fee offset; ${fmt.format(epochsPerYear)} epochs/year`);
             write('[data-chart-note="pool"]', `${token(annualEffective[0])} effective Year 1 cap`);
             write('[data-chart-note="stake"]', `${fmt.format(launchSubnets)} launch subnets`);
+            write('[data-chart-note="role"]', "Year 1 max reward / stake");
             drawLine(annualEffective, cumulative, supply);
             drawPie("pool-pie", "pool", pools);
             drawPie("stake-pie", "stake", [
@@ -450,6 +520,11 @@ TOKENOMICS_SIMULATOR_JS = """
               { label: "Validation agents", value: validationStake },
               { label: "Subnet owners", value: ownerStake },
             ]);
+            drawRoleBars(roleEconomics);
+            const roleTable = root.querySelector("[data-role-table]");
+            roleTable.innerHTML = roleEconomics.map((role) => (
+              `<tr><td>${role.label}</td><td>${token(role.stake)}</td><td>${token(role.annualReward)}</td><td>${token(role.epochReward)}</td><td>${apyText(role.apy)}</td><td>${fmt.format(role.count)}</td></tr>`
+            )).join("");
             const table = root.querySelector("[data-sim-table]");
             table.innerHTML = annualGross.map((gross, index) => {
               const effective = annualEffective[index];
