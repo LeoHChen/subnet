@@ -794,7 +794,11 @@ def render_markdown_body(lines: list[str], heading_slugs: dict[int, str]) -> str
                 output.append(f"<h2>{inline(text)}</h2>")
                 in_section = True
             else:
-                output.append(f"<h{level}>{inline(text)}</h{level}>")
+                heading_id = heading_slugs.get(i)
+                id_attribute = ""
+                if heading_id:
+                    id_attribute = f' id="{heading_id}"'
+                output.append(f"<h{level}{id_attribute}>{inline(text)}</h{level}>")
             i += 1
             continue
 
@@ -889,11 +893,14 @@ def parse_document(markdown: str) -> dict[str, object]:
     nav: list[tuple[str, str]] = []
     heading_slugs: dict[int, str] = {}
     for index, line in enumerate(body_lines):
-        if line.startswith("## "):
-            text = line[3:].strip()
+        heading_match = re.match(r"(#{2,6})\s+(.+)", line)
+        if heading_match:
+            level = len(heading_match.group(1))
+            text = heading_match.group(2).strip()
             slug = slugify(text, seen)
             heading_slugs[index] = slug
-            nav.append((text, slug))
+            if level == 2:
+                nav.append((text, slug))
 
     body = render_markdown_body(body_lines, heading_slugs)
     return {"title": title, "metadata": metadata, "nav": nav, "body": body, "source_markdown": markdown}
@@ -935,10 +942,14 @@ def release_banner(release_info: dict[str, str] | None) -> str:
 
 
 def inject_tokenomics_simulator(body: str) -> str:
-    anchor = '<section id="cpvss-overview"'
-    if anchor not in body:
-        return body + TOKENOMICS_SIMULATOR_SECTION
-    return body.replace(anchor, TOKENOMICS_SIMULATOR_SECTION + "\n" + anchor, 1)
+    anchors = [
+        '<section id="cpvss-processing-pipeline"',
+        '<section id="cpvss-overview"',
+    ]
+    for anchor in anchors:
+        if anchor in body:
+            return body.replace(anchor, TOKENOMICS_SIMULATOR_SECTION + "\n" + anchor, 1)
+    return body + TOKENOMICS_SIMULATOR_SECTION
 
 
 def render_page(

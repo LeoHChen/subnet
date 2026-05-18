@@ -4,6 +4,19 @@ Date: May 15, 2026
 Roadmap targets: Testnet 1 by June 30, 2026; Beta Testnet by September 30, 2026; Mainnet Launch by December 31, 2026
 Scope: Testnet 1 with two subnets, Beta Testnet with four launch-candidate subnets, and Mainnet Launch with a two-subnet minimum plus a four-subnet target that is conditional on signed launch partners
 
+## Table of Contents
+
+| Section | What to Read For |
+|---|---|
+| [Executive Summary](#executive-summary) | Poseidon background, subnet definition, CPVSS context, and launch scope |
+| [Design Principles](#design-principles) | The decentralization, centralization, and token-design principles that constrain the proposal |
+| [$PSDN Single Token Model](#psdn-single-token-model) | Token utility, role-based staking, agent pool sizing, slashing, and contributor alignment |
+| [Incentive and Emission Schedule](#incentive-and-emission-schedule) | Emission caps, canonical CPVSS allocation, revenue pressure model, lock-ups, and fee offsets |
+| [CPVSS Overview](#cpvss-overview) | [Stage summary](#stage-summary), [IP registry](#ip-and-licensing-registry-integration), [Collection](#collection-stage), [Parsing](#parsing-stage), [Validation](#validation-stage), [Score](#score-stage), [Search](#search-stage), [beta flow](#end-to-end-beta-flow), and [testnet architecture](#recommended-testnet-architecture) |
+| [Open Design Decisions](#open-design-decisions) | Items that should remain flexible until testnet data is available |
+| [Milestone Roadmap](#milestone-roadmap) | Monthly gates, launch-partner blockers, campaign plan, and measurable milestone metrics |
+| [Conclusion](#conclusion) | Decision scorecard and mainnet blockers |
+
 ## Executive Summary
 
 ### Background: Poseidon and Subnets
@@ -519,6 +532,8 @@ The beta does not need to finalize every sink. It should define the accounting s
 
 ## CPVSS Overview
 
+### Stage Summary
+
 | Stage | Function | Decentralization Thesis | Why Crypto Matters | Beta Shape |
 |---|---|---|---|---|
 | Collection | Gather raw voice and video data, metadata, consent, and provenance | Naturally decentralized because contributors are distributed | On-chain contribution records, audit trails, contributor identity, provenance, and reward eligibility | Contributor upload/API, dataset manifest, content hash, wallet-linked contribution ledger |
@@ -527,7 +542,7 @@ The beta does not need to finalize every sink. It should define the accounting s
 | Score | Assign final quality score and determine reward allocation | Should be centralized by the subnet owner | Crypto makes the score auditable and payout-linked, while authority remains with the owner | Owner scoring service, signed score batches, reward distribution output |
 | Search | Enable dataset discovery, access, transactions, and monetization | Should be centralized at the Poseidon network level | Payments, revenue splits, contributor royalties, and provenance-backed marketplace access | Poseidon portal with searchable voice and video datasets |
 
-## IP and Licensing Registry Integration
+### IP and Licensing Registry Integration
 
 The CPVSS ledger should separate two layers:
 
@@ -544,29 +559,29 @@ Story is the preferred candidate for the second layer. The practical integration
 
 This keeps Story from being a loose marketing reference while avoiding a hard dependency that could block the June testnet.
 
-## C: Collection
+### Collection Stage
 
-### Function
+#### Function
 
 Collection is the intake layer for raw voice and video data. It captures the asset, contributor identity, metadata, consent status, usage rights, and provenance information.
 
-### Goal
+#### Goal
 
 The goal is to make contribution easy while ensuring every dataset item has a traceable origin. The system should know who contributed what, when they contributed it, what rights are attached, and how it moved through the pipeline.
 
-### Decentralization
+#### Decentralization
 
 Collection is naturally decentralized. Contributors are distributed across geographies, communities, platforms, and data sources. A centralized data collection operation can work, but it limits scale and weakens contribution attribution, auditability, and incentive alignment.
 
 The beta should allow contributors or trusted operators to submit data through a simple upload/API flow. Every submitted item should produce a durable record that can later be used for audit, scoring, and payout.
 
-### Why Crypto Matters
+#### Why Crypto Matters
 
 Crypto matters in collection because it creates an auditable contribution ledger. A Kled-style on-chain contribution record can preserve who contributed each asset, what metadata and rights were attached, and how that contribution later created value.
 
 For beta, the system does not need to put raw data on-chain. It should put hashes, contribution metadata, and batch commitments on-chain or in a chain-compatible ledger.
 
-### Beta Requirements
+#### Beta Requirements
 
 - Contributor identity linked to wallet or account.
 - Upload/API flow for voice and video files.
@@ -580,9 +595,9 @@ For beta, the system does not need to put raw data on-chain. It should put hashe
 
 Pre-ingestion filtering is a centralized cost-control step run by Poseidon or the subnet owner before an item becomes reward-eligible. It should not silently bypass accountability: rejected submissions should receive a rejection reason where feasible, rejected-item hashes and aggregate rejection metrics should be logged, and a random sample of rejected items should be auditable during testnet. No slashing should apply at this stage unless the contributor is a bonded campaign operator or the system detects repeated intentional abuse.
 
-### Incentive Design Options
+#### Incentive Design Options
 
-#### Design A: Quality-Weighted Contribution Rewards
+##### Design A: Quality-Weighted Contribution Rewards
 
 Contributors do not receive meaningful $PSDN rewards at upload time. They receive provisional credit when data enters the system, then final rewards only after parsing, validation, subnet-owner scoring, and potentially marketplace usage.
 
@@ -605,7 +620,7 @@ Cons:
 - New contributors may not know what the network values.
 - Sybil attacks remain possible if identity creation is low cost and rewards are too high.
 
-#### Design B: Contributor Bond and Curated Campaigns
+##### Design B: Contributor Bond and Curated Campaigns
 
 Contributors or data collection operators stake a small amount of $PSDN to submit into a campaign. Campaigns define the exact data type needed, quality bar, rights requirements, and reward budget.
 
@@ -629,23 +644,23 @@ Cons:
 - Campaign design becomes operationally important.
 - Slashing for rights problems can be contentious if the contributor made a good-faith mistake.
 
-#### Collection Comparison
+##### Collection Comparison
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
 | Quality-weighted rewards | Pay only after data is verified as useful | No or low slashing; delayed reward and clawback | Simple, low-friction, emission-aware | Weaker spam deterrence |
 | Contributor bond campaigns | Stake to submit into defined campaigns | Bond loss for duplicate, fake, or rights-invalid data | Better game-theory defense, targeted supply | Higher friction, harder contributor onboarding |
 
-#### Open Questions
+##### Open Questions
 
 - Should small individual contributors be required to stake $PSDN, or only professional collection operators?
 - How long should contribution rewards remain clawback-eligible?
 - Should marketplace demand affect contributor rewards, or should rewards be based only on quality score?
 - How should the system distinguish malicious rights fraud from honest metadata mistakes?
 
-## P: Parsing
+### Parsing Stage
 
-### Function
+#### Function
 
 Parsing converts raw data into structured artifacts that are useful for AI workflows.
 
@@ -667,11 +682,11 @@ For video data, parsing may include:
 - OCR where applicable
 - Metadata extraction
 
-### Goal
+#### Goal
 
 The goal is to transform raw, noisy media into structured datasets that are easier to validate, search, package, and commercialize.
 
-### Decentralization
+#### Decentralization
 
 Parsing is decentralizable, although not mandatory. Its primary decentralization argument is parallelism. Parsing jobs can be split across many independent miner agents, and most parsing jobs do not require real-time execution.
 
@@ -682,7 +697,7 @@ This makes parsing a good fit for distributed compute:
 - Outputs can be committed and later validated.
 - Specialized miner agents can compete on speed, cost, and quality.
 
-### Why Crypto Matters
+#### Why Crypto Matters
 
 Crypto matters because decentralized parsing needs coordination:
 
@@ -695,7 +710,7 @@ Crypto matters because decentralized parsing needs coordination:
 
 The key design question is how much coordination happens on-chain versus off-chain. The beta should avoid overbuilding. A practical design is to keep job execution off-chain while recording job commitments, output hashes, miner agent identity, and reward events in an auditable ledger.
 
-### Beta Requirements
+#### Beta Requirements
 
 - Miner agent interface.
 - Job queue for voice and video parsing.
@@ -705,9 +720,9 @@ The key design question is how much coordination happens on-chain versus off-cha
 - Miner agent identity and job history.
 - Basic parser quality metadata.
 
-### Incentive Design Options
+#### Incentive Design Options
 
-#### Design A: Fixed Bounty With Quality Multiplier
+##### Design A: Fixed Bounty With Quality Multiplier
 
 Each parsing job has a posted $PSDN bounty. Miner agents receive the bounty only after the output passes validation. Higher-quality outputs receive a multiplier based on validation result and subnet-owner score.
 
@@ -731,7 +746,7 @@ Cons:
 - Fixed rewards can overpay easy work and underpay hard work.
 - Quality multipliers require a trusted scoring function.
 
-#### Design B: Competitive Miner Agent Market
+##### Design B: Competitive Miner Agent Market
 
 Multiple miner agents can bid for or compete on parsing jobs. The network selects miner agents based on price, reputation, stake, historical quality, or a commit-reveal process.
 
@@ -755,43 +770,43 @@ Cons:
 - Auctions can be gamed by underbidding.
 - Commit-reveal adds operational overhead.
 
-#### Parsing Comparison
+##### Parsing Comparison
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
 | Fixed bounty with quality multiplier | Base reward plus score-based upside | Stake slash or no payout for failed output | Simple, predictable, beta-ready | Risk of volume farming and mispriced jobs |
 | Competitive miner agent market | Market-priced jobs and reputation routing | Stake slash, reputation loss, spot-audit penalty | Scales toward efficiency | More mechanism complexity |
 
-#### Open Questions
+##### Open Questions
 
 - Should miner agents stake per job, per epoch, or per subnet?
 - Should hard jobs pay more automatically based on file length, media quality, or scarcity?
 - How many parser failures should trigger slashing versus only reputation loss?
 - Should the beta use permissioned miner agents first, then open participation later?
 
-## V: Validation
+### Validation Stage
 
-### Function
+#### Function
 
 Validation checks whether parsing outputs are accurate, complete, and useful. It is the quality-control layer between miner agent work and final scoring.
 
-### Goal
+#### Goal
 
 The goal is to prevent low-quality parsing from entering the marketplace and to create an incentive-compatible mechanism for validation agents to perform real review work.
 
-### Decentralization
+#### Decentralization
 
 Validation is a particularly strong fit for decentralization in the CPVSS pipeline. Multiple validation agents can independently review parser outputs, and their results can be aggregated through a consensus algorithm.
 
 For beta, validation should focus on practical consensus rather than perfect mechanism design. The first version should demonstrate that redundant validation can detect bad outputs and produce a reliable quality signal.
 
-### Why Crypto Matters
+#### Why Crypto Matters
 
 Crypto matters because validation agents need incentives, accountability, and penalties. Validation agents can stake reputation or tokens. Correct validation earns rewards. Low-effort or dishonest validation can be penalized.
 
 The red-herring mechanism is especially useful. The system can inject known test cases into validation queues. Validation agents who repeatedly fail these hidden checks can be down-weighted or slashed.
 
-### Consensus Design Space
+#### Consensus Design Space
 
 Open design questions include:
 
@@ -804,7 +819,7 @@ Open design questions include:
 - Appeals or owner override.
 - Whether validation produces binary pass/fail, graded scores, or structured comments.
 
-### Beta Requirements
+#### Beta Requirements
 
 - Validation agent assignment flow.
 - Validation schema.
@@ -816,9 +831,9 @@ Open design questions include:
 - Validation agent reliability score.
 - Basic slashing or down-weighting simulation.
 
-### Incentive Design Options
+#### Incentive Design Options
 
-#### Design A: Majority Consensus With Red Herrings
+##### Design A: Majority Consensus With Red Herrings
 
 Each artifact is reviewed by multiple validation agents. Validation agents earn rewards when they complete reviews and align with consensus, but they are penalized when they fail hidden red-herring tasks.
 
@@ -842,7 +857,7 @@ Cons:
 - Honest minority validation agents may be punished if the majority is wrong.
 - Colluding validation agents can still pass bad outputs if assignment randomness is weak.
 
-#### Design B: Reputation-Weighted Validation With Challenge Window
+##### Design B: Reputation-Weighted Validation With Challenge Window
 
 Validation agent votes are weighted by historical accuracy, stake, and red-herring performance. Disputed results can enter a challenge window where challengers stake $PSDN to request owner or expert adjudication.
 
@@ -866,43 +881,43 @@ Cons:
 - Reputation can entrench early validation agents.
 - Challenge mechanisms can be spammed if the bond is too low.
 
-#### Validation Comparison
+##### Validation Comparison
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
 | Majority consensus with red herrings | Reward consensus and hidden-test accuracy | Slash or down-weight validation agents who fail red herrings | Operationally simple defense against low-effort validation | Herding and collusion risk |
 | Reputation-weighted validation | More weight and rewards for proven validation agents | Slash for failed tests, wrong challenges, or repeated bad votes | Better long-term quality | Complexity and possible validation-agent oligopoly |
 
-#### Open Questions
+##### Open Questions
 
 - How often should red-herring tasks appear?
 - Should validation agents be rewarded for disagreeing with a wrong majority after adjudication?
 - Should slashing burn $PSDN, compensate harmed parties, or fund future validation?
 - How should the system detect validation-agent collusion beyond red-herring failure?
 
-## Score Stage
+### Score Stage
 
-### Function
+#### Function
 
 Scoring is the final quality and usefulness assessment. It determines how much value a contribution, parser output, or validation action should receive.
 
-### Goal
+#### Goal
 
 The goal is to make reward distribution accountable while preserving the subnet owner's authority over final quality.
 
-### Decentralization
+#### Decentralization
 
 Scoring should be centralized. The subnet owner has the ultimate responsibility to determine quality, usefulness, and reward allocation. This is especially important because the score directly affects token distribution.
 
 Trying to decentralize scoring too early could weaken accountability. For beta, the subnet owner should retain explicit final authority.
 
-### Why Crypto Matters
+#### Why Crypto Matters
 
 Crypto still matters in this centralized stage because the scoring output can be auditable. A subnet owner can publish signed score batches, reward allocation records, and references to the underlying artifacts and validation results.
 
 This creates transparency without pretending that quality judgment is fully objective.
 
-### Beta Requirements
+#### Beta Requirements
 
 - Owner scoring interface or admin workflow.
 - Score schema.
@@ -911,9 +926,9 @@ This creates transparency without pretending that quality judgment is fully obje
 - Linkage from score to contribution, parsing, and validation records.
 - Manual override ability.
 
-### Incentive Design Options
+#### Incentive Design Options
 
-#### Design A: Owner-Signed Scoring With Challenge Bond
+##### Design A: Owner-Signed Scoring With Challenge Bond
 
 The subnet owner signs final score batches. Participants can challenge a score by posting a $PSDN bond during a challenge window.
 
@@ -939,7 +954,7 @@ Cons:
 - Too many challenges can slow payout.
 - If the challenge bond is too high, small contributors cannot contest bad scores.
 
-#### Design B: Model-Assisted Rubric With Owner Veto
+##### Design B: Model-Assisted Rubric With Owner Veto
 
 Scores are generated from a transparent rubric, optionally assisted by models or evaluators, and the subnet owner has final veto authority.
 
@@ -963,40 +978,40 @@ Cons:
 - Participants may over-optimize for the rubric instead of true usefulness.
 - Owner veto still creates centralization concerns.
 
-#### Score Comparison
+##### Score Comparison
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
 | Owner-signed scoring with challenge bond | Owner controls final rewards with accountable audit trail | Challenge bond loss; possible owner reputation penalty | Clear authority, beta-ready | Requires fair adjudication |
 | Model-assisted rubric with owner veto | Transparent scoring criteria plus owner control | Outlier logging, challenge bond, owner reputation risk | More consistent and scalable | Rubric gaming and model bias |
 
-#### Open Questions
+##### Open Questions
 
 - What challenge-bond size keeps spam low without pricing out small contributors?
 - What reward or penalty threshold should trigger an independent reviewer?
 - How much scoring transparency is safe before participants start gaming the rubric?
 
-## Search Stage
+### Search Stage
 
-### Function
+#### Function
 
 Search is the user-facing discovery and marketplace layer. It lets users find, inspect, request, purchase, or access processed datasets.
 
-### Goal
+#### Goal
 
 The goal is to make Poseidon the central marketplace for AI-ready voice and video datasets.
 
-### Decentralization
+#### Decentralization
 
 Search should be centralized at the network level. Poseidon should manage the portal, ranking, access flow, transactions, and marketplace rules. This creates a coherent user experience and gives the project a direct revenue engine.
 
-### Why Crypto Matters
+#### Why Crypto Matters
 
 Crypto matters because marketplace transactions can connect back to provenance and contribution history. Revenue can be routed through the same CPVSS pools used by the emission schedule, with transparent records for Collection, Parsing, Validation, Score, Search and Marketplace Demand, and Network Security and Challenges.
 
 The marketplace is where the crypto incentive loop becomes economically meaningful.
 
-### Beta Requirements
+#### Beta Requirements
 
 - Searchable dataset portal.
 - Dataset detail page.
@@ -1006,9 +1021,9 @@ The marketplace is where the crypto incentive loop becomes economically meaningf
 - Basic access or request flow.
 - Marketplace transaction placeholder or testnet payment flow.
 
-### Incentive Design Options
+#### Incentive Design Options
 
-#### Design A: Marketplace Fee Split
+##### Design A: Marketplace Fee Split
 
 Dataset buyers pay through the Poseidon marketplace. Fees are routed through the CPVSS revenue pools according to the same top-level allocation used by the Year 1 emission schedule, then distributed internally according to dataset contribution, quality, marketplace, and security records.
 
@@ -1032,7 +1047,7 @@ Cons:
 - Revenue attribution can be hard when many assets compose one dataset.
 - Contributors may wait too long for meaningful payouts.
 
-#### Design B: Capped Demand Incentives With Anti-Wash Rules
+##### Design B: Capped Demand Incentives With Anti-Wash Rules
 
 Poseidon uses capped $PSDN incentives to bootstrap marketplace activity, but rewards only unlock when there is verified demand, quality, and non-self-dealing behavior.
 
@@ -1056,21 +1071,21 @@ Cons:
 - Incentive design can become complex.
 - Emissions may leak to actors who are good at farming demand signals.
 
-#### Search Comparison
+##### Search Comparison
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
 | Marketplace fee split | Pay from real buyer demand | No direct buyer slashing; bad actors lose ranking or access | Sustainable, emission-light | Slow bootstrap |
 | Capped demand incentives | Subsidize early useful marketplace activity | Curator or subnet owner stake can be slashed for fake demand | Accelerates network effects | Wash trading and subsidy farming risk |
 
-#### Open Questions
+##### Open Questions
 
 - Should the 70% $PSDN settlement/conversion policy be raised or lowered after real buyer procurement data is available?
 - Within the Search and Marketplace Demand pool, what share should fund Poseidon marketplace operations versus curators, search partners, and buyer-demand incentives?
 - Should a portion of revenue be burned, routed to insurance, or used for buyback-style reward pools?
 - How should the marketplace detect and penalize self-dealing or fake demand?
 
-## End-to-End Beta Flow
+### End-to-End Beta Flow
 
 1. Contributor uploads voice or video data.
 2. System creates a content hash, metadata manifest, contributor record, and audit trail.
@@ -1085,9 +1100,9 @@ Cons:
 11. Dataset appears in the Poseidon search marketplace.
 12. Users discover, preview, and request or purchase access.
 
-## Recommended Testnet Architecture
+### Recommended Testnet Architecture
 
-### Off-Chain
+#### Off-Chain
 
 - Raw voice and video files
 - Parsed transcripts and structured artifacts
@@ -1096,7 +1111,7 @@ Cons:
 - Marketplace UI
 - Admin scoring dashboard
 
-### On-Chain or Chain-Compatible Ledger
+#### On-Chain or Chain-Compatible Ledger
 
 - Contributor identity reference
 - Input content hash
