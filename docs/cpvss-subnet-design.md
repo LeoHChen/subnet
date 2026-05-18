@@ -68,6 +68,8 @@ Assumption for the baseline estimate:
 - Total $POS supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
 - Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
+- Beta target remains two production subnets, likely voice and video, while mainnet launch assumes four subnet launch partners.
+- Mainnet launch partner assumption: Poseidon team, Kled team, a Korea-based healthcare/data partner such as Big Care, and a major AI lab partner such as ElevenLabs. Big Care and ElevenLabs are planning examples, not confirmed commitments.
 - These are starting-point numbers for design discussion, not final launch parameters.
 - Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
 
@@ -102,6 +104,33 @@ validation_agent_subnet_stake = 20,000 x 16 = 320,000 $POS per subnet
 
 subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $POS per subnet
 ```
+
+#### Mainnet Launch Partner Assumption
+
+For mainnet planning, assume four launch subnets operated or sponsored by four launch partners:
+
+| Launch Partner | Planning Role | Initial Subnet Focus |
+|---|---|---|
+| Poseidon team | Core protocol and marketplace operator | Reference subnet, marketplace integration, scoring policy, search/distribution |
+| Kled team | Contribution provenance and audit-trail partner | On-chain contribution records, contributor reputation, collection workflows |
+| Big Care or similar Korea-based partner | Domain data partner | Healthcare-adjacent voice/video data collection and rights workflows |
+| Major AI lab such as ElevenLabs | Demand and AI-quality partner | Voice/audio model data demand, quality evaluation, commercial dataset requirements |
+
+Using 16 miner agents and 16 validation agents per subnet:
+
+```text
+mainnet_launch_subnets = 4
+miner_agents_at_launch = 16 x 4 = 64 miner agents
+validation_agents_at_launch = 16 x 4 = 64 validation agents
+
+miner_agent_launch_stake = 800,000 x 4 = 3,200,000 $POS
+validation_agent_launch_stake = 320,000 x 4 = 1,280,000 $POS
+subnet_owner_launch_stake = 2,500,000 x 4 = 10,000,000 $POS
+
+total_role_bonded_launch_stake = 14,480,000 $POS, or 1.448% of total supply
+```
+
+This is an equal-subnet launch assumption for planning. Actual mainnet reward and stake parameters should be weighted by subnet maturity, commercial demand, task cost, fraud risk, and partner operating capacity.
 
 The stake should be high enough to make malicious behavior expensive, but not so high that only whales can participate. If the market price of $POS rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
 
@@ -167,12 +196,12 @@ Recommended epoch structure:
 
 Assuming Year 1 weekly emission cap of 865,385 $POS:
 
-| Pool | Allocation | Weekly Network Cap | With 2 Initial Subnets | Per-Agent or Per-Role Baseline |
+| Pool | Allocation | Weekly Network Cap | With 4 Mainnet Launch Subnets | Per-Agent or Per-Role Baseline |
 |---|---:|---:|---:|---|
-| Contributor rewards and airdrops | 35% | 302,885 $POS | 151,442 $POS per subnet | Distributed by quality, uniqueness, rights clarity, and optional stake multiplier |
-| Miner agent rewards | 25% | 216,346 $POS | 108,173 $POS per subnet | With 16 miner agents per subnet: up to 6,761 $POS per miner agent per week before quality weighting |
-| Validation agent rewards | 15% | 129,808 $POS | 64,904 $POS per subnet | With 16 validation agents per subnet: up to 4,057 $POS per validation agent per week before quality weighting |
-| Subnet owner quality rewards | 10% | 86,538 $POS | 43,269 $POS per subnet | Paid only when subnet outputs pass owner, validation, and marketplace quality thresholds |
+| Contributor rewards and airdrops | 35% | 302,885 $POS | 75,721 $POS per subnet | Distributed by quality, uniqueness, rights clarity, and optional stake multiplier |
+| Miner agent rewards | 25% | 216,346 $POS | 54,087 $POS per subnet | With 16 miner agents per subnet: up to 3,380 $POS per miner agent per week before quality weighting |
+| Validation agent rewards | 15% | 129,808 $POS | 32,452 $POS per subnet | With 16 validation agents per subnet: up to 2,028 $POS per validation agent per week before quality weighting |
+| Subnet owner quality rewards | 10% | 86,538 $POS | 21,635 $POS per subnet | Paid only when subnet outputs pass owner, validation, and marketplace quality thresholds |
 | Marketplace demand and curation incentives | 10% | 86,538 $POS | Network-level pool | Used for demand bootstrapping, curated datasets, and buyer activation with anti-wash checks |
 | Security, audits, and challenge rewards | 5% | 43,269 $POS | Network-level pool | Funds successful challenges, fraud reports, red-herring creation, and emergency review |
 
