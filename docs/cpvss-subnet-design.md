@@ -1,8 +1,8 @@
-# Poseidon Subnet CPVSS Design and Beta Roadmap
+# Poseidon Subnet CPVSS Design and Launch Roadmap
 
-Date: May 15, 2026  
-Beta target: June 30, 2026  
-Scope: Two production beta subnets for voice and video data
+Date: May 15, 2026
+Roadmap targets: Testnet 1 by June 30, 2026; Beta Testnet by September 30, 2026; Mainnet Launch by December 31, 2026
+Scope: Testnet 1 with two subnets, Beta Testnet with four subnets, and Mainnet Launch with four launch-partner subnets
 
 ## Executive Summary
 
@@ -26,7 +26,11 @@ The CPVSS pipeline is:
 4. Score
 5. Search
 
-By the end of June 2026, the beta should demonstrate an end-to-end working flow for both voice and video data: contribution, provenance tracking, miner-agent parsing, decentralized validation, subnet-owner scoring, reward allocation, and dataset discovery through a Poseidon search portal.
+By June 30, 2026, Testnet 1 should demonstrate an end-to-end working flow for both voice and video data: contribution, provenance tracking, miner-agent parsing, decentralized validation, subnet-owner scoring, reward allocation, points accounting, and dataset discovery through a Poseidon search portal.
+
+By September 30, 2026, Beta Testnet should expand to four subnets, run a real user campaign, operate a point system with anti-abuse controls, and prove that partner-led subnets can run through CPVSS repeatedly.
+
+By December 31, 2026, Mainnet Launch should activate the four launch-partner subnets with production-grade staking, reward policy, marketplace flow, partner operating commitments, and launch readiness metrics.
 
 ## Design Principles
 
@@ -68,7 +72,9 @@ Assumption for the baseline estimate:
 - Total $POS supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
 - Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
-- Beta target remains two production subnets, likely voice and video, while mainnet launch assumes four subnet launch partners.
+- Testnet 1 target remains two production subnets, likely voice and video.
+- Beta Testnet target expands to four launch-candidate subnets.
+- Mainnet Launch assumes four subnet launch partners.
 - Mainnet launch partner assumption: Poseidon team, Kled team, a Korea-based healthcare/data partner such as Big Care, and a major AI lab partner such as ElevenLabs. Big Care and ElevenLabs are planning examples, not confirmed commitments.
 - These are starting-point numbers for design discussion, not final launch parameters.
 - Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
@@ -269,8 +275,9 @@ This prevents the network from overpaying with new emissions when real buyer dem
 
 | Phase | Goal | $POS Use | Emission Posture |
 |---|---|---|---|
-| Beta | Prove CPVSS flow with voice and video subnets | Testnet $POS, points, or capped internal accounting | No meaningful open-ended emissions |
-| Early Mainnet | Recruit contributors, miner agents, validation agents, and first buyers | Capped $POS rewards, role staking, reward vesting | Targeted emissions for verified useful work |
+| Testnet 1 | Prove CPVSS flow with two voice/video subnets | Testnet $POS, off-chain points, or capped internal accounting | No meaningful open-ended emissions |
+| Beta Testnet | Expand to four subnets, run user campaigns, and test partner operations | Non-transferable points, testnet $POS, simulated staking, and anti-abuse accounting | Capped test incentives for verified useful work |
+| Mainnet Launch | Activate four launch-partner subnets with production policy | $POS staking, reward vesting, marketplace fee routing, and published reward rules | Targeted emissions with strict epoch caps and fee-offset rules |
 | Growth | Expand subnet count and marketplace demand | Buyer-funded rewards, subnet owner staking, marketplace fee routing | Declining emissions with demand-based rewards |
 | Mature Network | Preserve token value and quality | Fee-funded payouts, staking, burns or insurance routing | Minimal emissions, mostly market-funded |
 
@@ -843,7 +850,7 @@ Cons:
 11. Dataset appears in the Poseidon search marketplace.
 12. Users discover, preview, and request or purchase access.
 
-## Recommended Beta Architecture
+## Recommended Testnet Architecture
 
 ### Off-Chain
 
@@ -867,200 +874,91 @@ Cons:
 - Reward allocation record
 - Marketplace transaction record
 
-For beta, a chain-compatible ledger or testnet contract is sufficient. The system should be designed so the beta ledger can later be upgraded to production smart contracts.
+For Testnet 1 and Beta Testnet, a chain-compatible ledger or testnet contract is sufficient. The system should be designed so the testnet ledger can later be upgraded to production smart contracts.
 
 ## Open Design Decisions
 
-These decisions should remain open during beta design and be resolved only when real workflow evidence appears:
+These decisions should remain open during testnet design and be resolved only when real workflow evidence appears:
 
-1. Whether beta rewards use real tokens, testnet tokens, or off-chain points.
+1. Whether testnet rewards use testnet tokens, off-chain points, or capped token-denominated accounting.
 2. Whether contribution records are written individually or batched through Merkle roots.
 3. Whether voice and video share one subnet framework or use two separate subnet templates.
 4. How validation agents are selected and weighted.
 5. How aggressive red-herring slashing should be.
-6. Whether miner agents need staking in beta.
+6. Whether miner agents need simulated staking in Testnet 1 and Beta Testnet.
 7. Whether search ranking should include quality score, commercial demand, freshness, or subnet owner reputation.
 8. Whether score decisions are manually assigned, model-assisted, or hybrid.
 9. Whether buyers transact directly with subnet owners or through Poseidon as marketplace operator.
 10. What minimum $POS stake is required for each role without excluding useful early participants.
 11. Whether slashed $POS should be burned, routed to insurance, or redistributed to honest participants.
 12. How quickly emissions should decline as marketplace revenue grows.
-13. Whether fiat buyer payments should be converted into $POS, abstracted behind credits, or kept separate in beta.
+13. Whether fiat buyer payments should be converted into $POS, abstracted behind credits, or kept separate during testnet phases.
 14. How to prevent early high-stake actors from capturing validation agent or miner agent reputation permanently.
 
-## Beta Success Criteria
+## Milestone Roadmap
 
-By June 30, 2026, beta should prove:
+The roadmap should be managed by monthly milestone gates, not weekly task lists. Each gate must prove a product capability, a testing level, a points or reward-accounting capability, and a launch-partner readiness level.
 
-- A contributor can submit voice and video data.
-- The system records provenance and contribution history.
-- Miner agents can parse real data.
-- Validation agents can verify outputs through consensus.
-- Red-herring tasks can detect lazy validation.
-- Subnet owner can assign final quality scores.
-- Rewards can be calculated transparently.
-- Users can find processed datasets through a central Poseidon marketplace.
-- Two production beta subnets are running: one for voice data and one for video data.
+The three hard milestone dates are:
 
-## Weekly Roadmap
+| Milestone | Target Date | Subnet Scope | Launch Meaning |
+|---|---:|---|---|
+| Testnet 1 | June 30, 2026 | 2 subnets: voice and video | Prove the CPVSS loop works end to end with testnet or internal points accounting |
+| Beta Testnet | September 30, 2026 | 4 subnets | Run partner-led subnet operations, user campaigns, points system, anti-abuse controls, and marketplace testing |
+| Mainnet Launch | December 31, 2026 | 4 launch-partner subnets | Launch production staking, reward policy, marketplace flow, and partner-backed subnet operations |
 
-| Week | Dates | Goal | Concrete Output |
+### Monthly Milestones
+
+| Month | Product and Protocol Milestone | Testing and Campaign Milestone | Launch-Partner Blocker | Exit Metrics |
+|---|---|---|---|---|
+| May 2026 | Lock CPVSS architecture, schemas, role-based staking assumptions, point-accounting model, and Testnet 1 scope | Create test plan, seed datasets, red-herring strategy, QA checklist, and internal points ledger spec | Biz team assigns partner owner for Poseidon, Kled, Korea-based data partner, and major AI lab track | Architecture approved; voice/video subnet specs drafted; points ledger spec approved; partner pipeline owner named for all 4 launch tracks |
+| June 2026 | Launch Testnet 1 with 2 subnets: voice and video | Run invite-only user campaign, internal/testnet points, end-to-end CPVSS QA, parser/validation/scoring dry runs, and marketplace discovery test | Poseidon and Kled technical owners confirmed; external partner pitch pack delivered to Korea partner and AI lab candidates | 2 subnets live; 16 miner-agent slots and 16 validation-agent slots configured per subnet; >=20 full CPVSS runs; >=95% manifest completeness; no open P0/P1 launch bugs |
+| July 2026 | Convert Testnet 1 learnings into Beta Testnet architecture for 4 subnets | Expand campaign tooling, anti-Sybil checks, points dashboards, validator red-herring library, and load-test plan | At least 2 external launch-candidate partners have signed LOI or equivalent written commitment | 4-subnet templates ready; points fraud rules drafted; partner data requirements captured; beta campaign terms drafted |
+| August 2026 | Stand up 4 Beta Testnet subnet environments and partner onboarding workflow | Run closed partner pilots, rights review, data-quality QA, security review, economic simulation, and campaign rehearsal | All 4 launch-candidate partners assign business owner, technical owner, data owner, and campaign owner | 4 subnets deployed in staging/testnet; >=64 miner-agent registrations; >=64 validation-agent registrations; partner sample datasets ingested; no unresolved data-rights blocker |
+| September 2026 | Launch Beta Testnet with 4 subnets | Run public or partner-led user campaign, points leaderboard, anti-abuse review, marketplace access tests, and partner operating drills | All 4 launch-candidate partners actively participate in Beta Testnet with signed campaign terms and data rights approval | 4 subnets live; >=500 contributor or user accounts; >=5,000 accepted data items or partner-approved equivalent; parser success >=90%; red-herring detection >=90%; no open P0/P1 launch bugs |
+| October 2026 | Freeze mainnet architecture and production tokenomics parameters | Run audit prep, incident-response drills, reward replay tests, data deletion/rights workflows, and marketplace transaction QA | Mainnet partner agreement drafts circulated to all 4 launch partners | Mainnet contract or ledger design frozen; reward formula replay passes; slashing/challenge policy approved; marketplace fee split draft approved |
+| November 2026 | Complete mainnet release candidate and launch operations plan | Run security review, economic attack simulation, load test, points audit, partner launch rehearsal, and disaster-recovery rehearsal | All 4 launch partners sign mainnet launch agreement or binding equivalent; launch dataset and operating commitments confirmed | 2-week release candidate stable; audit issues triaged; points-to-reward policy approved if applicable; partner launch runbook signed off |
+| December 2026 | Launch mainnet with 4 launch-partner subnets | Run final production readiness review, launch monitoring, post-launch support plan, and marketplace transaction verification | No mainnet launch without 4 signed launch partners, approved data rights, operator runbooks, and staking/reward commitments | 4 mainnet subnets live; staking/reward policy active; marketplace access flow live; partner dashboards live; no open P0/P1 launch bugs |
+
+### Mandatory Launch-Partner Blockers
+
+These are milestone blockers, not optional business-development notes. A milestone should not be marked complete if the matching partner dependency is missing.
+
+| Blocker | Required By | Why It Matters | Proof Needed |
+|---|---:|---|---|
+| Four named launch-partner tracks | May 31, 2026 | The product roadmap depends on 4 subnets by Beta Testnet and Mainnet Launch | Named internal owner, target partner, target subnet thesis, and next meeting for Poseidon, Kled, Korea-based partner, and AI lab track |
+| Poseidon and Kled Testnet 1 participation | June 30, 2026 | Testnet 1 needs at least two credible operators to prove contribution provenance and CPVSS operations | Technical owner, sample data or workflow, testnet account, and feedback loop |
+| Two external partner commitments | July 31, 2026 | The September 4-subnet target cannot wait until September for partner discovery | LOI, written intent, pilot scope, or equivalent written approval |
+| Four Beta Testnet partner workstreams | August 31, 2026 | Beta Testnet needs data, campaign, legal, and technical owners before launch | Named business owner, technical owner, data rights owner, campaign owner, and launch dataset for each partner |
+| Four active Beta Testnet partners | September 30, 2026 | A 4-subnet beta without real partner participation does not test mainnet operations | Partner-led subnet activity, campaign terms, data rights approval, and recurring operating review |
+| Four signed mainnet launch partners | November 30, 2026 | December launch requires legal, operational, and commercial certainty | Signed agreement or binding equivalent, launch dataset commitment, operating runbook, marketplace terms, and staking/reward acknowledgment |
+
+### User Campaign and Points System
+
+The testnet campaign should use non-transferable points first. Points should reward verified usefulness, not raw activity, and should not imply guaranteed token conversion unless Poseidon later publishes a formal conversion policy.
+
+| Phase | Campaign Design | Points Design | Abuse Controls |
 |---|---|---|---|
-| Week 0 | May 15-17, 2026 | Lock beta scope | CPVSS spec, two subnet definitions, voice and video beta acceptance criteria |
-| Week 1 | May 18-22, 2026 | Architecture and schemas | Subnet config, data manifest schema, parser job schema, validation schema, reward model draft |
-| Week 2 | May 25-29, 2026 | Collection layer | Upload/API flow, contributor wallet identity, content hashing, metadata manifest, contribution ledger |
-| Week 3 | June 1-5, 2026 | Miner agent framework | Job queue, miner agent interface, voice parser working, video parser skeleton, output schema |
-| Week 4 | June 8-12, 2026 | Validation layer | Validation agent assignment, consensus rule, red-herring tasks, validation agent reliability score |
-| Week 5 | June 15-19, 2026 | Scoring and search MVP | Owner scoring workflow, reward batch output, searchable dataset portal, dataset detail page |
-| Week 6 | June 22-26, 2026 | Production pilot | End-to-end runs for voice and video, observability, QA, beta docs, pilot datasets |
-| Release | June 29-30, 2026 | Beta launch | Two production beta subnets live, demo datasets processed end to end, beta users onboarded |
+| Testnet 1 | Invite-only campaign for contributors, miner agents, validation agents, and early dataset users | Internal points for accepted contribution, completed parsing, correct validation, useful challenges, and marketplace feedback | Wallet/account uniqueness, duplicate detection, manifest completeness checks, red-herring validation, manual review |
+| Beta Testnet | Public or partner-led campaign across 4 subnets | Visible points dashboard, role-specific points, quality multipliers, capped referral or campaign boosts, delayed finalization | Sybil scoring, rights review, anomaly detection, challenge window, leaderboard audit, partner data-quality review |
+| Mainnet Launch | Points campaign closes or converts into production reward/accounting policy if approved | Published points audit and reward policy; no retroactive ambiguity | Legal review, fraud exclusions, conversion cap if applicable, vesting, clawback window, partner sign-off |
 
-## Week-by-Week Detail
+### Milestone Metrics
 
-### Week 0: May 15-17, 2026
+These metrics are proposed planning targets. They should be tuned as real testnet data arrives, but each milestone needs measurable exit criteria.
 
-Goal: Lock the beta scope.
-
-Deliverables:
-
-- CPVSS design document.
-- Voice subnet definition.
-- Video subnet definition.
-- Beta success criteria.
-- Decision log template.
-
-Key decision:
-
-- Confirm whether beta rewards are testnet, points-based, or real token-denominated.
-
-### Week 1: May 18-22, 2026
-
-Goal: Define the architecture and schemas.
-
-Deliverables:
-
-- Dataset manifest schema.
-- Contributor record schema.
-- Parser job schema.
-- Parser output schema.
-- Validation schema.
-- Score schema.
-- Reward allocation model.
-- System architecture diagram.
-
-Key decision:
-
-- Choose beta ledger design: direct testnet contract, internal ledger with hash commitments, or hybrid.
-
-### Week 2: May 25-29, 2026
-
-Goal: Build the collection layer.
-
-Deliverables:
-
-- Contributor upload/API.
-- Wallet or account identity linkage.
-- Content hash generation.
-- Metadata and rights capture.
-- Contribution ledger.
-- Basic audit trail.
-
-Key decision:
-
-- Decide minimum consent and rights metadata required before data can enter parsing.
-
-### Week 3: June 1-5, 2026
-
-Goal: Build the miner agent framework.
-
-Deliverables:
-
-- Miner agent interface.
-- Job queue.
-- Voice parsing pipeline.
-- Video parsing pipeline skeleton.
-- Parser output artifact storage.
-- Output hash commitment.
-- Miner agent job history.
-
-Key decision:
-
-- Decide whether miner agents are permissioned for beta or open to external operators.
-
-### Week 4: June 8-12, 2026
-
-Goal: Build the validation layer.
-
-Deliverables:
-
-- Validation agent assignment workflow.
-- Validation UI or API.
-- Consensus threshold.
-- Red-herring task injection.
-- Validation agent reliability score.
-- Slashing or down-weighting simulation.
-
-Key decision:
-
-- Choose the initial consensus algorithm for beta and define failure handling.
-
-### Week 5: June 15-19, 2026
-
-Goal: Build scoring and search MVP.
-
-Deliverables:
-
-- Subnet owner scoring workflow.
-- Score batch output.
-- Reward allocation output.
-- Dataset search index.
-- Dataset detail page.
-- Voice and video filters.
-- Marketplace access placeholder.
-
-Key decision:
-
-- Decide what marketplace transaction flow is required for beta: request access, testnet payment, or manual approval.
-
-### Week 6: June 22-26, 2026
-
-Goal: Run production pilot.
-
-Deliverables:
-
-- End-to-end voice subnet run.
-- End-to-end video subnet run.
-- QA report.
-- Observability dashboard.
-- Failure recovery checklist.
-- Beta onboarding guide.
-- Initial pilot datasets in search portal.
-
-Key decision:
-
-- Decide what qualifies as production beta readiness.
-
-### Release Window: June 29-30, 2026
-
-Goal: Launch beta.
-
-Deliverables:
-
-- Two beta subnets live in production.
-- Voice dataset processed end to end.
-- Video dataset processed end to end.
-- Contributor, miner agent, validation agent, owner, and user flows demonstrated.
-- Beta users onboarded.
-- Known limitations documented.
-- Post-beta design backlog created.
-
-## Immediate Next Steps
-
-1. Approve the CPVSS stage ownership model.
-2. Define the voice and video subnet schemas.
-3. Choose the beta ledger approach.
-4. Create the first end-to-end demo dataset.
-5. Assign owners for collection, parsing, validation, scoring, and search.
+| Metric Category | Testnet 1 by June 30, 2026 | Beta Testnet by September 30, 2026 | Mainnet Launch by December 31, 2026 |
+|---|---|---|---|
+| Subnets | 2 live subnets: voice and video | 4 live Beta Testnet subnets | 4 live mainnet launch-partner subnets |
+| Partner Readiness | Poseidon and Kled active; 2 external partner tracks in active BD | 4 launch-candidate partners active in Beta Testnet | 4 signed launch partners with data, legal, ops, and campaign commitments |
+| Agent Network | 16 miner-agent slots and 16 validation-agent slots configured per subnet; permissioned agents acceptable | >=64 miner-agent registrations and >=64 validation-agent registrations across 4 subnets; >=70% active during the campaign period | Production agent registry active; staking or launch-bond rules enforced; agent reliability history migrated or initialized |
+| Data Supply | >=2 curated seed datasets; >=95% accepted items include manifest, content hash, and rights metadata | >=5,000 accepted data items or partner-approved equivalent; >=90% rights metadata completeness | Partner launch datasets committed; data-rights workflow approved; deletion and dispute workflow tested |
+| CPVSS Throughput | >=20 full end-to-end CPVSS runs across voice and video | >=200 full CPVSS runs across 4 subnets | Two-week release candidate with stable daily CPVSS processing |
+| Quality and Validation | Parser job success >=80%; validation consensus produced for >=90% completed jobs; red-herring detection >=80% | Parser job success >=90%; validation consensus produced for >=95% completed jobs; red-herring detection >=90% | Mainnet quality thresholds approved; challenge and slashing policy active; no unresolved high-risk validation issue |
+| Points and Rewards | Points ledger v0 records contribution, parsing, validation, scoring, and search feedback | Points dashboard live; leaderboard audited; fraud review completed before final points settlement | Points audit complete; mainnet reward or conversion policy approved if applicable; vesting and clawback rules active |
+| Marketplace | Search portal shows processed datasets with provenance and quality score | 4 subnet marketplace pages live; request/access flow tested with design partners | Marketplace access and transaction flow live; fee split and revenue accounting verified |
+| Reliability | No open P0/P1 bugs at milestone close; observability dashboard live | No open P0/P1 bugs; load test passes 5x Testnet 1 traffic assumptions | No open P0/P1 bugs; launch monitoring, incident response, and rollback plan approved |
+| Security and Compliance | Basic threat model and rights checklist complete | Security review, rights review, anti-Sybil review, and economic simulation complete | Security review issues triaged; partner legal approvals complete; production readiness review signed off |
 
 ## Final Positioning
 

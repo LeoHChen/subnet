@@ -229,7 +229,7 @@ def render_markdown_body(lines: list[str], heading_slugs: dict[int, str]) -> str
 
 def parse_document(markdown: str) -> dict[str, object]:
     lines = markdown.splitlines()
-    title = "Poseidon Subnet CPVSS Design and Beta Roadmap"
+    title = "Poseidon Subnet CPVSS Design and Launch Roadmap"
     if lines and lines[0].startswith("# "):
         title = lines[0][2:].strip()
 
