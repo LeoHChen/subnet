@@ -6,6 +6,45 @@ Scope: Testnet 1 with two subnets, Beta Testnet with four subnets, and Mainnet L
 
 ## Executive Summary
 
+### Background: Poseidon and Subnets
+
+Poseidon is designed for the part of the AI stack that is becoming hardest to solve: specialized, rights-cleared, high-quality training data.
+
+The first wave of AI progress was powered by three resources: compute, model architecture, and data. Compute can scale with capital. Model techniques spread quickly once discovered. Data is different. The most valuable training data is often specialized, long-tail, multi-modal, proprietary, operational, or newly generated. It may live inside domain organizations, DePIN networks, data platforms, call centers, robotics workflows, healthcare workflows, media workflows, or other real-world systems. This data is difficult to find, difficult to validate, difficult to license, and difficult to price.
+
+Poseidon addresses this gap by creating infrastructure for AI data economies. At a high level, Poseidon coordinates the full lifecycle of dataset creation:
+
+1. Define what data is needed.
+2. Collect data from distributed suppliers.
+3. Process and annotate it into AI-ready formats.
+4. Validate quality and rights.
+5. Register provenance and IP lineage.
+6. Make the resulting dataset discoverable and monetizable through a marketplace.
+
+Poseidon is built around data pipelines and subnetworks. A data pipeline is the workflow that turns raw contributions into a usable dataset. A subnetwork, or subnet, is a specialized execution environment for a particular AI data domain. Voice data, video data, robotics data, medical data, and other categories do not have the same privacy, storage, bandwidth, validation, or licensing requirements. Subnets let each domain optimize its workflow and economics while still sharing common Poseidon infrastructure.
+
+The Poseidon litepaper frames subnetworks as purpose-built shards synchronized and secured by a shared network layer. Each subnet can operate its own data pipelines, economic rules, validation mechanisms, and quality standards, while using shared infrastructure for provenance, IP management, interoperability, and marketplace access. This is why subnets matter: they let Poseidon scale across many AI data domains without forcing every domain into one generic pipeline.
+
+Story's IP infrastructure is an important part of this design. Poseidon can use Story to track data provenance, IP lineage, programmable licensing, royalty flows, randomness, commitments, and potentially secure access to registered data assets. This matters because AI buyers increasingly need data that is not only useful, but also rights-cleared and auditable.
+
+For a new reader, the simplest framing is:
+
+> Poseidon is a marketplace and coordination layer for AI training data. Subnets are specialized data factories inside Poseidon. Crypto is the coordination, provenance, staking, reward, and settlement layer that lets many independent actors contribute work and share in the value of the datasets they help create.
+
+### What This Document Adds
+
+The litepaper explains the broad Poseidon architecture. This document turns that architecture into a concrete subnet design for near-term launch, focused on voice and video data.
+
+It proposes CPVSS as the operating framework for a subnet:
+
+1. Collection
+2. Parsing
+3. Validation
+4. Score
+5. Search
+
+The goal is to make the subnet design legible to both technical and business readers: what each stage does, why decentralization matters, where central authority is still needed, how $POS token incentives fit, how staking and emissions should work, how marketplace revenue can create buying pressure, and what milestones are required for Testnet 1, Beta Testnet, and Mainnet Launch.
+
 The subnet design should use crypto where crypto creates a real advantage: coordinating distributed labor, preserving contribution history, proving provenance, creating auditable reward trails, and enabling a marketplace for AI data.
 
 The design should not claim that every part of the system must be decentralized. A stronger and more credible architecture is hybrid:
