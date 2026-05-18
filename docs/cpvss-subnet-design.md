@@ -10,11 +10,9 @@ Scope: Testnet 1 with two subnets, Beta Testnet with four subnets, and Mainnet L
 
 Poseidon is the Data Layer for AI.
 
-Poseidon is designed for the part of the AI stack that is becoming hardest to solve: specialized, rights-cleared, high-quality training data.
+Poseidon addresses a structural bottleneck in the AI stack: specialized, rights-cleared, high-quality data. Compute supply can expand with capital expenditure, and model techniques diffuse quickly once published. Data is less fungible. Valuable training data is often domain-specific, multi-modal, proprietary, operational, or newly generated, and it usually requires provenance, quality control, privacy handling, and licensing before it can be used by model developers.
 
-The first wave of AI progress was powered by three resources: compute, model architecture, and data. Compute can scale with capital. Model techniques spread quickly once discovered. Data is different. The most valuable training data is often specialized, long-tail, multi-modal, proprietary, operational, or newly generated. It may live inside domain organizations, DePIN networks, data platforms, call centers, robotics workflows, healthcare workflows, media workflows, or other real-world systems. This data is difficult to find, difficult to validate, difficult to license, and difficult to price.
-
-Poseidon addresses this gap by creating infrastructure for AI data economies. At a high level, Poseidon coordinates the full lifecycle of dataset creation:
+Poseidon coordinates the lifecycle of AI dataset creation:
 
 1. Define what data is needed.
 2. Collect data from distributed suppliers.
@@ -23,23 +21,17 @@ Poseidon addresses this gap by creating infrastructure for AI data economies. At
 5. Register provenance and IP lineage.
 6. Make the resulting dataset discoverable and monetizable through a marketplace.
 
-Poseidon is built around subnetworks and data pipelines. The original litepaper describes subnetworks as purpose-built shards for specific AI domains, but the current design should be sharper: a Poseidon subnet consists of both a decentralized compute network and a CPVSS processing pipeline. The decentralized compute network supplies the workers, miner agents, validation agents, challengers, and execution capacity. The CPVSS pipeline defines how raw data moves through collection, parsing, validation, scoring, and search until it becomes a usable, monetizable dataset.
+This proposal updates the subnet definition used in earlier materials. A Poseidon subnet is the combination of a decentralized compute network and a CPVSS processing pipeline. The compute network supplies miner agents, validation agents, challengers, and execution capacity. The CPVSS pipeline defines how raw data moves through Collection, Parsing, Validation, Score, and Search until it becomes a usable dataset.
 
-A subnetwork, or subnet, is therefore not just a generic compute cluster and not just a data workflow. It is a domain-specific data production system. Voice data, video data, robotics data, medical data, and other categories do not have the same privacy, storage, bandwidth, validation, fraud-detection, or licensing requirements. Subnets let each domain optimize its compute, workflow, quality controls, and economics while still sharing common Poseidon infrastructure.
+A subnet is therefore not a generic compute cluster and not merely a workflow template. It is a domain-specific data production system. Voice, video, robotics, healthcare, financial-document, and image data have different privacy, bandwidth, storage, validation, fraud-detection, and licensing requirements. Subnets allow each domain to specialize its processing stack and economics while sharing Poseidon infrastructure for provenance, IP management, interoperability, and marketplace access.
 
-The Poseidon litepaper frames subnetworks as purpose-built shards synchronized and secured by a shared network layer. That remains directionally useful, but this proposal updates the emphasis: the subnet's core product value comes from using decentralized compute to execute data-specific processing pipelines better, cheaper, and more transparently than a purely centralized workflow. Each subnet can operate its own economic rules, validation mechanisms, quality standards, and processing stack, while using shared infrastructure for provenance, IP management, interoperability, and marketplace access. This is why subnets matter: they let Poseidon scale across many AI data domains without forcing every domain into one generic pipeline.
-
-Story's IP infrastructure is an important part of this design. Poseidon can use Story to track data provenance, IP lineage, programmable licensing, royalty flows, randomness, commitments, and potentially secure access to registered data assets. This matters because AI buyers increasingly need data that is not only useful, but also rights-cleared and auditable.
-
-For a new reader, the simplest framing is:
-
-> Poseidon is a marketplace and coordination layer for AI training data. Subnets are specialized data factories inside Poseidon. Crypto is the coordination, provenance, staking, reward, and settlement layer that lets many independent actors contribute work and share in the value of the datasets they help create.
+Story's IP infrastructure can provide the provenance and licensing layer for this design. Poseidon can use Story to track data lineage, programmable licensing, royalty flows, commitments, and access rights for registered data assets. This is important because AI data buyers increasingly need datasets that are not only useful, but also rights-cleared, auditable, and commercially defensible.
 
 ### CPVSS Processing Pipeline Background
 
-CPVSS stands for Collection, Parsing, Validation, Score, and Search. It is the operating pipeline that turns raw, messy, distributed data into AI-ready data assets.
+CPVSS stands for Collection, Parsing, Validation, Score, and Search. It is the operating pipeline that converts distributed raw data into AI-ready data assets.
 
-The reason CPVSS matters is that raw data alone is not the product. A buyer does not only want uploads, volume, or a headline number of files. A buyer wants data that matches a specification, is not spam, is not duplicated, is not synthetic fraud, has usable metadata, meets quality thresholds, respects privacy and rights constraints, and can be found or licensed later. CPVSS is the structure that makes this possible.
+CPVSS matters because raw data alone is not the product. A buyer needs data that matches a specification, avoids spam and duplicates, passes synthetic-fraud checks, includes usable metadata, meets quality thresholds, respects privacy and rights constraints, and can be discovered and licensed later. CPVSS is the control system that enforces those requirements.
 
 At a high level:
 
@@ -49,51 +41,23 @@ At a high level:
 4. **Score** gives the subnet owner a final quality and usefulness decision, similar to an oracle role, while keeping score batches auditable and challengeable.
 5. **Search** turns accepted datasets into a marketplace surface where buyers can discover, inspect, license, and pay for useful data.
 
-The recent subnet strategy discussion reinforced that CPVSS should stay focused on data-specific processing rather than drifting too early into generic compute. Generic compute routing can be a future extension if the miner network grows large enough, but Poseidon's near-term moat is the combination of decentralized compute with opinionated AI data workflows.
+The recent subnet strategy discussion reinforced that CPVSS should remain data-specific rather than drifting prematurely into generic compute. Generic compute routing can be a future extension if the miner network becomes deep enough, but Poseidon's near-term technical advantage is the combination of decentralized compute with domain-specific AI data workflows.
 
-The practical reason to introduce subnets is that the current centralized CPVSS pattern becomes expensive and brittle as modalities expand. Poseidon absorbs every dollar of parsing and review cost, centralized reviewers can become lazy or gameable, and one internal roadmap cannot ship every modality fast enough. A subnet turns the same pipeline into an open production system: miner agents compete to run standardized parsing recipes, validation agents stake behind quality decisions, subnet owners propose modality-specific pipelines, and Poseidon keeps the buyer-facing marketplace coherent.
+The practical reason to introduce subnets is that the current centralized CPVSS pattern becomes expensive and brittle as modalities expand. Poseidon absorbs every dollar of parsing and review cost, centralized reviewers can become susceptible to shirking or gaming, and a single internal roadmap cannot cover every modality at sufficient speed. A subnet turns the same pipeline into an open production system: miner agents compete to run standardized parsing recipes, validation agents stake behind quality decisions, subnet owners propose modality-specific pipelines, and Poseidon keeps the buyer-facing marketplace coherent.
 
-For the first production targets, CPVSS should be grounded in audio and video. The audio pipeline can prove rights-cleared voice data, watermarking, metadata-based fraud controls, and buyer demand. The video pipeline can prove privacy filtering, task relevance checks, frame selection, transcript or annotation generation, cost-efficient use of classical computer vision, and selective use of expensive vision-language models only when needed.
+For the first production targets, CPVSS should be grounded in audio and video. The audio pipeline can validate rights-cleared voice data, watermarking, metadata-based fraud controls, and buyer demand. The video pipeline can validate privacy filtering, task-relevance checks, frame selection, transcript or annotation generation, cost-efficient classical computer vision, and selective use of expensive vision-language models only where they improve output quality.
 
-### What This Document Adds
+### Proposal Scope
 
-The litepaper explains the broad Poseidon architecture. The recent subnet strategy discussion clarifies how that architecture should be operationalized: Poseidon should remain focused on data-specific subnet design, use decentralized compute where it makes CPVSS cheaper or more scalable, and make audio/video processing the near-term product wedge.
+The litepaper explains the broad Poseidon architecture. This proposal translates that architecture into a concrete subnet and tokenomics design for near-term launch, focused on voice and video data.
 
-This document turns that architecture into a concrete subnet design for near-term launch, focused on voice and video data.
+The design is deliberately hybrid. Collection, Parsing, and Validation benefit from decentralization because the work is distributed, parallelizable, and adversarially checkable. The Score stage should remain under subnet-owner authority because quality assessment determines rewards and commercial acceptance. Search and marketplace distribution should remain centrally managed by Poseidon at the network level to preserve buyer trust, coherent discovery, and revenue control.
 
-It proposes CPVSS as the operating framework for a subnet:
+The role of crypto is not to decentralize every decision. It is to coordinate independent actors, create accountable staking, preserve contribution and provenance records, route rewards, enforce penalties, and connect dataset revenue back to the participants who created useful data.
 
-1. Collection
-2. Parsing
-3. Validation
-4. Score
-5. Search
+By June 30, 2026, Testnet 1 should demonstrate an end-to-end flow for both voice and video data: contribution, provenance tracking, miner-agent parsing, decentralized validation, subnet-owner scoring, reward allocation, points accounting, and dataset discovery through a Poseidon search portal.
 
-The goal is to make the subnet design legible to both technical and business readers: what each stage does, why decentralization matters, where central authority is still needed, how $PSDN token incentives fit, how staking and emissions should work, how marketplace revenue can create buying pressure, and what milestones are required for Testnet 1, Beta Testnet, and Mainnet Launch.
-
-The subnet design should use crypto where crypto creates a real advantage: coordinating distributed labor, preserving contribution history, proving provenance, creating auditable reward trails, and enabling a marketplace for AI data.
-
-The design should not claim that every part of the system must be decentralized. A stronger and more credible architecture is hybrid:
-
-- Collection, parsing, and validation benefit directly from decentralization.
-- Scoring should remain controlled by the subnet owner.
-- Search and marketplace distribution should remain centrally managed by Poseidon at the network level.
-
-This gives Poseidon a clear thesis:
-
-> Crypto is not here to decentralize everything. Crypto is here to coordinate distributed AI data work, make contribution and quality auditable, and create programmable ownership and payout rails for useful AI datasets.
-
-The CPVSS pipeline is:
-
-1. Collection
-2. Parsing
-3. Validation
-4. Score
-5. Search
-
-By June 30, 2026, Testnet 1 should demonstrate an end-to-end working flow for both voice and video data: contribution, provenance tracking, miner-agent parsing, decentralized validation, subnet-owner scoring, reward allocation, points accounting, and dataset discovery through a Poseidon search portal.
-
-By September 30, 2026, Beta Testnet should expand to four subnets, run a real user campaign, operate a point system with anti-abuse controls, and prove that partner-led subnets can run through CPVSS repeatedly.
+By September 30, 2026, Beta Testnet should expand to four subnets, run a user campaign, operate a point system with anti-abuse controls, and demonstrate that partner-led subnets can run CPVSS repeatedly.
 
 By December 31, 2026, Mainnet Launch should activate the four launch-partner subnets with production-grade staking, reward policy, marketplace flow, partner operating commitments, and launch readiness metrics.
 
@@ -104,7 +68,7 @@ By December 31, 2026, Mainnet Launch should activate the four launch-partner sub
 3. Keep raw data and large artifacts off-chain, but make provenance, commitments, scores, and reward history auditable.
 4. Treat the beta as a working system, not just a protocol demo.
 5. Leave room for design decisions in consensus, scoring, slashing, and marketplace economics.
-6. Use one token, $PSDN, for the full network. Avoid creating subnet-specific tokens unless there is an overwhelming reason later.
+6. Use one token, $PSDN, for the full network. Avoid subnet-specific tokens unless there is a clear technical or economic requirement.
 7. Reduce long-term emissions to protect token value, but reserve enough targeted incentives to bootstrap contributors, miner agents, validation agents, and early buyers.
 8. Design every reward around game theory: pay for useful verified work, not raw activity.
 
@@ -126,7 +90,7 @@ $PSDN should support five core utilities:
 
 ### Role-Based Staking Model
 
-> **Skin in the game principle:** any actor who can impose cost on the network should have enough $PSDN at risk that honest behavior is economically better than spam, laziness, collusion, or fraud.
+> **Skin in the game principle:** any actor who can impose cost on the network should have enough $PSDN at risk that honest behavior is economically better than spam, low-effort work, collusion, or fraud.
 
 The role-based staking model is one of the most important pieces of the tokenomics design because it makes participation economically accountable.
 
@@ -137,7 +101,7 @@ Assumption for the baseline estimate:
 - Total $PSDN supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
 - Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
-- Testnet 1 target remains two production subnets, likely voice and video.
+- Testnet 1 target remains two subnets, likely voice and video.
 - Beta Testnet target expands to four launch-candidate subnets.
 - Mainnet Launch assumes four subnet launch partners.
 - Mainnet launch partner assumption: Poseidon team, Kled team, a Korea-based healthcare/data partner such as Big Care, and a major AI lab partner such as ElevenLabs. Big Care and ElevenLabs are planning examples, not confirmed commitments.
@@ -148,8 +112,8 @@ Assumption for the baseline estimate:
 |---|---|---:|---|---|---|---|
 | Individual Contributor | No required stake. Optional stake can increase rewards through a capped multiplier. Past contributors can receive an initial airdrop based on verified contribution history. | Required: 0 $PSDN. Optional: 0-10,000 $PSDN. Reward multiplier capped at 1.25x so quality still matters more than wealth. | Open participation | Keep contribution open while giving serious contributors a way to signal long-term alignment | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata; penalties should usually reduce rewards before slashing optional stake | Prevent low-cost Sybil supply without blocking useful individual contributors |
 | Collection Operator | Required for large-scale campaigns or professional data suppliers | 50,000 $PSDN per active campaign, or 0.005% of supply | Campaign-based | Discourage spam, duplicate supply, and rights fraud at scale | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Make professional collection operators internalize the cost of bad supply |
-| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $PSDN per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $PSDN per subnet, or 0.08% of supply | 16 miner agents per subnet for beta production; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Stop miner agents from farming bounties with cheap invalid work |
-| Validation Agent | Required per active validation agent | 20,000 $PSDN per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $PSDN per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents take review work seriously | Failed red herrings, provably lazy validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
+| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $PSDN per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $PSDN per subnet, or 0.08% of supply | 16 miner agents per subnet for initial beta operation; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Prevent miner agents from farming bounties with low-cost invalid work |
+| Validation Agent | Required per active validation agent | 20,000 $PSDN per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $PSDN per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents perform independent review | Failed red herrings, provably low-effort validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
 | Subnet Owner | Required launch bond or quality bond | 2,500,000 $PSDN per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
 | Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $PSDN per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
 | Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $PSDN for normal buyers; 25,000 $PSDN only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
@@ -203,11 +167,11 @@ total_role_bonded_launch_stake = 14,480,000 $PSDN, or 1.448% of total supply
 
 This is an equal-subnet launch assumption for planning. Actual mainnet reward and stake parameters should be weighted by subnet maturity, commercial demand, task cost, fraud risk, and partner operating capacity.
 
-The stake should be high enough to make malicious behavior expensive, but not so high that only whales can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
+The stake should be high enough to make malicious behavior expensive, but not so high that only large holders can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
 
 #### Contributor Airdrop and Stake Multiplier
 
-Individual contributors should be allowed to start with zero stake. The network wants broad supply, and requiring every contributor to buy tokens before contributing would slow down bootstrapping.
+Individual contributors should be allowed to start with zero stake. Broad contribution supply is important during bootstrapping, and requiring every contributor to buy tokens before contributing would create unnecessary friction.
 
 Recommended contributor design:
 
@@ -283,12 +247,12 @@ Assuming Year 1 weekly emission cap of 865,385 $PSDN and four mainnet launch sub
 |---|---:|---:|---:|---|
 | Collection | 35% | 302,885 $PSDN | 75,721 $PSDN per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
 | Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per miner agent per week with 16 miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
-| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, lazy validation, or collusion reduce rewards and can slash stake. |
+| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, low-effort validation, or collusion reduce rewards and can slash stake. |
 | Score | 10% | 86,538 $PSDN | 21,635 $PSDN per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
 | Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
 | Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
 
-These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. It should not be emitted just because a budget exists.
+These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. Emissions should not be released solely because a budget was scheduled.
 
 The table above replaces the separate incentive design summary: incentive mechanism, penalty design, and emission budget must be changed together.
 
@@ -370,7 +334,7 @@ Recommended beta/mainnet planning assumptions:
 
 | Parameter | Conservative Starting Point | Why |
 |---|---:|---|
-| Annual revenue per production subnet | 3,000,000 $PSDN-equivalent | Enough to test meaningful buyer demand without assuming immediate marketplace dominance |
+| Annual revenue per production subnet | 3,000,000 $PSDN-equivalent | Enough to test meaningful buyer demand without assuming immediate market leadership |
 | Active mainnet launch subnets | 4 | Matches the launch-partner plan |
 | Annual revenue growth | 50% | Aggressive but plausible if partner-led subnets compound supply and demand |
 | $PSDN settlement or conversion ratio | 70% | Creates token demand while leaving room for fiat abstraction and operating flexibility |
@@ -439,8 +403,8 @@ The tokenomics must assume rational adversarial behavior.
 |---|---|---|
 | Sybil contribution | Many wallets submit duplicate, fake, or low-rights data | Deduplication, rights checks, delayed rewards, contributor reputation, optional bonds |
 | Volume farming | Actors optimize for number of uploads or jobs rather than usefulness | Quality-weighted rewards, owner score, marketplace demand weighting |
-| Lazy parsing | Miner agents submit cheap low-quality outputs | Validation consensus, spot checks, stake slashing, delayed payout |
-| Lazy validation | Validation agents rubber-stamp outputs | Red-herring tasks, reliability score, slashing, reduced future assignment |
+| Low-quality parsing | Miner agents submit low-cost, low-quality outputs | Validation consensus, spot checks, stake slashing, delayed payout |
+| Low-effort validation | Validation agents rubber-stamp outputs | Red-herring tasks, reliability score, slashing, reduced future assignment |
 | Collusion | Contributors, miner agents, and validation agents coordinate to approve bad data | Random assignment, hidden tests, reputation decay, owner scoring, challenge windows |
 | Score abuse | Subnet owner manipulates scores to favor insiders | Signed score batches, public audit trail, challenge bond, Poseidon-level monitoring |
 | Wash demand | Actors create fake marketplace purchases to trigger rewards | Buyer reputation, fee friction, anomaly detection, reward delay, anti-self-dealing rules |
@@ -464,7 +428,7 @@ The beta does not need to finalize every sink. It should define the accounting s
 |---|---|---|---|---|
 | Collection | Gather raw voice and video data, metadata, consent, and provenance | Naturally decentralized because contributors are distributed | On-chain contribution records, audit trails, contributor identity, provenance, and reward eligibility | Contributor upload/API, dataset manifest, content hash, wallet-linked contribution ledger |
 | Parsing | Convert raw data into structured artifacts such as transcripts, segments, labels, and metadata | Decentralizable because jobs are parallel and do not require real-time execution | On-chain coordination, miner agent assignment, result commitment, staking, and reward accounting | Miner agent framework for voice and video parsing jobs |
-| Validation | Check parsing quality and detect bad or lazy work | Strong fit for decentralized consensus through redundant validation agents | Validation agent staking, red-herring tasks, slashing, reputation, and proof-of-usefulness | Multi-agent review, consensus threshold, red-herring detection |
+| Validation | Check parsing quality and detect invalid or low-effort work | Strong fit for decentralized consensus through redundant validation agents | Validation agent staking, red-herring tasks, slashing, reputation, and proof-of-usefulness | Multi-agent review, consensus threshold, red-herring detection |
 | Score | Assign final quality score and determine reward allocation | Should be centralized by the subnet owner | Crypto makes the score auditable and payout-linked, while authority remains with the owner | Owner scoring service, signed score batches, reward distribution output |
 | Search | Enable dataset discovery, access, transactions, and monetization | Should be centralized at the Poseidon network level | Payments, revenue splits, contributor royalties, and provenance-backed marketplace access | Poseidon portal with searchable voice and video datasets |
 
@@ -480,13 +444,13 @@ The goal is to make contribution easy while ensuring every dataset item has a tr
 
 ### Decentralization
 
-Collection is naturally decentralized. Contributors are distributed across geographies, communities, platforms, and data sources. A centralized data collection operation can work, but it limits scale and weakens the crypto-native incentive story.
+Collection is naturally decentralized. Contributors are distributed across geographies, communities, platforms, and data sources. A centralized data collection operation can work, but it limits scale and weakens contribution attribution, auditability, and incentive alignment.
 
 The beta should allow contributors or trusted operators to submit data through a simple upload/API flow. Every submitted item should produce a durable record that can later be used for audit, scoring, and payout.
 
 ### Why Crypto Matters
 
-Crypto matters in collection because it creates an auditable contribution ledger. Similar to systems like Kled using on-chain records for contribution tracking and audit trails, Poseidon can use crypto rails to preserve who contributed which asset and how that contribution later created value.
+Crypto matters in collection because it creates an auditable contribution ledger. A Kled-style on-chain contribution record can preserve who contributed each asset, what metadata and rights were attached, and how that contribution later created value.
 
 For beta, the system does not need to put raw data on-chain. It should put hashes, contribution metadata, and batch commitments on-chain or in a chain-compatible ledger.
 
@@ -525,7 +489,7 @@ Cons:
 
 - Contributors may dislike delayed rewards.
 - New contributors may not know what the network values.
-- Sybil attacks are still possible if identities are cheap and rewards are too high.
+- Sybil attacks remain possible if identity creation is low cost and rewards are too high.
 
 #### Design B: Contributor Bond and Curated Campaigns
 
@@ -547,7 +511,7 @@ Pros:
 
 Cons:
 
-- Bonds may exclude small or non-crypto-native contributors.
+- Bonds may exclude small contributors or contributors unfamiliar with crypto.
 - Campaign design becomes operationally important.
 - Slashing for rights problems can be contentious if the contributor made a good-faith mistake.
 
@@ -555,7 +519,7 @@ Cons:
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
-| Quality-weighted rewards | Pay only after data proves useful | No or low slashing; delayed reward and clawback | Simple, low-friction, emission-aware | Weaker spam deterrence |
+| Quality-weighted rewards | Pay only after data is verified as useful | No or low slashing; delayed reward and clawback | Simple, low-friction, emission-aware | Weaker spam deterrence |
 | Contributor bond campaigns | Stake to submit into defined campaigns | Bond loss for duplicate, fake, or rights-invalid data | Better game-theory defense, targeted supply | Higher friction, harder contributor onboarding |
 
 #### Open Questions
@@ -591,11 +555,11 @@ For video data, parsing may include:
 
 ### Goal
 
-The goal is to transform raw, messy media into structured datasets that are easier to validate, search, package, and sell.
+The goal is to transform raw, noisy media into structured datasets that are easier to validate, search, package, and commercialize.
 
 ### Decentralization
 
-Parsing is decentralizable, although not mandatory. Its strongest decentralization argument is parallelism. Parsing jobs can be split across many independent miner agents, and most parsing jobs do not require real-time execution.
+Parsing is decentralizable, although not mandatory. Its primary decentralization argument is parallelism. Parsing jobs can be split across many independent miner agents, and most parsing jobs do not require real-time execution.
 
 This makes parsing a good fit for distributed compute:
 
@@ -613,7 +577,7 @@ Crypto matters because decentralized parsing needs coordination:
 - How is the output linked to the input?
 - How is the miner agent paid?
 - How is bad work penalized?
-- How can the system prove that work was done?
+- How does the system verify completed work without placing large artifacts on-chain?
 
 The key design question is how much coordination happens on-chain versus off-chain. The beta should avoid overbuilding. A practical design is to keep job execution off-chain while recording job commitments, output hashes, miner agent identity, and reward events in an auditable ledger.
 
@@ -645,7 +609,7 @@ Pros:
 
 - Easy for miner agents to understand.
 - Predictable cost for subnet owners.
-- Strong beta fit because it is operationally simple.
+- Strong beta fit because it is operationally straightforward.
 
 Cons:
 
@@ -703,13 +667,13 @@ The goal is to prevent low-quality parsing from entering the marketplace and to 
 
 ### Decentralization
 
-Validation is one of the strongest decentralization fits in the CPVSS pipeline. Multiple validation agents can independently review parser outputs, and their results can be aggregated through a consensus algorithm.
+Validation is a particularly strong fit for decentralization in the CPVSS pipeline. Multiple validation agents can independently review parser outputs, and their results can be aggregated through a consensus algorithm.
 
-For beta, validation should focus on practical consensus rather than perfect mechanism design. The first version should prove that redundant validation can detect bad outputs and produce a reliable quality signal.
+For beta, validation should focus on practical consensus rather than perfect mechanism design. The first version should demonstrate that redundant validation can detect bad outputs and produce a reliable quality signal.
 
 ### Why Crypto Matters
 
-Crypto matters because validation agents need incentives, accountability, and penalties. Validation agents can stake reputation or tokens. Correct validation earns rewards. Lazy or dishonest validation can be penalized.
+Crypto matters because validation agents need incentives, accountability, and penalties. Validation agents can stake reputation or tokens. Correct validation earns rewards. Low-effort or dishonest validation can be penalized.
 
 The red-herring mechanism is especially useful. The system can inject known test cases into validation queues. Validation agents who repeatedly fail these hidden checks can be down-weighted or slashed.
 
@@ -752,8 +716,8 @@ Mechanism:
 
 Pros:
 
-- Clear and simple validation model.
-- Red herrings directly target lazy validation.
+- Operationally clear validation model.
+- Red herrings directly target low-effort validation.
 - Strong beta fit.
 
 Cons:
@@ -790,7 +754,7 @@ Cons:
 
 | Design | Incentive | Slashing/Penalty | Pros | Cons |
 |---|---|---|---|---|
-| Majority consensus with red herrings | Reward consensus and hidden-test accuracy | Slash or down-weight validation agents who fail red herrings | Simple, strong lazy-validation defense | Herding and collusion risk |
+| Majority consensus with red herrings | Reward consensus and hidden-test accuracy | Slash or down-weight validation agents who fail red herrings | Operationally simple defense against low-effort validation | Herding and collusion risk |
 | Reputation-weighted validation | More weight and rewards for proven validation agents | Slash for failed tests, wrong challenges, or repeated bad votes | Better long-term quality | Complexity and possible validation-agent oligopoly |
 
 #### Open Questions
@@ -952,7 +916,7 @@ Cons:
 
 #### Design B: Capped Demand Incentives With Anti-Wash Rules
 
-Poseidon uses capped $PSDN incentives to bootstrap marketplace activity, but rewards only unlock when there is credible demand, quality, and non-self-dealing behavior.
+Poseidon uses capped $PSDN incentives to bootstrap marketplace activity, but rewards only unlock when there is verified demand, quality, and non-self-dealing behavior.
 
 Mechanism:
 
@@ -996,7 +960,7 @@ Cons:
 4. Miner agent produces structured artifacts.
 5. Parser output is stored off-chain and committed through an output hash.
 6. Validation agents review parser output.
-7. Red-herring validation tasks detect lazy or dishonest validation agents.
+7. Red-herring validation tasks detect low-effort or dishonest validation agents.
 8. Consensus produces a validation result.
 9. Subnet owner reviews final artifacts and assigns a score.
 10. Reward allocation is generated from contribution, parsing, validation, and owner score.
@@ -1050,7 +1014,7 @@ These decisions should remain open during testnet design and be resolved only wh
 
 ## Milestone Roadmap
 
-The roadmap should be managed by monthly milestone gates, not weekly task lists. Each gate must prove a product capability, a testing level, a points or reward-accounting capability, and a launch-partner readiness level.
+The roadmap should be managed by monthly milestone gates, not weekly task lists. Each gate must demonstrate a product capability, a testing level, a points or reward-accounting capability, and a launch-partner readiness level.
 
 The three hard milestone dates are:
 
@@ -1066,7 +1030,7 @@ The three hard milestone dates are:
 |---|---|---|---|---|
 | May 2026 | Lock CPVSS architecture, schemas, role-based staking assumptions, point-accounting model, and Testnet 1 scope | Create test plan, seed datasets, red-herring strategy, QA checklist, and internal points ledger spec | Biz team assigns partner owner for Poseidon, Kled, Korea-based data partner, and major AI lab track | Architecture approved; voice/video subnet specs drafted; points ledger spec approved; partner pipeline owner named for all 4 launch tracks |
 | June 2026 | Launch Testnet 1 with 2 subnets: voice and video | Run invite-only user campaign, internal/testnet points, end-to-end CPVSS QA, parser/validation/scoring dry runs, and marketplace discovery test | Poseidon and Kled technical owners confirmed; external partner pitch pack delivered to Korea partner and AI lab candidates | 2 subnets live; 16 miner-agent slots and 16 validation-agent slots configured per subnet; >=20 full CPVSS runs; >=95% manifest completeness; no open P0/P1 launch bugs |
-| July 2026 | Convert Testnet 1 learnings into Beta Testnet architecture for 4 subnets | Expand campaign tooling, anti-Sybil checks, points dashboards, validator red-herring library, and load-test plan | At least 2 external launch-candidate partners have signed LOI or equivalent written commitment | 4-subnet templates ready; points fraud rules drafted; partner data requirements captured; beta campaign terms drafted |
+| July 2026 | Convert Testnet 1 learnings into Beta Testnet architecture for 4 subnets | Expand campaign tooling, anti-Sybil checks, points dashboards, validation-agent red-herring library, and load-test plan | At least 2 external launch-candidate partners have signed LOI or equivalent written commitment | 4-subnet templates ready; points fraud rules drafted; partner data requirements captured; beta campaign terms drafted |
 | August 2026 | Stand up 4 Beta Testnet subnet environments and partner onboarding workflow | Run closed partner pilots, rights review, data-quality QA, security review, economic simulation, and campaign rehearsal | All 4 launch-candidate partners assign business owner, technical owner, data owner, and campaign owner | 4 subnets deployed in staging/testnet; >=64 miner-agent registrations; >=64 validation-agent registrations; partner sample datasets ingested; no unresolved data-rights blocker |
 | September 2026 | Launch Beta Testnet with 4 subnets | Run public or partner-led user campaign, points leaderboard, anti-abuse review, marketplace access tests, and partner operating drills | All 4 launch-candidate partners actively participate in Beta Testnet with signed campaign terms and data rights approval | 4 subnets live; >=500 contributor or user accounts; >=5,000 accepted data items or partner-approved equivalent; parser success >=90%; red-herring detection >=90%; no open P0/P1 launch bugs |
 | October 2026 | Freeze mainnet architecture and production tokenomics parameters | Run audit prep, incident-response drills, reward replay tests, data deletion/rights workflows, and marketplace transaction QA | Mainnet partner agreement drafts circulated to all 4 launch partners | Mainnet contract or ledger design frozen; reward formula replay passes; slashing/challenge policy approved; marketplace fee split draft approved |
@@ -1080,7 +1044,7 @@ These are milestone blockers, not optional business-development notes. A milesto
 | Blocker | Required By | Why It Matters | Proof Needed |
 |---|---:|---|---|
 | Four named launch-partner tracks | May 31, 2026 | The product roadmap depends on 4 subnets by Beta Testnet and Mainnet Launch | Named internal owner, target partner, target subnet thesis, and next meeting for Poseidon, Kled, Korea-based partner, and AI lab track |
-| Poseidon and Kled Testnet 1 participation | June 30, 2026 | Testnet 1 needs at least two credible operators to prove contribution provenance and CPVSS operations | Technical owner, sample data or workflow, testnet account, and feedback loop |
+| Poseidon and Kled Testnet 1 participation | June 30, 2026 | Testnet 1 needs at least two credible operators to demonstrate contribution provenance and CPVSS operations | Technical owner, sample data or workflow, testnet account, and feedback loop |
 | Two external partner commitments | July 31, 2026 | The September 4-subnet target cannot wait until September for partner discovery | LOI, written intent, pilot scope, or equivalent written approval |
 | Four Beta Testnet partner workstreams | August 31, 2026 | Beta Testnet needs data, campaign, legal, and technical owners before launch | Named business owner, technical owner, data rights owner, campaign owner, and launch dataset for each partner |
 | Four active Beta Testnet partners | September 30, 2026 | A 4-subnet beta without real partner participation does not test mainnet operations | Partner-led subnet activity, campaign terms, data rights approval, and recurring operating review |
@@ -1113,10 +1077,8 @@ These metrics are proposed planning targets. They should be tuned as real testne
 | Reliability | No open P0/P1 bugs at milestone close; observability dashboard live | No open P0/P1 bugs; load test passes 5x Testnet 1 traffic assumptions | No open P0/P1 bugs; launch monitoring, incident response, and rollback plan approved |
 | Security and Compliance | Basic threat model and rights checklist complete | Security review, rights review, anti-Sybil review, and economic simulation complete | Security review issues triaged; partner legal approvals complete; production readiness review signed off |
 
-## Final Positioning
+## Conclusion
 
-Poseidon should position the subnet as a pragmatic crypto-AI infrastructure layer.
+The subnet architecture should be evaluated on operational and economic grounds: whether it can produce higher-quality AI data at acceptable cost, whether it can detect low-quality or fraudulent work, whether participants have appropriate economic exposure, and whether buyer revenue can progressively replace emissions.
 
-The strongest argument is not that every step is decentralized. The strongest argument is that AI data creation involves many distributed actors, and crypto provides the rails to coordinate them, verify their work, preserve provenance, and distribute value when the data becomes commercially useful.
-
-Collection, parsing, and validation show why decentralization matters. Scoring and search show why central authority still matters. The full CPVSS system shows how the two can work together.
+The design does not require full decentralization. It uses decentralization where distributed execution and adversarial verification improve the system, and it preserves central authority where quality judgment, marketplace trust, and commercial distribution require accountable ownership. CPVSS is the mechanism that connects these choices into a single production workflow.
