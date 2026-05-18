@@ -1,6 +1,7 @@
 {
-  "commit": "f3c550c",
-  "release": "v1.1",
+  "commit": "e3161c3",
+  "release": "v1.2",
   "release_date": "2026-05-18",
-  "release_page": "releases/v1.1.html"
+  "release_doc": "releases/v1.2.md",
+  "release_page": "releases/v1.2.html"
 }

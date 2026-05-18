@@ -895,11 +895,19 @@ def release_banner(release_info: dict[str, str] | None) -> str:
     commit = html.escape(release_info.get("commit", "unknown"))
     release_date = html.escape(release_info.get("release_date", "unknown"))
     release_page = html.escape(release_info.get("release_page", ""), quote=True)
+    release_doc = html.escape(release_info.get("release_doc", ""), quote=True)
     page_link = ""
     if release_page:
         page_link = (
             '<span>Snapshot: '
             f'<a href="{release_page}">{release_page}</a>'
+            "</span>"
+        )
+    doc_link = ""
+    if release_doc:
+        doc_link = (
+            '<span>Doc archive: '
+            f'<a href="{release_doc}">{release_doc}</a>'
             "</span>"
         )
 
@@ -909,6 +917,7 @@ def release_banner(release_info: dict[str, str] | None) -> str:
         f"<span>Source commit: <code>{commit}</code></span>"
         f"<span>Release date: {release_date}</span>"
         f"{page_link}"
+        f"{doc_link}"
         "</div>"
     )
 
@@ -1500,6 +1509,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--commit", help="Source commit hash for the release")
     parser.add_argument("--release-date", help="Release date in YYYY-MM-DD form")
     parser.add_argument("--release-page", help="Versioned HTML snapshot path")
+    parser.add_argument("--release-doc", help="Versioned Markdown source archive path")
     parser.add_argument(
         "--metadata-out",
         type=Path,
@@ -1515,6 +1525,7 @@ def release_info_from_args(args: argparse.Namespace) -> dict[str, str] | None:
             "commit": args.commit or "unknown",
             "release_date": args.release_date or "unknown",
             "release_page": args.release_page or "",
+            "release_doc": args.release_doc or "",
         }
     return load_release_metadata()
 

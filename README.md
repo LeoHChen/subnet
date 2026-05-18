@@ -26,7 +26,7 @@ The generated HTML includes:
 
 ## Major Releases
 
-Only major releases should create a new versioned HTML snapshot.
+Only major releases should create new versioned snapshots.
 
 ```bash
 make major-release RELEASE=v1.0.0
@@ -37,5 +37,6 @@ This updates:
 - `release.json`
 - `index.html`
 - `releases/v1.0.0.html`
+- `releases/v1.0.0.md`
 
-The generated pages show the major release name, release date, and source commit hash used to cut the release.
+The generated pages show the major release name, release date, source commit hash used to cut the release, the HTML snapshot, and the archived Markdown source.

@@ -4,6 +4,7 @@ HTML ?= index.html
 RELEASE_METADATA ?= release.json
 RELEASE_DIR ?= releases
 RELEASE ?=
+RELEASE_DOC ?= $(RELEASE_DIR)/$(RELEASE).md
 COMMIT ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo unknown)
 RELEASE_DATE ?= $(shell date +%Y-%m-%d)
 PORT ?= 8080
@@ -18,8 +19,9 @@ $(HTML): $(MARKDOWN) tools/render_markdown.py
 major-release:
 	@test -n "$(RELEASE)" || (printf '%s\n' 'Usage: make major-release RELEASE=v1.0.0' && exit 1)
 	@mkdir -p $(RELEASE_DIR)
-	$(PYTHON) tools/render_markdown.py $(MARKDOWN) $(HTML) --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE_DIR)/$(RELEASE).html" --metadata-out $(RELEASE_METADATA)
-	$(PYTHON) tools/render_markdown.py $(MARKDOWN) "$(RELEASE_DIR)/$(RELEASE).html" --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE).html"
+	cp $(MARKDOWN) $(RELEASE_DOC)
+	$(PYTHON) tools/render_markdown.py $(MARKDOWN) $(HTML) --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE_DIR)/$(RELEASE).html" --release-doc "$(RELEASE_DOC)" --metadata-out $(RELEASE_METADATA)
+	$(PYTHON) tools/render_markdown.py $(MARKDOWN) "$(RELEASE_DIR)/$(RELEASE).html" --release "$(RELEASE)" --commit "$(COMMIT)" --release-date "$(RELEASE_DATE)" --release-page "$(RELEASE).html" --release-doc "$(RELEASE).md"
 
 serve: html
 	$(PYTHON) -m http.server $(PORT)
@@ -40,4 +42,5 @@ help:
 		'  MARKDOWN=path    Source Markdown file' \
 		'  HTML=path        Output HTML file' \
 		'  RELEASE=vX.Y.Z   Major release version for release snapshots' \
+		'  RELEASE_DOC=path Markdown archive path for major releases' \
 		'  PORT=8080        Local server port'
