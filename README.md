@@ -21,7 +21,7 @@ This updates `index.html` only. Use this for normal minor edits.
 The generated HTML includes:
 
 - `Export PDF`, which opens the browser print/PDF flow.
-- `Export DOC`, which downloads a Word-compatible `.doc` file from the rendered page.
+- `Export DOCX`, which downloads a Pages-compatible `.docx` file from the rendered page.
 
 ## Major Releases
 
