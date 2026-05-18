@@ -130,12 +130,12 @@
         cursor: pointer;
       }
       .theme-button { padding: 5px 10px; }
-      .theme-button[aria-pressed="true"], .pdf-button {
+      .theme-button[aria-pressed="true"], .pdf-button, .doc-button {
         border-color: var(--teal);
         background: var(--teal);
         color: #ffffff;
       }
-      .pdf-button { padding: 5px 12px; }
+      .pdf-button, .doc-button { padding: 5px 12px; }
       aside {
         position: sticky;
         top: 0;
@@ -394,6 +394,7 @@
         <button class="theme-button" type="button" data-theme-option="market" aria-pressed="false">Market</button>
       </div>
       <button class="pdf-button" type="button" id="export-pdf">Export PDF</button>
+      <button class="doc-button" type="button" id="export-doc">Export DOC</button>
     </div>
     <div class="page-shell">
       <aside>
@@ -750,7 +751,7 @@ subnet_owner_stake = 1,000,000,000 x 0.005 = 5,000,000 $PSDN</code></pre>
 <p>Collection, parsing, and validation show why decentralization matters. Scoring and search show why central authority still matters. The full CPVSS system shows how the two can work together.</p>
 </div></section>
         <footer class="footer">
-          <p>Generated from docs/cpvss-subnet-design.md. Use the Export PDF button or your browser print dialog to share this document.</p>
+          <p>Generated from docs/cpvss-subnet-design.md. Use the Export PDF or Export DOC buttons to share this document.</p>
         </footer>
       </main>
     </div>
@@ -759,6 +760,7 @@ subnet_owner_stake = 1,000,000,000 x 0.005 = 5,000,000 $PSDN</code></pre>
         const storageKey = "cpvss-theme";
         const buttons = Array.from(document.querySelectorAll("[data-theme-option]"));
         const exportButton = document.getElementById("export-pdf");
+        const exportDocButton = document.getElementById("export-doc");
         const getSavedTheme = () => {
           try {
             return localStorage.getItem(storageKey);
@@ -786,6 +788,76 @@ subnet_owner_stake = 1,000,000,000 x 0.005 = 5,000,000 $PSDN</code></pre>
           button.addEventListener("click", () => setTheme(button.dataset.themeOption));
         });
         exportButton.addEventListener("click", () => window.print());
+        const filenameSlug = (value) => {
+          return value
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "") || "poseidon-subnet-design";
+        };
+        const exportDoc = () => {
+          const main = document.querySelector("main");
+          if (!main) {
+            return;
+          }
+          const title = document.querySelector(".hero h2")?.textContent?.trim() || document.title;
+          const release = document.querySelector(".release-banner strong")?.textContent?.trim();
+          const filename = filenameSlug([title, release].filter(Boolean).join("-"));
+          const clone = main.cloneNode(true);
+          const styles = `
+            body {
+              color: #1f2523;
+              font-family: Arial, Helvetica, sans-serif;
+              line-height: 1.55;
+            }
+            h1, h2, h3, h4 { color: #1f2523; }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 16px 0;
+            }
+            th, td {
+              border: 1px solid #cfd7d2;
+              padding: 8px 10px;
+              vertical-align: top;
+              text-align: left;
+            }
+            th { background: #eef4ef; }
+            blockquote {
+              margin: 16px 0;
+              padding: 12px 16px;
+              border-left: 4px solid #1d7c72;
+              background: #eef7f4;
+            }
+            code, pre {
+              font-family: Consolas, Monaco, monospace;
+              background: #f6f8f7;
+            }
+            pre {
+              padding: 12px;
+              border: 1px solid #d8ded9;
+              white-space: pre-wrap;
+            }
+          `;
+          const doc = `<!doctype html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <title>${title}</title>
+                <style>${styles}</style>
+              </head>
+              <body>${clone.innerHTML}</body>
+            </html>`;
+          const blob = new Blob(["\ufeff", doc], { type: "application/msword" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${filename}.doc`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.setTimeout(() => URL.revokeObjectURL(url), 0);
+        };
+        exportDocButton.addEventListener("click", exportDoc);
         setTheme(getSavedTheme() || "executive");
       })();
     </script>

@@ -18,6 +18,11 @@ make html
 
 This updates `index.html` only. Use this for normal minor edits.
 
+The generated HTML includes:
+
+- `Export PDF`, which opens the browser print/PDF flow.
+- `Export DOC`, which downloads a Word-compatible `.doc` file from the rendered page.
+
 ## Major Releases
 
 Only major releases should create a new versioned HTML snapshot.
