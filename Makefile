@@ -1,5 +1,5 @@
 PYTHON ?= python3
-MARKDOWN ?= docs/cpvss-subnet-design.md
+MARKDOWN ?= docs/poseidon-subnet-design-tokenomics-proposal.md
 HTML ?= index.html
 RELEASE_METADATA ?= release.json
 RELEASE_DIR ?= releases
@@ -32,7 +32,7 @@ clean:
 help:
 	@printf '%s\n' \
 		'Targets:' \
-		'  make html        Regenerate index.html from docs/cpvss-subnet-design.md' \
+		'  make html        Regenerate index.html from docs/poseidon-subnet-design-tokenomics-proposal.md' \
 		'  make major-release RELEASE=v1.0.0' \
 		'                   Create a new major-release HTML snapshot' \
 		'  make serve       Regenerate and serve locally on PORT=8080' \

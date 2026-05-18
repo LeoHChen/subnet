@@ -2,7 +2,7 @@
 
 Date: May 15, 2026
 Roadmap targets: Testnet 1 by June 30, 2026; Beta Testnet by September 30, 2026; Mainnet Launch by December 31, 2026
-Scope: Testnet 1 with two subnets, Beta Testnet with four subnets, and Mainnet Launch with four launch-partner subnets
+Scope: Testnet 1 with two subnets, Beta Testnet with four launch-candidate subnets, and Mainnet Launch with a two-subnet minimum plus a four-subnet target that is conditional on signed launch partners
 
 ## Executive Summary
 
@@ -25,7 +25,7 @@ This proposal updates the subnet definition used in earlier materials. A Poseido
 
 A subnet is therefore not a generic compute cluster and not merely a workflow template. It is a domain-specific data production system. Voice, video, robotics, healthcare, financial-document, and image data have different privacy, bandwidth, storage, validation, fraud-detection, and licensing requirements. Subnets allow each domain to specialize its processing stack and economics while sharing Poseidon infrastructure for provenance, IP management, interoperability, and marketplace access.
 
-Story's IP infrastructure can provide the provenance and licensing layer for this design. Poseidon can use Story to track data lineage, programmable licensing, royalty flows, commitments, and access rights for registered data assets. This is important because AI data buyers increasingly need datasets that are not only useful, but also rights-cleared, auditable, and commercially defensible.
+The design assumes an IP and licensing registry for provenance, licensing, royalty flows, commitments, and access rights. Story is the preferred integration candidate because it is purpose-built for programmable IP, but the CPVSS ledger should keep a chain-compatible abstraction so Testnet 1 is not blocked if the Story integration is not production-ready. By mainnet, Poseidon should either integrate Story for registered data assets or document the alternative registry it will use for rights-cleared, auditable, commercially defensible datasets.
 
 ### CPVSS Processing Pipeline Background
 
@@ -57,9 +57,9 @@ The role of crypto is not to decentralize every decision. It is to coordinate in
 
 By June 30, 2026, Testnet 1 should demonstrate an end-to-end flow for both voice and video data: contribution, provenance tracking, miner-agent parsing, decentralized validation, subnet-owner scoring, reward allocation, points accounting, and dataset discovery through a Poseidon search portal.
 
-By September 30, 2026, Beta Testnet should expand to four subnets, run a user campaign, operate a point system with anti-abuse controls, and demonstrate that partner-led subnets can run CPVSS repeatedly.
+By September 30, 2026, Beta Testnet should expand to four launch-candidate subnets, run a user campaign, operate a point system with anti-abuse controls, and demonstrate that partner-led subnets can run CPVSS repeatedly.
 
-By December 31, 2026, Mainnet Launch should activate the four launch-partner subnets with production-grade staking, reward policy, marketplace flow, partner operating commitments, and launch readiness metrics.
+By December 31, 2026, Mainnet Launch should activate the signed launch-partner subnets with production-grade staking, reward policy, marketplace flow, partner operating commitments, and launch readiness metrics. The decision-ready minimum is two production subnets, one voice/audio and one video. The four-subnet mainnet target is conditional on closing two additional signed launch partners by November 30, 2026; if that gate is missed, Poseidon should launch a limited mainnet and explicitly label the remaining tracks as post-mainnet expansion.
 
 ## Design Principles
 
@@ -88,6 +88,8 @@ $PSDN should support five core utilities:
 4. Penalties: slashed $PSDN can be burned, routed to an insurance pool, or redistributed to honest participants.
 5. Access: advanced marketplace placement, priority jobs, or subnet launch rights can require $PSDN staking or payment.
 
+Access utility should be narrowly defined. $PSDN staking can gate subnet launch proposals, priority job routing for professional operators, premium marketplace APIs, curation programs, and buyer incentive campaigns. It should not let participants buy quality scores, bypass validation, or override marketplace trust rules; access staking is an anti-abuse and capacity-allocation mechanism, not a substitute for CPVSS quality.
+
 ### Role-Based Staking Model
 
 > **Skin in the game principle:** any actor who can impose cost on the network should have enough $PSDN at risk that honest behavior is economically better than spam, low-effort work, collusion, or fraud.
@@ -105,8 +107,8 @@ Assumption for the baseline estimate:
 - Beta Testnet availability target: at least 70% of registered agents active during the campaign period. This is an operating-readiness floor, not the denominator for automatically redistributing all rewards.
 - Testnet 1 target remains two subnets, likely voice and video.
 - Beta Testnet target expands to four launch-candidate subnets.
-- Mainnet Launch assumes four subnet launch partners.
-- Mainnet launch partner assumption: Poseidon team, Kled team, a Korea-based healthcare/data partner such as Big Care, and a major AI lab partner such as ElevenLabs. Big Care and ElevenLabs are planning examples, not confirmed commitments.
+- Mainnet Launch has a two-subnet minimum and a four-subnet target. The two-subnet minimum should include one voice/audio subnet and one video subnet. The four-subnet target requires signed partner commitments.
+- Mainnet launch partner assumption: Poseidon team and Kled team are planning tracks already known to Poseidon. A Korea-based healthcare/data partner such as Big Care and a major AI lab such as ElevenLabs are examples of target partner categories, not committed launch partners. They should not be presented externally as launch partners until signed.
 - These are starting-point numbers for design discussion, not final launch parameters.
 - Mainnet values should be adjusted by observed token price, participant cost, marketplace revenue, and attack frequency.
 
@@ -117,7 +119,7 @@ Assumption for the baseline estimate:
 | Miner Agent | Required per active miner agent, not only per subnet | Beta floor: 50,000 $PSDN per miner agent. Mainnet target: 200,000 $PSDN per miner agent unless observed utilization is materially lower. With 16 miner agents per subnet, target aggregate miner-agent stake is 3,200,000 $PSDN per subnet, or 0.32% of supply | 16 registered miner agents per subnet for initial beta operation; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Prevent miner agents from farming bounties with low-cost invalid work |
 | Validation Agent | Required per active validation agent | Beta floor: 20,000 $PSDN per validation agent. Mainnet target: 150,000 $PSDN per validation agent unless observed utilization is materially lower. With 16 validation agents per subnet, target aggregate validation-agent stake is 2,400,000 $PSDN per subnet, or 0.24% of supply | 16 registered validation agents per subnet; 3-agent and 7-agent artifact panels are sampled from this larger pool | Ensure validation agents perform independent review | Failed red herrings, provably low-effort validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
 | Subnet Owner | Required launch bond or quality bond | 2,500,000 $PSDN per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
-| Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $PSDN per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
+| Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $PSDN per promoted dataset or curation pool. This is a per-pool cap, not a global per-curator cap; if a curator promotes multiple pools, each pool needs separate stake and separate risk exposure | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
 | Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $PSDN for normal buyers; 25,000 $PSDN only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
 
 The beta should probably use simulated or capped staking for most roles. Mainnet can harden staking once the actual attack patterns are visible. A practical beta approach is to record the required stake in the ledger and enforce only lightweight penalties until the team has enough data to tune slashing severity.
@@ -146,14 +148,16 @@ subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $PSDN per subnet
 
 #### Mainnet Launch Partner Assumption
 
-For mainnet planning, assume four launch subnets operated or sponsored by four launch partners:
+For mainnet planning, distinguish signed launch tracks from target partner categories. Kled is a contribution provenance and audit-trail partner focused on on-chain contribution records, contributor reputation, and collection workflows. It is not assumed to be a domain-data buyer unless paired with a domain-specific campaign.
 
-| Launch Partner | Planning Role | Initial Subnet Focus |
-|---|---|---|
-| Poseidon team | Core protocol and marketplace operator | Reference subnet, marketplace integration, scoring policy, search/distribution |
-| Kled team | Contribution provenance and audit-trail partner | On-chain contribution records, contributor reputation, collection workflows |
-| Big Care or similar Korea-based partner | Domain data partner | Healthcare-adjacent voice/video data collection and rights workflows |
-| Major AI lab such as ElevenLabs | Demand and AI-quality partner | Voice/audio model data demand, quality evaluation, commercial dataset requirements |
+| Launch Track | Partner Status | Planning Role | Initial Subnet Focus | Mainnet Rule |
+|---|---|---|---|---|
+| Poseidon video reference track | Internal Poseidon-operated track | Core protocol, video workflow, marketplace integration, scoring policy, search/distribution | Video data pipeline with privacy filtering, frame selection, annotation, and buyer-facing discovery | Counts toward the two-subnet minimum if production-ready |
+| Kled-backed provenance and collection track | Known planning track; domain campaign still required | Contribution provenance and audit-trail partner | On-chain contribution records, contributor reputation, collection workflows for voice or video campaigns | Counts as a subnet only when attached to a concrete voice/video dataset campaign |
+| Korea-based healthcare/data partner, such as Big Care | Target category, not committed | Domain data partner | Healthcare-adjacent voice/video data collection and rights workflows | Counts only after signed LOI or launch agreement |
+| Major AI lab, such as ElevenLabs | Target category, not committed | Demand and AI-quality partner | Voice/audio model data demand, quality evaluation, commercial dataset requirements | Counts only after signed LOI or launch agreement |
+
+The four-subnet mainnet target is therefore conditional. Poseidon should not claim a four-subnet mainnet unless four subnet tracks have signed owners, approved data rights, and operating runbooks. If only two tracks are signed by November 30, 2026, the mainnet launch scope should be reduced to those signed tracks and the remaining two should become post-mainnet expansion milestones.
 
 Using 16 registered miner agents and 16 registered validation agents per subnet, and using mainnet target stakes for the agent roles:
 
@@ -166,10 +170,10 @@ miner_agent_launch_stake = 3,200,000 x 4 = 12,800,000 $PSDN
 validation_agent_launch_stake = 2,400,000 x 4 = 9,600,000 $PSDN
 subnet_owner_launch_stake = 2,500,000 x 4 = 10,000,000 $PSDN
 
-total_role_bonded_launch_stake = 32,400,000 $PSDN, or 3.24% of total supply
+core_role_bonded_launch_stake = 32,400,000 $PSDN, or 3.24% of total supply
 ```
 
-This is an equal-subnet launch assumption for planning. Actual mainnet reward and stake parameters should be weighted by subnet maturity, commercial demand, task cost, fraud risk, and partner operating capacity.
+This is an equal-subnet launch assumption for planning and includes only miner agents, validation agents, and subnet owners. It excludes collection-operator campaign bonds and optional curator/search stakes because those are demand-driven and dataset-specific. Additional launch-period bonded stake should be reported separately once the number of collection campaigns, promoted datasets, and curation pools is known.
 
 The stake should be high enough to make malicious behavior expensive, but not so high that only large holders can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
 
@@ -195,7 +199,25 @@ participant_reward = min(quality_point_reward, participant_reward_cap)
 unused_epoch_pool = role_epoch_pool - sum(actual_participant_rewards)
 ```
 
-Inactive agents earn zero. Active agents earn according to completed, useful, validated work, but unused budget should roll back to reserve, extend the runway, or be reallocated by policy. It should not mechanically raise active-agent APY.
+Inactive agents earn zero. Active agents earn according to completed, useful, validated work, but unused budget should return to the unspent incentive reserve by default. Any runway extension or cross-subnet reallocation should require a quarterly policy decision. Unused budget should not mechanically raise active-agent APY.
+
+Validation-agent stake is subnet-scoped by default. A validation agent can operate across multiple subnets, but each subnet requires its own stake or delegated stake because the agent can impose modality-specific review costs and collusion risk in each subnet. Reputation should have two layers: a global agent reputation for identity and long-term behavior, and a subnet-specific reliability score for modality expertise.
+
+#### Slashing Severity
+
+Slashing should be predictable enough to create credible skin in the game, but not so aggressive that honest participants leave after ambiguous mistakes. The default policy should distinguish mistakes, negligence, and fraud:
+
+| Actor | Minor Failure | Repeated or Negligent Failure | Fraud, Collusion, or Rights Abuse | Notes |
+|---|---:|---:|---:|---|
+| Individual Contributor | Reward denial or 0-5% optional stake penalty | 5-25% optional stake penalty and reputation decay | 25-100% optional stake penalty, reward clawback, campaign ban | Required stake remains zero; most enforcement is reward denial and reputation |
+| Collection Operator | 5-10% campaign bond penalty | 10-30% campaign bond penalty | 30-100% campaign bond penalty and campaign termination | Applies to professional or large-scale campaigns, not casual contributors |
+| Miner Agent | 5-10% stake penalty for missed reveal or repeated low-quality output | 10-30% stake penalty for persistent invalid work | 30-100% stake penalty for forged output, collusion, or deliberate fraud | Locked rewards should be clawed back before principal stake is slashed |
+| Validation Agent | 2-5% stake penalty for failed red herrings or late review | 5-20% stake penalty for repeated low-effort validation | 20-100% stake penalty for collusion, bribery, or provably dishonest votes | Red-herring failures should first reduce reliability score before severe slashing |
+| Subnet Owner | Warning, score-batch rollback, or 0-5% launch-bond risk | 5-20% launch-bond penalty and marketplace demotion | 20-100% launch-bond penalty, delisting, or governance removal | Owner slashing requires Poseidon-level adjudication because owner authority is central to Score |
+| Curator/Search Participant | Ranking loss or 0-5% pool stake penalty | 5-25% pool stake penalty | 25-100% pool stake penalty for fake demand or self-dealing | Curator stake is per promoted dataset or curation pool |
+| Challenger | Challenge bond loss for frivolous or low-evidence claims | Higher bond requirement after repeated failed challenges | Temporary challenge ban for spam or extortion | Honest successful challengers should receive part of penalties or security-pool rewards |
+
+Slashing should be cumulative within an epoch but capped by the actor's stake or campaign bond for that role. Repeat offenses across epochs should increase severity through reputation decay and higher future bond requirements.
 
 #### Contributor Airdrop and Stake Multiplier
 
@@ -255,7 +277,7 @@ Recommended epoch structure:
 - Epoch length: 1 week.
 - Settlement cadence: rewards are calculated weekly after parsing, validation, scoring, and fraud checks.
 - Internal accounting can run daily, but token rewards should settle weekly to leave time for validation and red-herring detection.
-- Challenge window: 14 days after each epoch before locked rewards become fully finalized.
+- Challenge window: 14 days after each epoch before rewards become final.
 - Emission decay: emissions decline each year and should be reduced faster when marketplace fees can fund rewards.
 
 #### Four-Year Emission Cap
@@ -267,6 +289,8 @@ Recommended epoch structure:
 | Year 3 | 25,000,000 $PSDN | 2.5% | 480,769 $PSDN per week | Shift toward fee-funded rewards |
 | Year 4 | 15,000,000 $PSDN | 1.5% | 288,462 $PSDN per week | Maintain strategic incentives only |
 | Total | 120,000,000 $PSDN | 12.0% | N/A | Four-year maximum emission budget |
+
+The CPVSS allocation vector should default to the same 35/25/15/10/10/5 split in Years 2-4 unless governance or Poseidon policy explicitly changes it before the relevant year starts. The annual cap declines each year, but the stage mix remains constant by default so the reward model does not drift silently. Any future shift, such as reducing parsing subsidies as fee revenue grows or increasing security/challenge funding after observed attacks, should be published as an updated allocation table.
 
 #### Year 1 CPVSS Incentive and Emission Schedule
 
@@ -281,7 +305,7 @@ Assuming Year 1 weekly emission cap of 865,385 $PSDN and four mainnet launch sub
 | Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
 | Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
 
-These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. Emissions should not be released solely because a budget was scheduled.
+These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the unspent incentive reserve by default. There should be no automatic roll-forward and no automatic redistribution to active participants. Reallocation should require a quarterly governance or Poseidon policy decision with a public rationale, because roll-forward, burn, and cross-subnet reallocation have different token-supply and incentive effects.
 
 The "up to" per-agent figures are cap diagnostics, not expected yields. They are anchored to the registered 16-agent capacity target. If only 70% of agents are active, the unused capacity should lower actual utilization rather than redistribute the full pool across 11 active agents.
 
@@ -344,6 +368,8 @@ Quality points should include:
 | Curator/Search Participant | 50% | 50% | Locked for 30-90 days to detect fake demand or self-dealing |
 | Buyer Incentive Program | 0-25% | 75-100% | Buyer incentives should be conservative and delayed to reduce wash trading |
 
+The 14-day challenge window and the role lock-up periods are separate mechanisms. The 14-day window gates finality for the liquid portion of each epoch reward: if a challenge succeeds, the liquid portion can be delayed, reduced, or clawed back before release. The longer 30-day to 12-month lock-up applies to the locked portion after the challenge window and exists to catch late rights disputes, marketplace quality failures, or delayed fraud evidence.
+
 #### Fee Offset Rule
 
 Emissions should decline as marketplace revenue grows.
@@ -366,7 +392,9 @@ This prevents the network from overpaying with new emissions when real buyer dem
 
 #### Revenue, Buying Pressure, and Selling Pressure
 
-Marketplace revenue should be modeled as external demand for $PSDN. If buyers pay directly in $PSDN, they create direct buying pressure. If buyers pay in fiat or stablecoins, Poseidon can still create $PSDN-denominated buying pressure by converting part of marketplace revenue into $PSDN for settlement, rewards, buybacks, burns, insurance, or treasury routing.
+Marketplace revenue should be modeled as external demand for $PSDN. Buyers should not be forced to hold crypto for enterprise procurement. The default policy should allow buyers to pay in fiat, stablecoin, or $PSDN, while Poseidon routes a policy-defined share of net marketplace revenue through $PSDN settlement, reward funding, buyback, burn, insurance, or treasury operations.
+
+The default planning denominator is a 70% $PSDN settlement or conversion ratio on net marketplace revenue after refunds, chargebacks, and taxes. This is not an open placeholder: it is the proposed launch policy. Governance can revise it later, but any change materially affects token demand and should trigger an updated buying/selling pressure model.
 
 The core tokenomics question is whether useful subnet demand can eventually exceed the sell pressure created by emissions.
 
@@ -395,10 +423,10 @@ Recommended beta/mainnet planning assumptions:
 | Parameter | Conservative Starting Point | Why |
 |---|---:|---|
 | Annual revenue per production subnet | 3,000,000 $PSDN-equivalent | Enough to test meaningful buyer demand without assuming immediate market leadership |
-| Active mainnet launch subnets | 4 | Matches the launch-partner plan |
+| Active mainnet launch subnets | 2 minimum; 4 target | Four-subnet launch depends on signed partners; the model can be rerun for either launch scope |
 | Annual revenue growth | 50% | Aggressive but plausible if partner-led subnets compound supply and demand |
 | $PSDN settlement or conversion ratio | 70% | Creates token demand while leaving room for fiat abstraction and operating flexibility |
-| Reward utilization ratio | 35% | Models the fact that Year 1 emissions are caps, not automatic yield; unused cap rolls back or extends runway |
+| Reward utilization ratio | 35% | Models the fact that Year 1 emissions are caps, not automatic yield; unused cap returns to reserve by default |
 | Emission sell-through ratio | 65% | Conservative assumption that many early recipients sell some rewards to cover costs |
 
 If Year 1 effective emission cap is 45,000,000 $PSDN, reward utilization is 35%, four subnets each generate 3,000,000 $PSDN-equivalent revenue, 70% of revenue touches $PSDN, and 65% of paid emissions are sold, then:
@@ -448,7 +476,6 @@ Governance or Poseidon policy should decide whether the Network Security and Cha
 
 Open questions:
 
-- Should enterprise buyers be required to buy $PSDN directly, or should Poseidon abstract payment and convert a policy-defined share into $PSDN?
 - Should Poseidon marketplace operations be funded entirely from the Search and Marketplace Demand pool, or should there be an explicit off-top platform fee later?
 - Should contributors receive recurring royalties forever, or should some datasets use a capped royalty model?
 - Should revenue splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
@@ -459,8 +486,8 @@ Open questions:
 | Phase | Goal | $PSDN Use | Emission Posture |
 |---|---|---|---|
 | Testnet 1 | Prove CPVSS flow with two voice/video subnets | Testnet $PSDN, off-chain points, or capped internal accounting | No meaningful open-ended emissions |
-| Beta Testnet | Expand to four subnets, run user campaigns, and test partner operations | Non-transferable points, testnet $PSDN, simulated staking, and anti-abuse accounting | Capped test incentives for verified useful work |
-| Mainnet Launch | Activate four launch-partner subnets with production policy | $PSDN staking, reward vesting, marketplace fee routing, and published reward rules | Targeted emissions with strict epoch caps and fee-offset rules |
+| Beta Testnet | Expand to four launch-candidate subnets, run user campaigns, and test partner operations | Non-transferable points, testnet $PSDN, simulated staking, and anti-abuse accounting | Capped test incentives for verified useful work |
+| Mainnet Launch | Activate signed launch-partner subnets, with two production subnets as the decision-ready minimum and four as the conditional target | $PSDN staking, reward vesting, marketplace fee routing, and published reward rules | Targeted emissions with strict epoch caps and fee-offset rules |
 | Growth | Expand subnet count and marketplace demand | Buyer-funded rewards, subnet owner staking, marketplace fee routing | Declining emissions with demand-based rewards |
 | Mature Network | Preserve token value and quality | Fee-funded payouts, staking, burns or insurance routing | Minimal emissions, mostly market-funded |
 
@@ -477,6 +504,14 @@ The tokenomics must assume rational adversarial behavior.
 | Collusion | Contributors, miner agents, and validation agents coordinate to approve bad data | Random assignment, hidden tests, reputation decay, owner scoring, challenge windows |
 | Score abuse | Subnet owner manipulates scores to favor insiders | Signed score batches, public audit trail, challenge bond, Poseidon-level monitoring |
 | Wash demand | Actors create fake marketplace purchases to trigger rewards | Buyer reputation, fee friction, anomaly detection, reward delay, anti-self-dealing rules |
+
+The table above is a design checklist, not a claim that every defense already exists. Beta Testnet should implement the following minimum controls before any meaningful reward conversion:
+
+- Contributor reputation: account age, wallet or account uniqueness, duplicate rate, rights-valid acceptance rate, dispute history, and accepted-data usefulness.
+- Random assignment: validation and parsing assignments should use a verifiable random seed or auditable assignment log so subnet owners cannot quietly route work to friendly agents.
+- Hidden tests: red-herring tasks and known-answer validation items should be generated by Poseidon or the subnet owner and mixed into normal queues without advance disclosure.
+- Reputation decay: old good behavior should not permanently protect an agent from current bad behavior; recent failures should carry heavier weight.
+- Anti-self-dealing: buyer, curator, contributor, miner-agent, and validation-agent relationships should be checked for common ownership before demand incentives are finalized.
 
 ### Token Sink Options
 
@@ -500,6 +535,23 @@ The beta does not need to finalize every sink. It should define the accounting s
 | Validation | Check parsing quality and detect invalid or low-effort work | Strong fit for decentralized consensus through redundant validation agents | Validation agent staking, red-herring tasks, slashing, reputation, and proof-of-usefulness | Multi-agent review, consensus threshold, red-herring detection |
 | Score | Assign final quality score and determine reward allocation | Should be centralized by the subnet owner | Crypto makes the score auditable and payout-linked, while authority remains with the owner | Owner scoring service, signed score batches, reward distribution output |
 | Search | Enable dataset discovery, access, transactions, and monetization | Should be centralized at the Poseidon network level | Payments, revenue splits, contributor royalties, and provenance-backed marketplace access | Poseidon portal with searchable voice and video datasets |
+
+## IP and Licensing Registry Integration
+
+The CPVSS ledger should separate two layers:
+
+1. Operational commitments: content hashes, manifests, parser output hashes, validation records, score batches, and reward accounting.
+2. IP and licensing records: contributor rights, usage permissions, license terms, royalty routing, derivative-dataset lineage, and revocation or dispute status.
+
+Story is the preferred candidate for the second layer. The practical integration plan is:
+
+| Phase | Integration Requirement | Fallback if Story Is Not Ready |
+|---|---|---|
+| Testnet 1 | Keep Story-compatible fields in the dataset manifest: contributor identity reference, content hash, rights statement, license reference, royalty recipient, and derivative lineage field | Store fields in the internal ledger and export a Story-compatible manifest later |
+| Beta Testnet | Register a sample set of accepted voice/video assets or dataset manifests through Story or a Story-compatible adapter | Use signed manifest roots and preserve migration metadata |
+| Mainnet Launch | Production datasets need a rights registry before marketplace sale: Story integration or a formally approved alternative | Mainnet marketplace launch should block commercial dataset sale until rights registry is live |
+
+This keeps Story from being a loose marketing reference while avoiding a hard dependency that could block the June testnet.
 
 ## C: Collection
 
@@ -534,6 +586,8 @@ For beta, the system does not need to put raw data on-chain. It should put hashe
 - Metadata-based fraud checks for duplicates, suspicious account patterns, unrealistic language coverage, campaign abuse, duration anomalies, and upload timing.
 - Client-side or pre-ingestion filtering for obvious spam so the network does not pay bandwidth, storage, or parsing cost for unusable data.
 - Clear rejection explanations when possible, so honest contributors understand whether the issue is language, quality, rights, privacy, or task mismatch.
+
+Pre-ingestion filtering is a centralized cost-control step run by Poseidon or the subnet owner before an item becomes reward-eligible. It should not silently bypass accountability: rejected submissions should receive a rejection reason where feasible, rejected-item hashes and aggregate rejection metrics should be logged, and a random sample of rejected items should be auditable during testnet. No slashing should apply at this stage unless the contributor is a bonded campaign operator or the system detects repeated intentional abuse.
 
 ### Incentive Design Options
 
@@ -835,7 +889,7 @@ Cons:
 - Should slashing burn $PSDN, compensate harmed parties, or fund future validation?
 - How should the system detect validation-agent collusion beyond red-herring failure?
 
-## S: Score
+## Score Stage
 
 ### Function
 
@@ -879,6 +933,8 @@ Mechanism:
 - Any affected participant can challenge by bonding $PSDN.
 - Valid challenge triggers correction and possibly owner penalty or reputation loss.
 - Invalid challenge loses bond.
+
+Adjudication should default to a Poseidon-level review panel during beta and mainnet launch. The panel should include one Poseidon protocol representative, one modality/domain reviewer for the subnet, and one independent reviewer when the disputed reward or penalty exceeds a published threshold. The subnet owner should provide evidence and can defend the score, but should not be the final adjudicator for challenges against its own score batch. Decisions should produce a signed adjudication record that updates the score batch, challenger bond, owner reputation, and any slashing action.
 
 Pros:
 
@@ -925,12 +981,11 @@ Cons:
 
 #### Open Questions
 
-- Should subnet owners stake $PSDN against scoring integrity?
-- Who adjudicates challenges: Poseidon, expert panel, or subnet owner with public explanation?
-- Should owner penalties be financial, reputational, or marketplace-ranking based?
+- What challenge-bond size keeps spam low without pricing out small contributors?
+- What reward or penalty threshold should trigger an independent reviewer?
 - How much scoring transparency is safe before participants start gaming the rubric?
 
-## S: Search
+## Search Stage
 
 ### Function
 
@@ -1019,7 +1074,7 @@ Cons:
 
 #### Open Questions
 
-- Should marketplace fees be paid only in $PSDN, or can fiat payments be converted into $PSDN accounting?
+- Should the 70% $PSDN settlement/conversion policy be raised or lowered after real buyer procurement data is available?
 - Within the Search and Marketplace Demand pool, what share should fund Poseidon marketplace operations versus curators, search partners, and buyer-demand incentives?
 - Should a portion of revenue be burned, routed to insurance, or used for buyback-style reward pools?
 - How should the marketplace detect and penalize self-dealing or fake demand?
@@ -1077,11 +1132,11 @@ These decisions should remain open during testnet design and be resolved only wh
 6. Whether miner agents need simulated staking in Testnet 1 and Beta Testnet.
 7. Whether search ranking should include quality score, commercial demand, freshness, or subnet owner reputation.
 8. Whether score decisions are manually assigned, model-assisted, or hybrid.
-9. Whether buyers transact directly with subnet owners or through Poseidon as marketplace operator.
+9. Whether buyers transact directly with subnet owners or through Poseidon as marketplace operator, while preserving the 70% $PSDN settlement/conversion policy.
 10. What minimum $PSDN stake is required for each role without excluding useful early participants.
 11. Whether slashed $PSDN should be burned, routed to insurance, or redistributed to honest participants.
 12. How quickly emissions should decline as marketplace revenue grows.
-13. Whether fiat buyer payments should be converted into $PSDN, abstracted behind credits, or kept separate during testnet phases.
+13. Whether the 70% $PSDN settlement/conversion ratio should change after testnet buyer data is available.
 14. How to prevent early high-stake actors from capturing validation agent or miner agent reputation permanently.
 
 ## Milestone Roadmap
@@ -1093,21 +1148,21 @@ The three hard milestone dates are:
 | Milestone | Target Date | Subnet Scope | Launch Meaning |
 |---|---:|---|---|
 | Testnet 1 | June 30, 2026 | 2 subnets: voice and video | Prove the CPVSS loop works end to end with testnet or internal points accounting |
-| Beta Testnet | September 30, 2026 | 4 subnets | Run partner-led subnet operations, user campaigns, points system, anti-abuse controls, and marketplace testing |
-| Mainnet Launch | December 31, 2026 | 4 launch-partner subnets | Launch production staking, reward policy, marketplace flow, and partner-backed subnet operations |
+| Beta Testnet | September 30, 2026 | 4 launch-candidate subnets | Run partner-led subnet operations, user campaigns, points system, anti-abuse controls, and marketplace testing |
+| Mainnet Launch | December 31, 2026 | 2 signed production subnets minimum; 4 signed launch-partner subnets target | Launch production staking, reward policy, marketplace flow, and partner-backed subnet operations. Four-subnet launch is conditional on signed partners |
 
 ### Monthly Milestones
 
 | Month | Product and Protocol Milestone | Testing and Campaign Milestone | Launch-Partner Blocker | Exit Metrics |
 |---|---|---|---|---|
-| May 2026 | Lock CPVSS architecture, schemas, role-based staking assumptions, point-accounting model, and Testnet 1 scope | Create test plan, seed datasets, red-herring strategy, QA checklist, and internal points ledger spec | Biz team assigns partner owner for Poseidon, Kled, Korea-based data partner, and major AI lab track | Architecture approved; voice/video subnet specs drafted; points ledger spec approved; partner pipeline owner named for all 4 launch tracks |
+| May 2026 | Lock CPVSS architecture, schemas, role-based staking assumptions, point-accounting model, IP registry abstraction, and Testnet 1 scope | Create test plan, seed datasets, red-herring strategy, QA checklist, internal points ledger spec, and Story-compatible manifest fields | Biz team assigns partner owner for Poseidon, Kled, Korea-based data partner, major AI lab track, and a dedicated video-domain track | Architecture approved; voice/video subnet specs drafted; points ledger spec approved; partner pipeline owner named for all launch tracks |
 | June 2026 | Launch Testnet 1 with 2 subnets: voice and video | Run invite-only user campaign, internal/testnet points, end-to-end CPVSS QA, parser/validation/scoring dry runs, and marketplace discovery test | Poseidon and Kled technical owners confirmed; external partner pitch pack delivered to Korea partner and AI lab candidates | 2 subnets live; 16 miner-agent slots and 16 validation-agent slots configured per subnet; >=20 full CPVSS runs; >=95% manifest completeness; no open P0/P1 launch bugs |
-| July 2026 | Convert Testnet 1 learnings into Beta Testnet architecture for 4 subnets | Expand campaign tooling, anti-Sybil checks, points dashboards, validation-agent red-herring library, and load-test plan | At least 2 external launch-candidate partners have signed LOI or equivalent written commitment | 4-subnet templates ready; points fraud rules drafted; partner data requirements captured; beta campaign terms drafted |
+| July 2026 | Convert Testnet 1 learnings into Beta Testnet architecture for 4 launch-candidate subnets | Expand campaign tooling, anti-Sybil checks, points dashboards, validation-agent red-herring library, Story-compatible export, and load-test plan | At least 2 external launch-candidate partners have signed LOI or equivalent written commitment, including at least 1 video-specific partner or campaign | 4-subnet templates ready; points fraud rules drafted; partner data requirements captured; beta campaign terms drafted |
 | August 2026 | Stand up 4 Beta Testnet subnet environments and partner onboarding workflow | Run closed partner pilots, rights review, data-quality QA, security review, economic simulation, and campaign rehearsal | All 4 launch-candidate partners assign business owner, technical owner, data owner, and campaign owner | 4 subnets deployed in staging/testnet; >=64 miner-agent registrations; >=64 validation-agent registrations; partner sample datasets ingested; no unresolved data-rights blocker |
 | September 2026 | Launch Beta Testnet with 4 subnets | Run public or partner-led user campaign, points leaderboard, anti-abuse review, marketplace access tests, and partner operating drills | All 4 launch-candidate partners actively participate in Beta Testnet with signed campaign terms and data rights approval | 4 subnets live; >=500 contributor or user accounts; >=5,000 accepted data items or partner-approved equivalent; parser success >=90%; red-herring detection >=90%; no open P0/P1 launch bugs |
-| October 2026 | Freeze mainnet architecture and production tokenomics parameters | Run audit prep, incident-response drills, reward replay tests, data deletion/rights workflows, and marketplace transaction QA | Mainnet partner agreement drafts circulated to all 4 launch partners | Mainnet contract or ledger design frozen; reward formula replay passes; slashing/challenge policy approved; marketplace fee split draft approved |
-| November 2026 | Complete mainnet release candidate and launch operations plan | Run security review, economic attack simulation, load test, points audit, partner launch rehearsal, and disaster-recovery rehearsal | All 4 launch partners sign mainnet launch agreement or binding equivalent; launch dataset and operating commitments confirmed | 2-week release candidate stable; audit issues triaged; points-to-reward policy approved if applicable; partner launch runbook signed off |
-| December 2026 | Launch mainnet with 4 launch-partner subnets | Run final production readiness review, launch monitoring, post-launch support plan, and marketplace transaction verification | No mainnet launch without 4 signed launch partners, approved data rights, operator runbooks, and staking/reward commitments | 4 mainnet subnets live; staking/reward policy active; marketplace access flow live; partner dashboards live; no open P0/P1 launch bugs |
+| October 2026 | Freeze mainnet architecture, production tokenomics parameters, Story or alternative IP registry decision, and launch-scope decision tree | Run audit prep, incident-response drills, reward replay tests, data deletion/rights workflows, and marketplace transaction QA | Mainnet partner agreement drafts circulated to all candidate launch partners; at least 2 production subnet tracks are identified as minimum launch scope | Mainnet contract or ledger design frozen; reward formula replay passes; slashing/challenge policy approved; marketplace fee split draft approved; IP registry decision approved |
+| November 2026 | Complete mainnet release candidate and launch operations plan | Run security review, economic attack simulation, load test, points audit, partner launch rehearsal, and disaster-recovery rehearsal | At least 2 launch partners sign mainnet launch agreement or binding equivalent; 4-subnet launch requires 4 signed partners, including a voice/audio track and a video track | 2-week release candidate stable; audit issues triaged; points-to-reward policy approved if applicable; partner launch runbook signed off; final launch scope declared as 2, 3, or 4 subnets |
+| December 2026 | Launch mainnet with signed launch-partner subnets | Run final production readiness review, launch monitoring, post-launch support plan, and marketplace transaction verification | No mainnet launch without at least 2 signed production subnet tracks, approved data rights, operator runbooks, and staking/reward commitments. No four-subnet claim without 4 signed tracks | Signed mainnet subnets live; staking/reward policy active; marketplace access flow live; partner dashboards live; rights registry live; no open P0/P1 launch bugs |
 
 ### Mandatory Launch-Partner Blockers
 
@@ -1115,12 +1170,12 @@ These are milestone blockers, not optional business-development notes. A milesto
 
 | Blocker | Required By | Why It Matters | Proof Needed |
 |---|---:|---|---|
-| Four named launch-partner tracks | May 31, 2026 | The product roadmap depends on 4 subnets by Beta Testnet and Mainnet Launch | Named internal owner, target partner, target subnet thesis, and next meeting for Poseidon, Kled, Korea-based partner, and AI lab track |
+| Four named launch-candidate tracks | May 31, 2026 | The beta roadmap depends on four candidate tracks, but mainnet scope should be based only on signed partners | Named internal owner, target partner or internal operator, target subnet thesis, commitment status, and next meeting for Poseidon, Kled, Korea-based partner, AI lab track, and video-domain track |
 | Poseidon and Kled Testnet 1 participation | June 30, 2026 | Testnet 1 needs at least two credible operators to demonstrate contribution provenance and CPVSS operations | Technical owner, sample data or workflow, testnet account, and feedback loop |
-| Two external partner commitments | July 31, 2026 | The September 4-subnet target cannot wait until September for partner discovery | LOI, written intent, pilot scope, or equivalent written approval |
+| Two external partner commitments | July 31, 2026 | The September 4-subnet target cannot wait until September for partner discovery | LOI, written intent, pilot scope, or equivalent written approval; at least one should cover video-specific data or a video buyer workflow |
 | Four Beta Testnet partner workstreams | August 31, 2026 | Beta Testnet needs data, campaign, legal, and technical owners before launch | Named business owner, technical owner, data rights owner, campaign owner, and launch dataset for each partner |
 | Four active Beta Testnet partners | September 30, 2026 | A 4-subnet beta without real partner participation does not test mainnet operations | Partner-led subnet activity, campaign terms, data rights approval, and recurring operating review |
-| Four signed mainnet launch partners | November 30, 2026 | December launch requires legal, operational, and commercial certainty | Signed agreement or binding equivalent, launch dataset commitment, operating runbook, marketplace terms, and staking/reward acknowledgment |
+| Minimum signed mainnet launch partners | November 30, 2026 | December launch requires legal, operational, and commercial certainty | At least 2 signed production subnet tracks for limited mainnet; 4 signed tracks required only for the four-subnet mainnet claim. Each signed track needs launch dataset commitment, operating runbook, marketplace terms, data-rights approval, and staking/reward acknowledgment |
 
 ### User Campaign and Points System
 
@@ -1129,7 +1184,7 @@ The testnet campaign should use non-transferable points first. Points should rew
 | Phase | Campaign Design | Points Design | Abuse Controls |
 |---|---|---|---|
 | Testnet 1 | Invite-only campaign for contributors, miner agents, validation agents, and early dataset users | Internal points for accepted contribution, completed parsing, correct validation, useful challenges, and marketplace feedback | Wallet/account uniqueness, duplicate detection, manifest completeness checks, red-herring validation, manual review |
-| Beta Testnet | Public or partner-led campaign across 4 subnets | Visible points dashboard, role-specific points, quality multipliers, capped referral or campaign boosts, delayed finalization | Sybil scoring, rights review, anomaly detection, challenge window, leaderboard audit, partner data-quality review |
+| Beta Testnet | Public or partner-led campaign across 4 launch-candidate subnets | Visible points dashboard, role-specific points, quality multipliers, capped referral or campaign boosts, delayed finalization | Sybil scoring, rights review, anomaly detection, challenge window, leaderboard audit, partner data-quality review |
 | Mainnet Launch | Points campaign closes or converts into production reward/accounting policy if approved | Published points audit and reward policy; no retroactive ambiguity | Legal review, fraud exclusions, conversion cap if applicable, vesting, clawback window, partner sign-off |
 
 ### Milestone Metrics
@@ -1138,19 +1193,34 @@ These metrics are proposed planning targets. They should be tuned as real testne
 
 | Metric Category | Testnet 1 by June 30, 2026 | Beta Testnet by September 30, 2026 | Mainnet Launch by December 31, 2026 |
 |---|---|---|---|
-| Subnets | 2 live subnets: voice and video | 4 live Beta Testnet subnets | 4 live mainnet launch-partner subnets |
-| Partner Readiness | Poseidon and Kled active; 2 external partner tracks in active BD | 4 launch-candidate partners active in Beta Testnet | 4 signed launch partners with data, legal, ops, and campaign commitments |
+| Subnets | 2 live subnets: voice and video | 4 live Beta Testnet launch-candidate subnets | 2 signed production subnets minimum; 4 signed subnets target |
+| Partner Readiness | Poseidon and Kled active; 2 external partner tracks in active BD | 4 launch-candidate partners active in Beta Testnet | At least 2 signed launch partners with data, legal, ops, and campaign commitments; 4 signed partners required for four-subnet launch claim |
 | Agent Network | 16 miner-agent slots and 16 validation-agent slots configured per subnet; permissioned agents acceptable | >=64 miner-agent registrations and >=64 validation-agent registrations across 4 subnets; >=70% active during the campaign period, meaning at least 45 active agents network-wide and roughly 11 active agents per subnet on average | Production agent registry active; staking or launch-bond rules enforced; agent reliability history migrated or initialized |
 | Data Supply | >=2 curated seed datasets; >=95% accepted items include manifest, content hash, and rights metadata | >=5,000 accepted data items or partner-approved equivalent; >=90% rights metadata completeness | Partner launch datasets committed; data-rights workflow approved; deletion and dispute workflow tested |
 | CPVSS Throughput | >=20 full end-to-end CPVSS runs across voice and video | >=200 full CPVSS runs across 4 subnets | Two-week release candidate with stable daily CPVSS processing |
 | Quality and Validation | Parser job success >=80%; validation consensus produced for >=90% completed jobs; red-herring detection >=80% | Parser job success >=90%; validation consensus produced for >=95% completed jobs; red-herring detection >=90% | Mainnet quality thresholds approved; challenge and slashing policy active; no unresolved high-risk validation issue |
 | Points and Rewards | Points ledger v0 records contribution, parsing, validation, scoring, and search feedback | Points dashboard live; leaderboard audited; fraud review completed before final points settlement | Points audit complete; mainnet reward or conversion policy approved if applicable; vesting and clawback rules active |
-| Marketplace | Search portal shows processed datasets with provenance and quality score | 4 subnet marketplace pages live; request/access flow tested with design partners | Marketplace access and transaction flow live; fee split and revenue accounting verified |
+| Marketplace | Search portal shows processed datasets with provenance and quality score | 4 subnet marketplace pages live; request/access flow tested with design partners | Marketplace access and transaction flow live; fee split, 70% $PSDN settlement/conversion policy, and revenue accounting verified |
 | Reliability | No open P0/P1 bugs at milestone close; observability dashboard live | No open P0/P1 bugs; load test passes 5x Testnet 1 traffic assumptions | No open P0/P1 bugs; launch monitoring, incident response, and rollback plan approved |
-| Security and Compliance | Basic threat model and rights checklist complete | Security review, rights review, anti-Sybil review, and economic simulation complete | Security review issues triaged; partner legal approvals complete; production readiness review signed off |
+| Security and Compliance | Basic threat model and rights checklist complete | Security review, rights review, anti-Sybil review, Story-compatible manifest review, and economic simulation complete | Security review issues triaged; partner legal approvals complete; Story or alternative rights registry live; production readiness review signed off |
 
 ## Conclusion
 
 The subnet architecture should be evaluated on operational and economic grounds: whether it can produce higher-quality AI data at acceptable cost, whether it can detect low-quality or fraudulent work, whether participants have appropriate economic exposure, and whether buyer revenue can progressively replace emissions.
 
 The design does not require full decentralization. It uses decentralization where distributed execution and adversarial verification improve the system, and it preserves central authority where quality judgment, marketplace trust, and commercial distribution require accountable ownership. CPVSS is the mechanism that connects these choices into a single production workflow.
+
+### Decision Scorecard
+
+| Area | Status | Decision or Blocker |
+|---|---|---|
+| CPVSS architecture | Locked for testnet | Collection, Parsing, Validation, Score, and Search remain the operating pipeline |
+| Token model | Locked for proposal | Single-token $PSDN model with staking, rewards, settlement, penalties, and access utility |
+| Launch scope | Partially locked | Testnet 1 is 2 subnets; Beta Testnet is 4 launch-candidate subnets; mainnet is 2 signed subnets minimum and 4 signed subnets only if partner closure succeeds |
+| Staking model | Proposed | Mainnet target stakes are set for miner agents, validation agents, and subnet owners; collection and curator stakes remain campaign-specific |
+| Emission model | Proposed | Four-year cap, Year 1 CPVSS allocation, default same allocation for Years 2-4, no-job-no-emission rule, unused weekly emissions return to reserve by default |
+| Slashing model | Proposed | Severity ranges are defined; exact thresholds should be tuned during testnet |
+| Score adjudication | Locked for beta | Poseidon-level review panel adjudicates score challenges; subnet owners cannot adjudicate challenges against their own score batches |
+| Buyer settlement | Proposed launch policy | Buyers can pay fiat, stablecoin, or $PSDN; Poseidon routes 70% of net marketplace revenue through $PSDN settlement/conversion by default |
+| IP and rights registry | Mainnet blocker | Story is preferred; a Story-compatible abstraction is required for testnet, and Story or an approved alternative is required before commercial mainnet dataset sale |
+| Partner readiness | Mainnet blocker | Four-subnet launch requires four signed tracks, including voice/audio and video coverage. If not signed by November 30, 2026, mainnet scope should be reduced and labeled accordingly |

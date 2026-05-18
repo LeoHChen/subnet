@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 
-DEFAULT_SOURCE = Path("docs/cpvss-subnet-design.md")
+DEFAULT_SOURCE = Path("docs/poseidon-subnet-design-tokenomics-proposal.md")
 DEFAULT_OUTPUT = Path("index.html")
 DEFAULT_RELEASE_METADATA = Path("release.json")
 

@@ -1,4 +1,4 @@
-# Poseidon Subnet Design
+# Poseidon Subnet Design and Tokenomics Proposal
 
 This repo keeps the CPVSS subnet design in Markdown and generates shareable HTML.
 
@@ -7,7 +7,7 @@ This repo keeps the CPVSS subnet design in Markdown and generates shareable HTML
 Edit the source document:
 
 ```bash
-docs/cpvss-subnet-design.md
+docs/poseidon-subnet-design-tokenomics-proposal.md
 ```
 
 Then regenerate the current HTML page:
