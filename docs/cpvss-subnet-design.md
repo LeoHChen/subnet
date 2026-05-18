@@ -100,7 +100,9 @@ Assumption for the baseline estimate:
 
 - Total $PSDN supply: 1,000,000,000 tokens.
 - Proposed stake amount = total supply x role stake rate.
-- Initial production design target: 16 miner agents per subnet and 16 validation agents per subnet.
+- Initial production design target: 16 registered and staked miner agents per subnet and 16 registered and staked validation agents per subnet.
+- Per-artifact validation panels are smaller than the full staked pool: three validation agents for clear cases and up to seven for escalated cases.
+- Beta Testnet availability target: at least 70% of registered agents active during the campaign period. This is an operating-readiness floor, not the denominator for automatically redistributing all rewards.
 - Testnet 1 target remains two subnets, likely voice and video.
 - Beta Testnet target expands to four launch-candidate subnets.
 - Mainnet Launch assumes four subnet launch partners.
@@ -112,8 +114,8 @@ Assumption for the baseline estimate:
 |---|---|---:|---|---|---|---|
 | Individual Contributor | No required stake. Optional stake can increase rewards through a capped multiplier. Past contributors can receive an initial airdrop based on verified contribution history. | Required: 0 $PSDN. Optional: 0-10,000 $PSDN. Reward multiplier capped at 1.25x so quality still matters more than wealth. | Open participation | Keep contribution open while giving serious contributors a way to signal long-term alignment | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata; penalties should usually reduce rewards before slashing optional stake | Prevent low-cost Sybil supply without blocking useful individual contributors |
 | Collection Operator | Required for large-scale campaigns or professional data suppliers | 50,000 $PSDN per active campaign, or 0.005% of supply | Campaign-based | Discourage spam, duplicate supply, and rights fraud at scale | Duplicate data, fake data, fraudulent rights claims, repeated bad metadata | Make professional collection operators internalize the cost of bad supply |
-| Miner Agent | Required per active miner agent, not only per subnet | 50,000 $PSDN per miner agent. With 16 miner agents per subnet, aggregate miner-agent stake is 800,000 $PSDN per subnet, or 0.08% of supply | 16 miner agents per subnet for initial beta operation; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Prevent miner agents from farming bounties with low-cost invalid work |
-| Validation Agent | Required per active validation agent | 20,000 $PSDN per validation agent. With 16 validation agents per subnet, aggregate validation-agent stake is 320,000 $PSDN per subnet, or 0.032% of supply | 16 validation agents per subnet so validation can support redundancy, random assignment, and red-herring coverage | Ensure validation agents perform independent review | Failed red herrings, provably low-effort validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
+| Miner Agent | Required per active miner agent, not only per subnet | Beta floor: 50,000 $PSDN per miner agent. Mainnet target: 200,000 $PSDN per miner agent unless observed utilization is materially lower. With 16 miner agents per subnet, target aggregate miner-agent stake is 3,200,000 $PSDN per subnet, or 0.32% of supply | 16 registered miner agents per subnet for initial beta operation; scale up as job volume grows | Make low-quality parsing costly | Fraudulent output, repeated failed validation, refusal to reveal committed output, persistent missed deadlines | Prevent miner agents from farming bounties with low-cost invalid work |
+| Validation Agent | Required per active validation agent | Beta floor: 20,000 $PSDN per validation agent. Mainnet target: 150,000 $PSDN per validation agent unless observed utilization is materially lower. With 16 validation agents per subnet, target aggregate validation-agent stake is 2,400,000 $PSDN per subnet, or 0.24% of supply | 16 registered validation agents per subnet; 3-agent and 7-agent artifact panels are sampled from this larger pool | Ensure validation agents perform independent review | Failed red herrings, provably low-effort validation, collusion, bad challenge behavior | Make honest validation more profitable than rubber-stamping |
 | Subnet Owner | Required launch bond or quality bond | 2,500,000 $PSDN per subnet launch, or 0.25% of supply | 1 owner/operator group per subnet | Hold owners accountable for scoring and subnet quality | Repeated scoring abuse, unresolved fraud, marketplace delisting event | Prevent owners from extracting rewards while degrading network trust |
 | Curator/Search Participant | Optional stake. Required only when a curator wants boosted placement or participates in a curation market | Optional: 0-100,000 $PSDN per promoted dataset or curation pool, up to 0.01% of supply | Optional role | Align discovery influence with quality without forcing every curator to stake | Promoting fake demand, low-quality datasets, or self-dealing | Prevent marketplace ranking from becoming pay-to-spam while keeping organic discovery open |
 | Buyer | Usually no stake; optional anti-abuse deposit for incentive programs | 0 $PSDN for normal buyers; 25,000 $PSDN only for subsidized buyer programs, or 0.0025% of supply | Open demand side | Buyers should face low friction while incentive programs need anti-wash protection | Fraudulent payment, chargeback abuse, self-dealing for incentives | Keep demand easy while preventing reward farming |
@@ -131,11 +133,13 @@ role_stake_tokens = total_psdn_supply x role_stake_rate
 Using the 1,000,000,000 $PSDN supply assumption:
 
 ```text
-miner_agent_stake = 1,000,000,000 x 0.00005 = 50,000 $PSDN per miner agent
-miner_agent_subnet_stake = 50,000 x 16 = 800,000 $PSDN per subnet
+miner_agent_beta_floor = 1,000,000,000 x 0.00005 = 50,000 $PSDN per miner agent
+miner_agent_mainnet_target = 1,000,000,000 x 0.00020 = 200,000 $PSDN per miner agent
+miner_agent_subnet_stake_target = 200,000 x 16 = 3,200,000 $PSDN per subnet
 
-validation_agent_stake = 1,000,000,000 x 0.00002 = 20,000 $PSDN per validation agent
-validation_agent_subnet_stake = 20,000 x 16 = 320,000 $PSDN per subnet
+validation_agent_beta_floor = 1,000,000,000 x 0.00002 = 20,000 $PSDN per validation agent
+validation_agent_mainnet_target = 1,000,000,000 x 0.00015 = 150,000 $PSDN per validation agent
+validation_agent_subnet_stake_target = 150,000 x 16 = 2,400,000 $PSDN per subnet
 
 subnet_owner_stake = 1,000,000,000 x 0.0025 = 2,500,000 $PSDN per subnet
 ```
@@ -151,23 +155,47 @@ For mainnet planning, assume four launch subnets operated or sponsored by four l
 | Big Care or similar Korea-based partner | Domain data partner | Healthcare-adjacent voice/video data collection and rights workflows |
 | Major AI lab such as ElevenLabs | Demand and AI-quality partner | Voice/audio model data demand, quality evaluation, commercial dataset requirements |
 
-Using 16 miner agents and 16 validation agents per subnet:
+Using 16 registered miner agents and 16 registered validation agents per subnet, and using mainnet target stakes for the agent roles:
 
 ```text
 mainnet_launch_subnets = 4
 miner_agents_at_launch = 16 x 4 = 64 miner agents
 validation_agents_at_launch = 16 x 4 = 64 validation agents
 
-miner_agent_launch_stake = 800,000 x 4 = 3,200,000 $PSDN
-validation_agent_launch_stake = 320,000 x 4 = 1,280,000 $PSDN
+miner_agent_launch_stake = 3,200,000 x 4 = 12,800,000 $PSDN
+validation_agent_launch_stake = 2,400,000 x 4 = 9,600,000 $PSDN
 subnet_owner_launch_stake = 2,500,000 x 4 = 10,000,000 $PSDN
 
-total_role_bonded_launch_stake = 14,480,000 $PSDN, or 1.448% of total supply
+total_role_bonded_launch_stake = 32,400,000 $PSDN, or 3.24% of total supply
 ```
 
 This is an equal-subnet launch assumption for planning. Actual mainnet reward and stake parameters should be weighted by subnet maturity, commercial demand, task cost, fraud risk, and partner operating capacity.
 
 The stake should be high enough to make malicious behavior expensive, but not so high that only large holders can participate. If the market price of $PSDN rises sharply, the token-denominated stake can be reduced while preserving the same economic security in dollar terms.
+
+#### Agent Pool, Panel Size, and Availability
+
+The design uses three different agent-count concepts that should not be conflated:
+
+| Concept | Planning Number | Meaning | Reward Implication |
+|---|---:|---|---|
+| Registered and staked pool | 16 miner agents and 16 validation agents per subnet | Target capacity bonded to the subnet for routing, redundancy, rotation, and economic security | Used for stake sizing and baseline per-agent reward caps |
+| Active availability floor | >=70% of registered agents during Beta Testnet | Operating-readiness target. With 64 registered validation agents across four subnets, 70% means at least 45 active validation agents, or about 11 active per subnet on average | Falling below the availability floor should reduce usable epoch budget rather than increase payout for the remaining active agents |
+| Per-artifact validation panel | 3 agents for normal cases; up to 7 agents for escalated cases | Review quorum for a specific artifact, sampled from the active validation-agent pool | Not every validation agent reviews every artifact; the larger staked pool enables parallelism, randomness, and anti-collusion rotation |
+
+The reward model should not automatically redistribute the entire validation pool to the remaining active agents when availability is below the 16-agent target. Otherwise, 70% activity would create an unintended payout windfall. The correct interpretation is:
+
+```text
+registered_agent_target = 16 per subnet
+active_agent_floor = registered_agent_target x 70%
+per_artifact_panel = 3 for normal review, 7 for escalation
+
+participant_reward_cap = role_epoch_pool / registered_agent_target
+participant_reward = min(quality_point_reward, participant_reward_cap)
+unused_epoch_pool = role_epoch_pool - sum(actual_participant_rewards)
+```
+
+Inactive agents earn zero. Active agents earn according to completed, useful, validated work, but unused budget should roll back to reserve, extend the runway, or be reallocated by policy. It should not mechanically raise active-agent APY.
 
 #### Contributor Airdrop and Stake Multiplier
 
@@ -212,6 +240,7 @@ Recommended principles:
 - Prefer delayed rewards, vesting, or clawback windows for work that may later be found low quality.
 - Move from emission-funded rewards to fee-funded rewards as soon as a subnet has real buyer demand.
 - Use staking locks to reduce circulating supply while forcing participants to internalize the cost of bad behavior.
+- Treat role APY as a risk signal. If implied cap APY is too high relative to the stake at risk, the protocol should raise stake requirements, lower emissions, reduce utilization, or route excess to reserve.
 
 ### Canonical Emission Schedule
 
@@ -246,13 +275,36 @@ Assuming Year 1 weekly emission cap of 865,385 $PSDN and four mainnet launch sub
 | CPVSS Stage or Network Pool | Year 1 Allocation | Weekly Network Cap | Four-Subnet Launch Baseline | Incentive Mechanism and Penalty Rule |
 |---|---:|---:|---:|---|
 | Collection | 35% | 302,885 $PSDN | 75,721 $PSDN per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
-| Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per miner agent per week with 16 miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
-| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, low-effort validation, or collusion reduce rewards and can slash stake. |
+| Parsing | 25% | 216,346 $PSDN | 54,087 $PSDN per subnet; up to 3,380 $PSDN per registered miner-agent slot per week before utilization controls | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
+| Validation | 15% | 129,808 $PSDN | 32,452 $PSDN per subnet; up to 2,028 $PSDN per registered validation-agent slot per week before utilization controls | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, low-effort validation, or collusion reduce rewards and can slash stake. |
 | Score | 10% | 86,538 $PSDN | 21,635 $PSDN per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
 | Search and Marketplace Demand | 10% | 86,538 $PSDN | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
 | Network Security and Challenges | 5% | 43,269 $PSDN | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
 
 These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. Emissions should not be released solely because a budget was scheduled.
+
+The "up to" per-agent figures are cap diagnostics, not expected yields. They are anchored to the registered 16-agent capacity target. If only 70% of agents are active, the unused capacity should lower actual utilization rather than redistribute the full pool across 11 active agents.
+
+#### Cap APY Diagnostic
+
+The previous beta-floor stakes of 50,000 $PSDN for miner agents and 20,000 $PSDN for validation agents are too low if the Year 1 emission cap is interpreted as expected annual yield. They should therefore be treated as beta/testnet floors. For mainnet, agent stakes should be raised, emissions should be utilization-gated, and fee-funded revenue should offset emissions rather than stack on top of the full emission cap.
+
+Using the Year 1 cap schedule, 16 registered agents per subnet, four launch subnets, and the proposed mainnet target stakes:
+
+| Role | Mainnet Target Stake | Weekly Cap per Registered Slot | Annual Cap per Registered Slot | Cap APY if Fully Utilized | Modeled APY at 35% Utilization |
+|---|---:|---:|---:|---:|---:|
+| Miner Agent | 200,000 $PSDN | 3,380 $PSDN | 175,760 $PSDN | 88% | 31% |
+| Validation Agent | 150,000 $PSDN | 2,028 $PSDN | 105,456 $PSDN | 70% | 25% |
+| Subnet Owner | 2,500,000 $PSDN | 21,635 $PSDN | 1,125,000 $PSDN | 45% | 16% |
+
+The cap APY is still high because Year 1 is a bootstrap budget. That is acceptable only if it remains a cap. It is not acceptable as a steady-state yield promise.
+
+Recommended APY guardrails:
+
+- Miner agents and validation agents: target realized bootstrap APY of roughly 20-60%, with exceptions only for scarce capacity, high-cost workloads, or short tactical campaigns.
+- Subnet owners: target realized emission APY of roughly 10-30%, with upside coming primarily from real marketplace revenue and subnet growth.
+- If trailing four-week realized APY exceeds the guardrail without a clear capacity shortage, new rewards should be throttled, staked requirements should rise, or unused emissions should return to reserve.
+- Fee-funded revenue should first replace emissions for the same CPVSS pool. It should not automatically stack on top of the full emission cap unless Poseidon explicitly chooses a temporary growth subsidy.
 
 The table above replaces the separate incentive design summary: incentive mechanism, penalty design, and emission budget must be changed together.
 
@@ -264,6 +316,8 @@ For each role:
 role_epoch_pool = network_epoch_emission x role_allocation
 subnet_epoch_pool = role_epoch_pool x subnet_weight / sum(all_subnet_weights)
 participant_reward = subnet_epoch_pool x participant_quality_points / sum(all_participant_quality_points)
+participant_reward = min(participant_reward, participant_epoch_reward_cap)
+unused_epoch_pool = subnet_epoch_pool - sum(actual_participant_rewards)
 ```
 
 Quality points should include:
@@ -275,6 +329,8 @@ Quality points should include:
 - Red-herring accuracy for validation agents.
 - Marketplace demand signal, where applicable.
 - Penalty adjustments for failed checks or disputes.
+- Active availability versus registered capacity.
+- Role APY guardrails.
 
 #### Lock-Up and Vesting
 
@@ -296,6 +352,7 @@ Recommended rule:
 
 ```text
 effective_epoch_emission = max(minimum_security_emission, planned_epoch_emission - fee_funded_rewards)
+role_total_reward = min(fee_funded_rewards + effective_epoch_emission, role_reward_guardrail)
 ```
 
 Where:
@@ -303,6 +360,7 @@ Where:
 - `planned_epoch_emission` is the scheduled $PSDN emission for the epoch.
 - `fee_funded_rewards` is the amount of marketplace revenue routed to participants.
 - `minimum_security_emission` keeps validation, challenge, and red-herring systems funded even when demand fluctuates.
+- `role_reward_guardrail` is the maximum reward that should be paid to a role in an epoch after considering utilization, stake at risk, and target APY.
 
 This prevents the network from overpaying with new emissions when real buyer demand can cover participant costs.
 
@@ -319,7 +377,8 @@ annual_subnet_revenue = paid_dataset_accesses x average_dataset_price
 network_revenue_year_n = active_subnets x annual_subnet_revenue x (1 + revenue_growth_rate)^(n - 1)
 
 buying_pressure_year_n = network_revenue_year_n x psdn_settlement_ratio
-selling_pressure_year_n = effective_emission_year_n x emission_sell_through_ratio
+modeled_emission_year_n = effective_emission_year_n x reward_utilization_ratio
+selling_pressure_year_n = modeled_emission_year_n x emission_sell_through_ratio
 net_pressure_year_n = buying_pressure_year_n - selling_pressure_year_n
 ```
 
@@ -327,6 +386,7 @@ Where:
 
 - `annual_subnet_revenue` is the $PSDN-equivalent revenue generated by one subnet in a year.
 - `psdn_settlement_ratio` is the percentage of revenue that must touch $PSDN through buyer payment, conversion, settlement, buyback, burn, insurance, or treasury policy.
+- `reward_utilization_ratio` is the portion of the emission cap actually paid after useful work, availability, quality, APY guardrails, and fee offset.
 - `emission_sell_through_ratio` is the estimated percentage of emitted rewards sold by recipients. This should be treated conservatively because early participants may sell to cover operating costs.
 - `net_pressure_year_n` is not a price prediction. It is a directional health metric: positive means modeled external demand exceeds modeled emission sell pressure.
 
@@ -338,15 +398,17 @@ Recommended beta/mainnet planning assumptions:
 | Active mainnet launch subnets | 4 | Matches the launch-partner plan |
 | Annual revenue growth | 50% | Aggressive but plausible if partner-led subnets compound supply and demand |
 | $PSDN settlement or conversion ratio | 70% | Creates token demand while leaving room for fiat abstraction and operating flexibility |
+| Reward utilization ratio | 35% | Models the fact that Year 1 emissions are caps, not automatic yield; unused cap rolls back or extends runway |
 | Emission sell-through ratio | 65% | Conservative assumption that many early recipients sell some rewards to cover costs |
 
-If Year 1 effective emissions are 45,000,000 $PSDN, four subnets each generate 3,000,000 $PSDN-equivalent revenue, 70% of revenue touches $PSDN, and 65% of emissions are sold, then:
+If Year 1 effective emission cap is 45,000,000 $PSDN, reward utilization is 35%, four subnets each generate 3,000,000 $PSDN-equivalent revenue, 70% of revenue touches $PSDN, and 65% of paid emissions are sold, then:
 
 ```text
 network_revenue_year_1 = 4 x 3,000,000 = 12,000,000 $PSDN-equivalent
 buying_pressure_year_1 = 12,000,000 x 70% = 8,400,000 $PSDN
-selling_pressure_year_1 = 45,000,000 x 65% = 29,250,000 $PSDN
-net_pressure_year_1 = -20,850,000 $PSDN
+modeled_emission_year_1 = 45,000,000 x 35% = 15,750,000 $PSDN
+selling_pressure_year_1 = 15,750,000 x 65% = 10,237,500 $PSDN
+net_pressure_year_1 = -1,837,500 $PSDN
 ```
 
 This is acceptable for bootstrap if emissions are capped, locked, and tied to useful work. The design goal is for revenue growth, fee routing, and reduced emissions to move net pressure positive over time.
@@ -379,6 +441,8 @@ emission_offset_ratio_year_n = min(100%, fee_funded_rewards_year_n / planned_emi
 ```
 
 Under the default gross-pool model, `fee_offset_eligible_share` is 100% because all marketplace revenue is assigned to the same CPVSS pools used by emissions. If Poseidon later takes an off-top platform fee before CPVSS distribution, that fee should be modeled explicitly by reducing `fee_offset_eligible_share` or by updating both the revenue-sharing table and emission schedule.
+
+Fee-funded payouts should reduce same-pool emissions before they are added as extra upside. For example, validation revenue should first offset validation emissions. Otherwise the model can produce excessive combined APY for validation agents and miner agents even when their stake at risk is low.
 
 Governance or Poseidon policy should decide whether the Network Security and Challenges reserve is burned, retained as an insurance pool, used for buybacks, or routed to ecosystem grants. The safest initial design is to keep it as an insurance pool during testnet and decide burn or buyback policy only after real marketplace behavior is visible.
 
@@ -699,8 +763,10 @@ Open design questions include:
 
 - Validation agent assignment flow.
 - Validation schema.
-- At least three validation agents per selected artifact, where feasible.
+- Registered validation-agent pool of 16 per subnet, with at least 70% active during Beta Testnet.
+- At least three validation agents per selected artifact, sampled from the active pool where feasible.
 - Two-stage consensus rule: accept clear 2-of-3 agreement, then escalate uncertain or disputed cases to a larger 5-of-7 review.
+- Active-pool shortfalls should reduce validation throughput or epoch-budget utilization; they should not increase per-agent reward caps.
 - Red-herring task injection.
 - Validation agent reliability score.
 - Basic slashing or down-weighting simulation.
@@ -1074,7 +1140,7 @@ These metrics are proposed planning targets. They should be tuned as real testne
 |---|---|---|---|
 | Subnets | 2 live subnets: voice and video | 4 live Beta Testnet subnets | 4 live mainnet launch-partner subnets |
 | Partner Readiness | Poseidon and Kled active; 2 external partner tracks in active BD | 4 launch-candidate partners active in Beta Testnet | 4 signed launch partners with data, legal, ops, and campaign commitments |
-| Agent Network | 16 miner-agent slots and 16 validation-agent slots configured per subnet; permissioned agents acceptable | >=64 miner-agent registrations and >=64 validation-agent registrations across 4 subnets; >=70% active during the campaign period | Production agent registry active; staking or launch-bond rules enforced; agent reliability history migrated or initialized |
+| Agent Network | 16 miner-agent slots and 16 validation-agent slots configured per subnet; permissioned agents acceptable | >=64 miner-agent registrations and >=64 validation-agent registrations across 4 subnets; >=70% active during the campaign period, meaning at least 45 active agents network-wide and roughly 11 active agents per subnet on average | Production agent registry active; staking or launch-bond rules enforced; agent reliability history migrated or initialized |
 | Data Supply | >=2 curated seed datasets; >=95% accepted items include manifest, content hash, and rights metadata | >=5,000 accepted data items or partner-approved equivalent; >=90% rights metadata completeness | Partner launch datasets committed; data-rights workflow approved; deletion and dispute workflow tested |
 | CPVSS Throughput | >=20 full end-to-end CPVSS runs across voice and video | >=200 full CPVSS runs across 4 subnets | Two-week release candidate with stable daily CPVSS processing |
 | Quality and Validation | Parser job success >=80%; validation consensus produced for >=90% completed jobs; red-herring detection >=80% | Parser job success >=90%; validation consensus produced for >=95% completed jobs; red-herring detection >=90% | Mainnet quality thresholds approved; challenge and slashing policy active; no unresolved high-risk validation issue |

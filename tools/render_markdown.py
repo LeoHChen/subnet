@@ -60,8 +60,10 @@ TOKENOMICS_SIMULATOR_SECTION = """
         <label class="sim-control"><span><span>Launch subnets</span><strong data-output="launchSubnets"></strong></span><input type="range" data-param="launchSubnets" min="1" max="12" step="1" value="4"></label>
         <label class="sim-control"><span><span>Miner agents per subnet</span><strong data-output="minerAgents"></strong></span><input type="range" data-param="minerAgents" min="1" max="64" step="1" value="16"></label>
         <label class="sim-control"><span><span>Validation agents per subnet</span><strong data-output="validationAgents"></strong></span><input type="range" data-param="validationAgents" min="1" max="64" step="1" value="16"></label>
-        <label class="sim-control"><span><span>Stake per miner agent</span><strong data-output="minerStake"></strong></span><input type="range" data-param="minerStake" min="0" max="250000" step="5000" value="50000"></label>
-        <label class="sim-control"><span><span>Stake per validation agent</span><strong data-output="validationStake"></strong></span><input type="range" data-param="validationStake" min="0" max="150000" step="5000" value="20000"></label>
+        <label class="sim-control"><span><span>Active availability</span><strong data-output="activeRate"></strong></span><input type="range" data-param="activeRate" min="10" max="100" step="5" value="70"></label>
+        <label class="sim-control"><span><span>Reward utilization</span><strong data-output="rewardUtilization"></strong></span><input type="range" data-param="rewardUtilization" min="0" max="100" step="5" value="35"></label>
+        <label class="sim-control"><span><span>Stake per miner agent</span><strong data-output="minerStake"></strong></span><input type="range" data-param="minerStake" min="0" max="500000" step="10000" value="200000"></label>
+        <label class="sim-control"><span><span>Stake per validation agent</span><strong data-output="validationStake"></strong></span><input type="range" data-param="validationStake" min="0" max="500000" step="10000" value="150000"></label>
         <label class="sim-control"><span><span>Subnet-owner stake</span><strong data-output="ownerStake"></strong></span><input type="range" data-param="ownerStake" min="0" max="10000000" step="250000" value="2500000"></label>
       </div>
       <div class="sim-control-group">
@@ -102,16 +104,16 @@ TOKENOMICS_SIMULATOR_SECTION = """
       <div class="sim-chart-card">
         <div class="sim-chart-title"><h3>Buying vs Selling Pressure</h3><span data-chart-note="pressure"></span></div>
         <svg class="sim-chart sim-pressure-chart" data-chart="pressure-bars" role="img" aria-label="Buying pressure, selling pressure, and net pressure chart"></svg>
-        <p class="sim-note">Buying pressure is modeled revenue touching $PSDN. Selling pressure is emitted rewards multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
+        <p class="sim-note">Buying pressure is modeled revenue touching $PSDN. Selling pressure is emitted rewards after reward utilization, multiplied by the sell-through assumption. This is directional, not a price forecast.</p>
       </div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table sim-pressure-table"><thead><tr><th>Year</th><th>Network Revenue</th><th>Buying Pressure</th><th>Selling Pressure</th><th>Net Pressure</th></tr></thead><tbody data-pressure-table></tbody></table></div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table sim-revenue-table"><thead><tr><th>CPVSS Revenue Pool</th><th>Share</th><th>Year 1 Revenue</th><th>Purpose</th></tr></thead><tbody data-revenue-table></tbody></table></div>
       <div class="sim-chart-card">
         <div class="sim-chart-title"><h3>Role Reward APY</h3><span data-chart-note="role"></span></div>
         <svg class="sim-chart sim-role-chart" data-chart="role-bars" role="img" aria-label="Per-role stake, reward, and APY chart"></svg>
-        <p class="sim-note">Year 1 maximum reward at full utilization. Actual payout should still depend on quality points, uptime, lockups, challenge windows, and slashing events.</p>
+        <p class="sim-note">Modeled reward uses registered capacity and the reward-utilization slider. Active shortfalls reduce used budget; they do not automatically increase per-agent caps.</p>
       </div>
-      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-role-table"><thead><tr><th>Role</th><th>Stake / Participant</th><th>Year 1 Reward</th><th>Reward / Epoch</th><th>APY</th><th>Network Count</th></tr></thead><tbody data-role-table></tbody></table></div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table sim-role-table"><thead><tr><th>Role</th><th>Stake / Participant</th><th>Modeled Year 1 Reward</th><th>Reward / Epoch</th><th>Modeled APY</th><th>Registered / Active</th></tr></thead><tbody data-role-table></tbody></table></div>
       <div class="table-wrap sim-table-wrap"><table class="sim-table"><thead><tr><th>Year</th><th>Gross Cap</th><th>Effective Emission</th><th>Effective / Epoch</th><th>Cumulative Effective</th><th>Supply Share</th></tr></thead><tbody data-sim-table></tbody></table></div>
     </div>
   </div>
@@ -334,7 +336,7 @@ TOKENOMICS_SIMULATOR_JS = """
           const colors = ["#1d7c72", "#b97014", "#426d91", "#bd4b37", "#446b2f", "#7b5bb8", "#6b7280"];
           const paramNames = [
             "supply", "reservePct", "feeOffset", "epochDays", "year1Weight", "year2Weight", "year3Weight", "year4Weight",
-            "launchSubnets", "minerAgents", "validationAgents", "minerStake", "validationStake", "ownerStake",
+            "launchSubnets", "minerAgents", "validationAgents", "activeRate", "rewardUtilization", "minerStake", "validationStake", "ownerStake",
             "collectionAlloc", "parsingAlloc", "validationAlloc", "scoreAlloc", "searchAlloc", "securityAlloc",
             "revenuePerSubnet", "revenueGrowth", "psdnSettlement", "emissionSellThrough",
           ];
@@ -438,11 +440,11 @@ TOKENOMICS_SIMULATOR_JS = """
               return `
                 <g>
                   <text x="12" y="${y + 15}" fill="var(--ink)" font-size="15" font-weight="760">${role.label}</text>
-                  <text x="12" y="${y + 36}" fill="var(--muted)" font-size="12">${fmt.format(role.count)} active at launch</text>
+                  <text x="12" y="${y + 36}" fill="var(--muted)" font-size="12">${fmt.format(role.registeredCount)} registered / ${fmt.format(role.activeCount)} active</text>
                   <text x="12" y="${y + 57}" fill="var(--amber)" font-size="13" font-weight="760">APY ${apyText(role.apy)}</text>
                   <rect x="${pad.left}" y="${y + 2}" width="${stakeW}" height="18" rx="5" fill="var(--teal)" opacity="0.82"><title>${role.label} stake: ${token(role.stake)}</title></rect>
                   <text x="${stakeLabelX}" y="${y + 16}" fill="var(--muted)" font-size="12">${compact(role.stake)}</text>
-                  <rect x="${pad.left}" y="${y + 30}" width="${rewardW}" height="18" rx="5" fill="var(--amber)" opacity="0.82"><title>${role.label} Year 1 reward: ${token(role.annualReward)}</title></rect>
+                  <rect x="${pad.left}" y="${y + 30}" width="${rewardW}" height="18" rx="5" fill="var(--amber)" opacity="0.82"><title>${role.label} modeled Year 1 reward: ${token(role.annualReward)}</title></rect>
                   <text x="${rewardLabelX}" y="${y + 44}" fill="var(--muted)" font-size="12">${compact(role.annualReward)}</text>
                 </g>`;
             }).join("");
@@ -511,8 +513,14 @@ TOKENOMICS_SIMULATOR_JS = """
               return items;
             }, []);
             const launchSubnets = value("launchSubnets");
-            const minerStake = launchSubnets * value("minerAgents") * value("minerStake");
-            const validationStake = launchSubnets * value("validationAgents") * value("validationStake");
+            const activeRate = value("activeRate") / 100;
+            const rewardUtilization = value("rewardUtilization") / 100;
+            const minerRegisteredCount = Math.max(1, launchSubnets * value("minerAgents"));
+            const validationRegisteredCount = Math.max(1, launchSubnets * value("validationAgents"));
+            const minerActiveCount = Math.max(1, Math.round(minerRegisteredCount * activeRate));
+            const validationActiveCount = Math.max(1, Math.round(validationRegisteredCount * activeRate));
+            const minerStake = minerRegisteredCount * value("minerStake");
+            const validationStake = validationRegisteredCount * value("validationStake");
             const ownerStake = launchSubnets * value("ownerStake");
             const totalStake = minerStake + validationStake + ownerStake;
             const poolInputs = [
@@ -543,7 +551,7 @@ TOKENOMICS_SIMULATOR_JS = """
             ));
             const pressureRows = annualNetworkRevenue.map((revenue, index) => {
               const buying = revenue * psdnSettlement;
-              const selling = annualEffective[index] * emissionSellThrough;
+              const selling = annualEffective[index] * rewardUtilization * emissionSellThrough;
               return {
                 label: `Y${index + 1}`,
                 revenue,
@@ -553,29 +561,31 @@ TOKENOMICS_SIMULATOR_JS = """
               };
             });
             const year1FeeFundedRewards = annualNetworkRevenue[0] * feeOffsetEligibleShare;
-            const feeCoverage = annualEffective[0] > 0 ? year1FeeFundedRewards / annualEffective[0] * 100 : 0;
+            const year1ModeledEmission = annualEffective[0] * rewardUtilization;
+            const feeCoverage = year1ModeledEmission > 0 ? year1FeeFundedRewards / year1ModeledEmission * 100 : 0;
             const poolValue = (key) => pools.find((item) => item.key === key)?.value || 0;
-            const minerCount = Math.max(1, launchSubnets * value("minerAgents"));
-            const validationCount = Math.max(1, launchSubnets * value("validationAgents"));
             const ownerCount = Math.max(1, launchSubnets);
             const roleEconomics = [
               {
                 label: "Miner agent",
                 stake: value("minerStake"),
-                annualReward: poolValue("parsing") / minerCount,
-                count: minerCount,
+                annualReward: poolValue("parsing") * rewardUtilization / minerRegisteredCount,
+                registeredCount: minerRegisteredCount,
+                activeCount: minerActiveCount,
               },
               {
                 label: "Validation agent",
                 stake: value("validationStake"),
-                annualReward: poolValue("validation") / validationCount,
-                count: validationCount,
+                annualReward: poolValue("validation") * rewardUtilization / validationRegisteredCount,
+                registeredCount: validationRegisteredCount,
+                activeCount: validationActiveCount,
               },
               {
                 label: "Subnet owner",
                 stake: value("ownerStake"),
-                annualReward: poolValue("score") / ownerCount,
-                count: ownerCount,
+                annualReward: poolValue("score") * rewardUtilization / ownerCount,
+                registeredCount: ownerCount,
+                activeCount: ownerCount,
               },
             ].map((role) => ({
               ...role,
@@ -589,6 +599,8 @@ TOKENOMICS_SIMULATOR_JS = """
             setOutput("launchSubnets", fmt.format(launchSubnets));
             setOutput("minerAgents", fmt.format(value("minerAgents")));
             setOutput("validationAgents", fmt.format(value("validationAgents")));
+            setOutput("activeRate", pct(value("activeRate"), 0));
+            setOutput("rewardUtilization", pct(value("rewardUtilization"), 0));
             setOutput("minerStake", token(value("minerStake")));
             setOutput("validationStake", token(value("validationStake")));
             setOutput("ownerStake", token(value("ownerStake")));
@@ -614,7 +626,7 @@ TOKENOMICS_SIMULATOR_JS = """
             write('[data-chart-note="pool"]', `${token(annualEffective[0])} effective Year 1 cap`);
             write('[data-chart-note="stake"]', `${fmt.format(launchSubnets)} launch subnets`);
             write('[data-chart-note="pressure"]', `${token(annualNetworkRevenue[0])} Year 1 network revenue`);
-            write('[data-chart-note="role"]', "Year 1 max reward / stake");
+            write('[data-chart-note="role"]', `${pct(value("rewardUtilization"), 0)} reward utilization; ${pct(value("activeRate"), 0)} active availability`);
             drawLine(annualEffective, cumulative, supply);
             drawPie("pool-pie", "pool", pools);
             drawPie("stake-pie", "stake", [
@@ -634,7 +646,7 @@ TOKENOMICS_SIMULATOR_JS = """
             drawRoleBars(roleEconomics);
             const roleTable = root.querySelector("[data-role-table]");
             roleTable.innerHTML = roleEconomics.map((role) => (
-              `<tr><td>${role.label}</td><td>${token(role.stake)}</td><td>${token(role.annualReward)}</td><td>${token(role.epochReward)}</td><td>${apyText(role.apy)}</td><td>${fmt.format(role.count)}</td></tr>`
+              `<tr><td>${role.label}</td><td>${token(role.stake)}</td><td>${token(role.annualReward)}</td><td>${token(role.epochReward)}</td><td>${apyText(role.apy)}</td><td>${fmt.format(role.registeredCount)} / ${fmt.format(role.activeCount)}</td></tr>`
             )).join("");
             const table = root.querySelector("[data-sim-table]");
             table.innerHTML = annualGross.map((gross, index) => {
