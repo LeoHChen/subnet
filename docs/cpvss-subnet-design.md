@@ -1,4 +1,4 @@
-# Poseidon Subnet CPVSS Design and Launch Roadmap
+# Poseidon Subnet Design and Tokenomics Proposal
 
 Date: May 15, 2026
 Roadmap targets: Testnet 1 by June 30, 2026; Beta Testnet by September 30, 2026; Mainnet Launch by December 31, 2026
@@ -7,6 +7,8 @@ Scope: Testnet 1 with two subnets, Beta Testnet with four subnets, and Mainnet L
 ## Executive Summary
 
 ### Background: Poseidon and Subnets
+
+Poseidon is the Data Layer for AI.
 
 Poseidon is designed for the part of the AI stack that is becoming hardest to solve: specialized, rights-cleared, high-quality training data.
 
@@ -21,9 +23,11 @@ Poseidon addresses this gap by creating infrastructure for AI data economies. At
 5. Register provenance and IP lineage.
 6. Make the resulting dataset discoverable and monetizable through a marketplace.
 
-Poseidon is built around data pipelines and subnetworks. A data pipeline is the workflow that turns raw contributions into a usable dataset. A subnetwork, or subnet, is a specialized execution environment for a particular AI data domain. Voice data, video data, robotics data, medical data, and other categories do not have the same privacy, storage, bandwidth, validation, or licensing requirements. Subnets let each domain optimize its workflow and economics while still sharing common Poseidon infrastructure.
+Poseidon is built around subnetworks and data pipelines. The original litepaper describes subnetworks as purpose-built shards for specific AI domains, but the current design should be sharper: a Poseidon subnet consists of both a decentralized compute network and a CPVSS processing pipeline. The decentralized compute network supplies the workers, miner agents, validation agents, challengers, and execution capacity. The CPVSS pipeline defines how raw data moves through collection, parsing, validation, scoring, and search until it becomes a usable, monetizable dataset.
 
-The Poseidon litepaper frames subnetworks as purpose-built shards synchronized and secured by a shared network layer. Each subnet can operate its own data pipelines, economic rules, validation mechanisms, and quality standards, while using shared infrastructure for provenance, IP management, interoperability, and marketplace access. This is why subnets matter: they let Poseidon scale across many AI data domains without forcing every domain into one generic pipeline.
+A subnetwork, or subnet, is therefore not just a generic compute cluster and not just a data workflow. It is a domain-specific data production system. Voice data, video data, robotics data, medical data, and other categories do not have the same privacy, storage, bandwidth, validation, fraud-detection, or licensing requirements. Subnets let each domain optimize its compute, workflow, quality controls, and economics while still sharing common Poseidon infrastructure.
+
+The Poseidon litepaper frames subnetworks as purpose-built shards synchronized and secured by a shared network layer. That remains directionally useful, but this proposal updates the emphasis: the subnet's core product value comes from using decentralized compute to execute data-specific processing pipelines better, cheaper, and more transparently than a purely centralized workflow. Each subnet can operate its own economic rules, validation mechanisms, quality standards, and processing stack, while using shared infrastructure for provenance, IP management, interoperability, and marketplace access. This is why subnets matter: they let Poseidon scale across many AI data domains without forcing every domain into one generic pipeline.
 
 Story's IP infrastructure is an important part of this design. Poseidon can use Story to track data provenance, IP lineage, programmable licensing, royalty flows, randomness, commitments, and potentially secure access to registered data assets. This matters because AI buyers increasingly need data that is not only useful, but also rights-cleared and auditable.
 
@@ -31,9 +35,31 @@ For a new reader, the simplest framing is:
 
 > Poseidon is a marketplace and coordination layer for AI training data. Subnets are specialized data factories inside Poseidon. Crypto is the coordination, provenance, staking, reward, and settlement layer that lets many independent actors contribute work and share in the value of the datasets they help create.
 
+### CPVSS Processing Pipeline Background
+
+CPVSS stands for Collection, Parsing, Validation, Score, and Search. It is the operating pipeline that turns raw, messy, distributed data into AI-ready data assets.
+
+The reason CPVSS matters is that raw data alone is not the product. A buyer does not only want uploads, volume, or a headline number of files. A buyer wants data that matches a specification, is not spam, is not duplicated, is not synthetic fraud, has usable metadata, meets quality thresholds, respects privacy and rights constraints, and can be found or licensed later. CPVSS is the structure that makes this possible.
+
+At a high level:
+
+1. **Collection** defines the requested data and captures submissions, metadata, consent, provenance, and contributor attribution.
+2. **Parsing** uses decentralized compute to transform raw data into structured artifacts such as transcripts, labels, annotations, segments, summaries, or selected video frames.
+3. **Validation** checks data quality, fraud, rights, and parser outputs through automated checks, human review, red herrings, stratified sampling, consensus, and challengers.
+4. **Score** gives the subnet owner a final quality and usefulness decision, similar to an oracle role, while keeping score batches auditable and challengeable.
+5. **Search** turns accepted datasets into a marketplace surface where buyers can discover, inspect, license, and pay for useful data.
+
+The recent subnet strategy discussion reinforced that CPVSS should stay focused on data-specific processing rather than drifting too early into generic compute. Generic compute routing can be a future extension if the miner network grows large enough, but Poseidon's near-term moat is the combination of decentralized compute with opinionated AI data workflows.
+
+The practical reason to introduce subnets is that the current centralized CPVSS pattern becomes expensive and brittle as modalities expand. Poseidon absorbs every dollar of parsing and review cost, centralized reviewers can become lazy or gameable, and one internal roadmap cannot ship every modality fast enough. A subnet turns the same pipeline into an open production system: miner agents compete to run standardized parsing recipes, validation agents stake behind quality decisions, subnet owners propose modality-specific pipelines, and Poseidon keeps the buyer-facing marketplace coherent.
+
+For the first production targets, CPVSS should be grounded in audio and video. The audio pipeline can prove rights-cleared voice data, watermarking, metadata-based fraud controls, and buyer demand. The video pipeline can prove privacy filtering, task relevance checks, frame selection, transcript or annotation generation, cost-efficient use of classical computer vision, and selective use of expensive vision-language models only when needed.
+
 ### What This Document Adds
 
-The litepaper explains the broad Poseidon architecture. This document turns that architecture into a concrete subnet design for near-term launch, focused on voice and video data.
+The litepaper explains the broad Poseidon architecture. The recent subnet strategy discussion clarifies how that architecture should be operationalized: Poseidon should remain focused on data-specific subnet design, use decentralized compute where it makes CPVSS cheaper or more scalable, and make audio/video processing the near-term product wedge.
+
+This document turns that architecture into a concrete subnet design for near-term launch, focused on voice and video data.
 
 It proposes CPVSS as the operating framework for a subnet:
 
@@ -213,7 +239,11 @@ The network should minimize emissions by default and use them only where they cr
 Recommended principles:
 
 - Emit against verified usefulness, not activity volume.
+- Treat emission schedules as caps, not calendar inflation. If no useful paid or validated work completes, no new $PSDN should be emitted for that work.
 - Cap emissions per epoch and per subnet.
+- Prefer job-triggered rewards: token release should follow completed work, validation, scoring, and challenge windows.
+- Use stablecoin-floored payout accounting where needed so miner agents and validation agents can cover baseline operating cost, with $PSDN rewards as upside and alignment.
+- Convert part of fiat or stablecoin buyer revenue into $PSDN demand through settlement, reward funding, buyback, burn, insurance, or treasury policy.
 - Increase rewards when a subnet is supply-constrained and reduce them when marketplace demand can fund the work.
 - Prefer delayed rewards, vesting, or clawback windows for work that may later be found low quality.
 - Move from emission-funded rewards to fee-funded rewards as soon as a subnet has real buyer demand.
@@ -222,6 +252,8 @@ Recommended principles:
 ### Canonical Emission Schedule
 
 The emission design should bootstrap the network without making emissions the permanent business model. With a 1,000,000,000 $PSDN supply, the recommended starting point is to reserve 120,000,000 $PSDN, or 12% of supply, for a four-year network incentive program. This is a maximum cap, not an obligation to emit.
+
+The operating rule should be "no job, no emission." Weekly epochs are settlement windows, not an automatic inflation clock. If a subnet has idle agents, no accepted jobs, failed validation, unresolved rights issues, or no useful scored output, the corresponding epoch budget should stay in reserve.
 
 #### Epoch Design
 
@@ -466,6 +498,9 @@ For beta, the system does not need to put raw data on-chain. It should put hashe
 - Metadata manifest for each submitted item.
 - Consent and rights fields in the manifest.
 - Contribution ledger that can support later rewards.
+- Metadata-based fraud checks for duplicates, suspicious account patterns, unrealistic language coverage, campaign abuse, duration anomalies, and upload timing.
+- Client-side or pre-ingestion filtering for obvious spam so the network does not pay bandwidth, storage, or parsing cost for unusable data.
+- Clear rejection explanations when possible, so honest contributors understand whether the issue is language, quality, rights, privacy, or task mismatch.
 
 ### Incentive Design Options
 
@@ -696,7 +731,7 @@ Open design questions include:
 - Validation agent assignment flow.
 - Validation schema.
 - At least three validation agents per selected artifact, where feasible.
-- Consensus rule for pass/fail or quality tier.
+- Two-stage consensus rule: accept clear 2-of-3 agreement, then escalate uncertain or disputed cases to a larger 5-of-7 review.
 - Red-herring task injection.
 - Validation agent reliability score.
 - Basic slashing or down-weighting simulation.
