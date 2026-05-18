@@ -21,6 +21,449 @@ DEFAULT_SOURCE = Path("docs/cpvss-subnet-design.md")
 DEFAULT_OUTPUT = Path("index.html")
 DEFAULT_RELEASE_METADATA = Path("release.json")
 
+TOKENOMICS_SIMULATOR_SECTION = """
+<section id="tokenomics-simulator" data-no-notion="true"><div class="content">
+<div class="simulator-shell">
+  <div class="simulator-heading">
+    <div>
+      <h2>Tokenomics Simulator</h2>
+      <p>Adjust the emission, staking, launch, and allocation assumptions to see how $POS supply, emissions, and bonded stake move over the launch timeline.</p>
+    </div>
+    <div class="simulator-status" data-sim-status>Live model</div>
+  </div>
+  <div class="sim-kpis" aria-label="Tokenomics simulation summary">
+    <div class="sim-kpi"><span>Total supply</span><strong data-kpi="supply">-</strong></div>
+    <div class="sim-kpi"><span>4-year effective emission</span><strong data-kpi="effectiveEmission">-</strong></div>
+    <div class="sim-kpi"><span>Launch bonded stake</span><strong data-kpi="launchStake">-</strong></div>
+    <div class="sim-kpi"><span>Bonded stake share</span><strong data-kpi="stakeShare">-</strong></div>
+  </div>
+  <div class="simulator-grid">
+    <div class="sim-panel sim-controls" aria-label="Tokenomics simulator controls">
+      <div class="sim-control-group">
+        <h3>Emission Timeline</h3>
+        <label class="sim-control"><span><span>Token supply</span><strong data-output="supply"></strong></span><input type="range" data-param="supply" min="100000000" max="5000000000" step="50000000" value="1000000000"></label>
+        <label class="sim-control"><span><span>Incentive reserve</span><strong data-output="reservePct"></strong></span><input type="range" data-param="reservePct" min="1" max="30" step="0.5" value="12"></label>
+        <label class="sim-control"><span><span>Fee offset</span><strong data-output="feeOffset"></strong></span><input type="range" data-param="feeOffset" min="0" max="80" step="5" value="0"></label>
+        <label class="sim-control"><span><span>Epoch length</span><strong data-output="epochDays"></strong></span><input type="range" data-param="epochDays" min="7" max="30" step="1" value="7"></label>
+        <label class="sim-control"><span><span>Year 1 weight</span><strong data-output="year1Weight"></strong></span><input type="range" data-param="year1Weight" min="0" max="70" step="0.5" value="37.5"></label>
+        <label class="sim-control"><span><span>Year 2 weight</span><strong data-output="year2Weight"></strong></span><input type="range" data-param="year2Weight" min="0" max="70" step="0.5" value="29.2"></label>
+        <label class="sim-control"><span><span>Year 3 weight</span><strong data-output="year3Weight"></strong></span><input type="range" data-param="year3Weight" min="0" max="70" step="0.5" value="20.8"></label>
+        <label class="sim-control"><span><span>Year 4 weight</span><strong data-output="year4Weight"></strong></span><input type="range" data-param="year4Weight" min="0" max="70" step="0.5" value="12.5"></label>
+        <p class="sim-note" data-output="yearWeightTotal"></p>
+      </div>
+      <div class="sim-control-group">
+        <h3>Launch Staking</h3>
+        <label class="sim-control"><span><span>Launch subnets</span><strong data-output="launchSubnets"></strong></span><input type="range" data-param="launchSubnets" min="1" max="12" step="1" value="4"></label>
+        <label class="sim-control"><span><span>Miner agents per subnet</span><strong data-output="minerAgents"></strong></span><input type="range" data-param="minerAgents" min="1" max="64" step="1" value="16"></label>
+        <label class="sim-control"><span><span>Validation agents per subnet</span><strong data-output="validationAgents"></strong></span><input type="range" data-param="validationAgents" min="1" max="64" step="1" value="16"></label>
+        <label class="sim-control"><span><span>Stake per miner agent</span><strong data-output="minerStake"></strong></span><input type="range" data-param="minerStake" min="0" max="250000" step="5000" value="50000"></label>
+        <label class="sim-control"><span><span>Stake per validation agent</span><strong data-output="validationStake"></strong></span><input type="range" data-param="validationStake" min="0" max="150000" step="5000" value="20000"></label>
+        <label class="sim-control"><span><span>Subnet-owner stake</span><strong data-output="ownerStake"></strong></span><input type="range" data-param="ownerStake" min="0" max="10000000" step="250000" value="2500000"></label>
+      </div>
+      <div class="sim-control-group">
+        <h3>Year 1 Pool Allocation</h3>
+        <label class="sim-control"><span><span>Collection</span><strong data-output="collectionAlloc"></strong></span><input type="range" data-param="collectionAlloc" min="0" max="70" step="1" value="35"></label>
+        <label class="sim-control"><span><span>Parsing</span><strong data-output="parsingAlloc"></strong></span><input type="range" data-param="parsingAlloc" min="0" max="70" step="1" value="25"></label>
+        <label class="sim-control"><span><span>Validation</span><strong data-output="validationAlloc"></strong></span><input type="range" data-param="validationAlloc" min="0" max="70" step="1" value="15"></label>
+        <label class="sim-control"><span><span>Score</span><strong data-output="scoreAlloc"></strong></span><input type="range" data-param="scoreAlloc" min="0" max="70" step="1" value="10"></label>
+        <label class="sim-control"><span><span>Search and demand</span><strong data-output="searchAlloc"></strong></span><input type="range" data-param="searchAlloc" min="0" max="70" step="1" value="10"></label>
+        <label class="sim-control"><span><span>Security</span><strong data-output="securityAlloc"></strong></span><input type="range" data-param="securityAlloc" min="0" max="70" step="1" value="5"></label>
+        <p class="sim-note" data-output="poolAllocTotal"></p>
+      </div>
+    </div>
+    <div class="sim-panel sim-results" aria-label="Tokenomics simulator charts">
+      <div class="sim-chart-card">
+        <div class="sim-chart-title"><h3>Cumulative Effective Emission</h3><span data-chart-note="line"></span></div>
+        <svg class="sim-chart sim-line-chart" data-chart="emission-line" role="img" aria-label="Cumulative effective emission line chart"></svg>
+      </div>
+      <div class="sim-chart-grid">
+        <div class="sim-chart-card">
+          <div class="sim-chart-title"><h3>Year 1 Emission Pools</h3><span data-chart-note="pool"></span></div>
+          <svg class="sim-chart sim-pie-chart" data-chart="pool-pie" role="img" aria-label="Year 1 emission pool pie chart"></svg>
+          <div class="sim-legend" data-legend="pool"></div>
+        </div>
+        <div class="sim-chart-card">
+          <div class="sim-chart-title"><h3>Launch Bonded Stake</h3><span data-chart-note="stake"></span></div>
+          <svg class="sim-chart sim-pie-chart" data-chart="stake-pie" role="img" aria-label="Launch bonded stake pie chart"></svg>
+          <div class="sim-legend" data-legend="stake"></div>
+        </div>
+      </div>
+      <div class="table-wrap sim-table-wrap"><table class="sim-table"><thead><tr><th>Year</th><th>Gross Cap</th><th>Effective Emission</th><th>Effective / Epoch</th><th>Cumulative Effective</th><th>Supply Share</th></tr></thead><tbody data-sim-table></tbody></table></div>
+    </div>
+  </div>
+</div>
+</div></section>
+"""
+
+TOKENOMICS_SIMULATOR_CSS = """
+      #tokenomics-simulator {
+        background:
+          linear-gradient(135deg, rgba(29, 124, 114, 0.09), rgba(185, 112, 20, 0.08)),
+          var(--paper);
+      }
+      .simulator-shell {
+        display: grid;
+        gap: 22px;
+      }
+      .simulator-heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .simulator-heading p { margin-bottom: 0; }
+      .simulator-status {
+        flex: 0 0 auto;
+        min-height: 32px;
+        padding: 5px 10px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--teal);
+        font-size: 13px;
+        font-weight: 760;
+      }
+      .sim-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .sim-kpi,
+      .sim-panel,
+      .sim-chart-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+      .sim-kpi {
+        min-height: 92px;
+        padding: 16px;
+      }
+      .sim-kpi span,
+      .sim-chart-title span,
+      .sim-note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .sim-kpi strong {
+        display: block;
+        margin-top: 8px;
+        color: var(--ink);
+        font-size: clamp(20px, 2vw, 28px);
+        line-height: 1.08;
+      }
+      .simulator-grid {
+        display: grid;
+        grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+      .sim-panel { padding: 18px; }
+      .sim-controls {
+        display: grid;
+        gap: 18px;
+      }
+      .sim-control-group {
+        display: grid;
+        gap: 12px;
+      }
+      .sim-control-group + .sim-control-group {
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .sim-control-group h3,
+      .sim-chart-title h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .sim-control {
+        display: grid;
+        gap: 8px;
+      }
+      .sim-control > span {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .sim-control strong {
+        color: var(--ink);
+        font-size: 13px;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .sim-control input[type="range"] {
+        width: 100%;
+        accent-color: var(--teal);
+      }
+      .sim-results {
+        display: grid;
+        gap: 16px;
+      }
+      .sim-chart-card {
+        min-width: 0;
+        padding: 16px;
+      }
+      .sim-chart-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .sim-chart {
+        display: block;
+        width: 100%;
+        min-height: 260px;
+        overflow: visible;
+      }
+      .sim-line-chart { min-height: 300px; }
+      .sim-pie-chart {
+        max-width: 360px;
+        margin: 0 auto;
+      }
+      .sim-chart path,
+      .sim-chart polyline,
+      .sim-chart circle,
+      .sim-chart rect {
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+      .sim-line-chart polyline {
+        stroke-dasharray: 1;
+        animation: simDraw 520ms ease both;
+      }
+      .sim-pie-chart path {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: simPop 360ms ease both;
+      }
+      .sim-chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .sim-legend {
+        display: grid;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      .sim-legend-item {
+        display: grid;
+        grid-template-columns: 12px minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .sim-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .sim-table-wrap { margin-bottom: 0; }
+      .sim-table { min-width: 680px; }
+      .sim-pulse .sim-kpi strong {
+        animation: simGlow 420ms ease;
+      }
+      @keyframes simGlow {
+        0% { color: var(--amber); }
+        100% { color: var(--ink); }
+      }
+      @keyframes simDraw {
+        0% { stroke-dashoffset: 1; opacity: 0.3; }
+        100% { stroke-dashoffset: 0; opacity: 1; }
+      }
+      @keyframes simPop {
+        0% { transform: scale(0.96); opacity: 0.4; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      @media (max-width: 1100px) {
+        .sim-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .simulator-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 720px) {
+        .simulator-heading,
+        .sim-chart-title {
+          display: grid;
+        }
+        .sim-kpis,
+        .sim-chart-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+"""
+
+TOKENOMICS_SIMULATOR_JS = """
+        const initTokenomicsSimulator = () => {
+          const root = document.getElementById("tokenomics-simulator");
+          if (!root) {
+            return;
+          }
+          const colors = ["#1d7c72", "#b97014", "#426d91", "#bd4b37", "#446b2f", "#7b5bb8", "#6b7280"];
+          const paramNames = [
+            "supply", "reservePct", "feeOffset", "epochDays", "year1Weight", "year2Weight", "year3Weight", "year4Weight",
+            "launchSubnets", "minerAgents", "validationAgents", "minerStake", "validationStake", "ownerStake",
+            "collectionAlloc", "parsingAlloc", "validationAlloc", "scoreAlloc", "searchAlloc", "securityAlloc",
+          ];
+          const inputs = new Map(paramNames.map((name) => [name, root.querySelector(`[data-param="${name}"]`)]));
+          const value = (name) => Number(inputs.get(name)?.value || 0);
+          const fmt = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+          const pct = (number, digits = 1) => `${Number(number).toFixed(digits)}%`;
+          const token = (number) => {
+            const abs = Math.abs(number);
+            if (abs >= 1_000_000_000) return `${(number / 1_000_000_000).toFixed(2)}B $POS`;
+            if (abs >= 1_000_000) return `${(number / 1_000_000).toFixed(1)}M $POS`;
+            if (abs >= 1_000) return `${(number / 1_000).toFixed(1)}K $POS`;
+            return `${fmt.format(number)} $POS`;
+          };
+          const compact = (number) => token(number).replace(" $POS", "");
+          const write = (selector, valueText) => {
+            root.querySelectorAll(selector).forEach((node) => {
+              node.textContent = valueText;
+            });
+          };
+          const setOutput = (name, valueText) => write(`[data-output="${name}"]`, valueText);
+          const normalized = (items) => {
+            const total = items.reduce((sum, item) => sum + Math.max(0, item.value), 0) || 1;
+            return items.map((item) => ({ ...item, share: Math.max(0, item.value) / total }));
+          };
+          const piePath = (cx, cy, r, start, end) => {
+            const x1 = cx + r * Math.cos(start);
+            const y1 = cy + r * Math.sin(start);
+            const x2 = cx + r * Math.cos(end);
+            const y2 = cy + r * Math.sin(end);
+            const large = end - start > Math.PI ? 1 : 0;
+            return `M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z`;
+          };
+          const drawPie = (chartName, legendName, rawItems) => {
+            const svg = root.querySelector(`[data-chart="${chartName}"]`);
+            const legend = root.querySelector(`[data-legend="${legendName}"]`);
+            if (!svg || !legend) return;
+            const items = normalized(rawItems).filter((item) => item.share > 0);
+            let angle = -Math.PI / 2;
+            const paths = items.map((item, index) => {
+              const next = angle + item.share * Math.PI * 2;
+              const path = `<path d="${piePath(130, 130, 104, angle, next)}" fill="${colors[index % colors.length]}"><title>${item.label}: ${token(item.value)}</title></path>`;
+              angle = next;
+              return path;
+            }).join("");
+            const total = rawItems.reduce((sum, item) => sum + item.value, 0);
+            svg.setAttribute("viewBox", "0 0 260 260");
+            svg.innerHTML = `${paths}<circle cx="130" cy="130" r="58" fill="var(--surface)" stroke="var(--line)"/><text x="130" y="124" text-anchor="middle" fill="var(--muted)" font-size="13">Total</text><text x="130" y="146" text-anchor="middle" fill="var(--ink)" font-size="18" font-weight="800">${compact(total)}</text>`;
+            legend.innerHTML = items.map((item, index) => `<div class="sim-legend-item"><span class="sim-dot" style="background:${colors[index % colors.length]}"></span><span>${item.label}</span><strong>${token(item.value)} (${pct(item.share * 100)})</strong></div>`).join("");
+          };
+          const drawLine = (annual, cumulative, supply) => {
+            const svg = root.querySelector('[data-chart="emission-line"]');
+            if (!svg) return;
+            const width = 760;
+            const height = 310;
+            const pad = { left: 72, right: 24, top: 24, bottom: 52 };
+            const innerW = width - pad.left - pad.right;
+            const innerH = height - pad.top - pad.bottom;
+            const points = [0, ...cumulative];
+            const maxValue = Math.max(...points, supply * 0.01);
+            const x = (index) => pad.left + (index / (points.length - 1)) * innerW;
+            const y = (amount) => pad.top + innerH - (amount / maxValue) * innerH;
+            const coords = points.map((amount, index) => `${x(index).toFixed(2)},${y(amount).toFixed(2)}`).join(" ");
+            const area = `M ${pad.left},${pad.top + innerH} L ${coords.replaceAll(" ", " L ")} L ${pad.left + innerW},${pad.top + innerH} Z`;
+            const grid = [0, 0.25, 0.5, 0.75, 1].map((ratio) => {
+              const gy = pad.top + innerH - ratio * innerH;
+              const label = compact(maxValue * ratio);
+              return `<line x1="${pad.left}" y1="${gy}" x2="${pad.left + innerW}" y2="${gy}" stroke="var(--line)" stroke-width="1"/><text x="${pad.left - 10}" y="${gy + 4}" text-anchor="end" fill="var(--muted)" font-size="12">${label}</text>`;
+            }).join("");
+            const labels = points.map((_, index) => `<text x="${x(index)}" y="${height - 18}" text-anchor="middle" fill="var(--muted)" font-size="12">Y${index}</text>`).join("");
+            const circles = points.map((amount, index) => `<circle cx="${x(index)}" cy="${y(amount)}" r="4.5" fill="var(--teal)"><title>Year ${index}: ${token(amount)}</title></circle>`).join("");
+            const bars = annual.map((amount, index) => {
+              const barW = Math.max(18, innerW / 18);
+              const bx = x(index + 1) - barW / 2;
+              const by = y(amount);
+              const bh = pad.top + innerH - by;
+              return `<rect x="${bx}" y="${by}" width="${barW}" height="${bh}" rx="4" fill="var(--amber)" opacity="0.24"><title>Year ${index + 1} effective emission: ${token(amount)}</title></rect>`;
+            }).join("");
+            svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+            svg.innerHTML = `<rect x="0" y="0" width="${width}" height="${height}" fill="transparent"/>${grid}${labels}${bars}<path d="${area}" fill="var(--teal)" opacity="0.1"/><polyline pathLength="1" points="${coords}" fill="none" stroke="var(--teal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${circles}`;
+          };
+          const update = () => {
+            const supply = value("supply");
+            const reservePct = value("reservePct");
+            const feeOffset = value("feeOffset");
+            const epochDays = value("epochDays") || 7;
+            const epochsPerYear = Math.max(1, Math.round(365 / epochDays));
+            const yearWeights = [
+              { label: "Year 1", value: value("year1Weight") },
+              { label: "Year 2", value: value("year2Weight") },
+              { label: "Year 3", value: value("year3Weight") },
+              { label: "Year 4", value: value("year4Weight") },
+            ];
+            const years = normalized(yearWeights);
+            const grossReserve = supply * reservePct / 100;
+            const annualGross = years.map((year) => grossReserve * year.share);
+            const annualEffective = annualGross.map((amount) => amount * (1 - feeOffset / 100));
+            const cumulative = annualEffective.reduce((items, amount) => {
+              items.push((items[items.length - 1] || 0) + amount);
+              return items;
+            }, []);
+            const launchSubnets = value("launchSubnets");
+            const minerStake = launchSubnets * value("minerAgents") * value("minerStake");
+            const validationStake = launchSubnets * value("validationAgents") * value("validationStake");
+            const ownerStake = launchSubnets * value("ownerStake");
+            const totalStake = minerStake + validationStake + ownerStake;
+            const poolInputs = [
+              { key: "collection", label: "Collection", value: value("collectionAlloc") },
+              { key: "parsing", label: "Parsing", value: value("parsingAlloc") },
+              { key: "validation", label: "Validation", value: value("validationAlloc") },
+              { key: "score", label: "Score", value: value("scoreAlloc") },
+              { key: "search", label: "Search and demand", value: value("searchAlloc") },
+              { key: "security", label: "Security", value: value("securityAlloc") },
+            ];
+            const pools = normalized(poolInputs).map((item) => ({ ...item, value: annualEffective[0] * item.share }));
+            setOutput("supply", token(supply));
+            setOutput("reservePct", pct(reservePct));
+            setOutput("feeOffset", pct(feeOffset, 0));
+            setOutput("epochDays", `${fmt.format(epochDays)} days (${fmt.format(epochsPerYear)}/year)`);
+            setOutput("launchSubnets", fmt.format(launchSubnets));
+            setOutput("minerAgents", fmt.format(value("minerAgents")));
+            setOutput("validationAgents", fmt.format(value("validationAgents")));
+            setOutput("minerStake", token(value("minerStake")));
+            setOutput("validationStake", token(value("validationStake")));
+            setOutput("ownerStake", token(value("ownerStake")));
+            yearWeights.forEach((year, index) => setOutput(`year${index + 1}Weight`, pct(year.value)));
+            poolInputs.forEach((item) => setOutput(`${item.key}Alloc`, pct(item.value, 0)));
+            const yearWeightTotal = yearWeights.reduce((sum, item) => sum + item.value, 0);
+            const poolTotal = poolInputs.reduce((sum, item) => sum + item.value, 0);
+            setOutput("yearWeightTotal", `Schedule weights sum to ${pct(yearWeightTotal)} and are normalized for the line chart.`);
+            setOutput("poolAllocTotal", `Pool sliders sum to ${pct(poolTotal, 0)} and are normalized for the pie chart.`);
+            write('[data-kpi="supply"]', token(supply));
+            write('[data-kpi="effectiveEmission"]', `${token(cumulative[cumulative.length - 1])} (${pct(cumulative[cumulative.length - 1] / supply * 100)})`);
+            write('[data-kpi="launchStake"]', token(totalStake));
+            write('[data-kpi="stakeShare"]', pct(totalStake / supply * 100, 3));
+            write('[data-chart-note="line"]', `${token(grossReserve)} scheduled before fee offset; ${fmt.format(epochsPerYear)} epochs/year`);
+            write('[data-chart-note="pool"]', `${token(annualEffective[0])} effective Year 1 cap`);
+            write('[data-chart-note="stake"]', `${fmt.format(launchSubnets)} launch subnets`);
+            drawLine(annualEffective, cumulative, supply);
+            drawPie("pool-pie", "pool", pools);
+            drawPie("stake-pie", "stake", [
+              { label: "Miner agents", value: minerStake },
+              { label: "Validation agents", value: validationStake },
+              { label: "Subnet owners", value: ownerStake },
+            ]);
+            const table = root.querySelector("[data-sim-table]");
+            table.innerHTML = annualGross.map((gross, index) => {
+              const effective = annualEffective[index];
+              return `<tr><td>Year ${index + 1}</td><td>${token(gross)}</td><td>${token(effective)}</td><td>${token(effective / epochsPerYear)}</td><td>${token(cumulative[index])}</td><td>${pct(cumulative[index] / supply * 100)}</td></tr>`;
+            }).join("");
+            root.classList.remove("sim-pulse");
+            void root.offsetWidth;
+            root.classList.add("sim-pulse");
+          };
+          inputs.forEach((input) => input?.addEventListener("input", update));
+          update();
+        };
+"""
+
 
 def load_release_metadata(path: Path = DEFAULT_RELEASE_METADATA) -> dict[str, str] | None:
     if not path.exists():
@@ -284,6 +727,13 @@ def release_banner(release_info: dict[str, str] | None) -> str:
     )
 
 
+def inject_tokenomics_simulator(body: str) -> str:
+    anchor = '<section id="cpvss-overview"'
+    if anchor not in body:
+        return body + TOKENOMICS_SIMULATOR_SECTION
+    return body.replace(anchor, TOKENOMICS_SIMULATOR_SECTION + "\n" + anchor, 1)
+
+
 def render_page(
     document: dict[str, object],
     source_path: Path,
@@ -291,14 +741,20 @@ def render_page(
 ) -> str:
     title = str(document["title"])
     metadata = document["metadata"]
-    nav = document["nav"]
-    body = str(document["body"])
+    nav = list(document["nav"])  # type: ignore[arg-type]
+    body = inject_tokenomics_simulator(str(document["body"]))
+    if ("Tokenomics Simulator", "tokenomics-simulator") not in nav:
+        insert_at = next(
+            (index + 1 for index, (_, slug) in enumerate(nav) if slug == "incentive-and-emission-schedule"),
+            len(nav),
+        )
+        nav.insert(insert_at, ("Tokenomics Simulator", "tokenomics-simulator"))
     meta_html = "".join(
         f'<span class="pill">{html.escape(key)}: {html.escape(value)}</span>'
         for key, value in metadata  # type: ignore[misc]
     )
     nav_html = "".join(
-        f'<a href="#{slug}">{html.escape(text)}</a>' for text, slug in nav  # type: ignore[misc]
+        f'<a href="#{slug}">{html.escape(text)}</a>' for text, slug in nav
     )
     source_href = html.escape(source_path.as_posix(), quote=True)
     notion_markdown = json.dumps(str(document.get("source_markdown", ""))).replace("</", "<\\/")
@@ -643,6 +1099,7 @@ def render_page(
         margin: 0;
         color: var(--quote-text);
       }}
+{TOKENOMICS_SIMULATOR_CSS}
       @media (max-width: 980px) {{
         .page-shell {{ display: block; }}
         aside {{
@@ -784,7 +1241,7 @@ def render_page(
           const metadata = Array.from(document.querySelectorAll(".meta-row .pill"))
             .map((item) => "<p><strong>" + htmlEscape(item.textContent.trim()) + "</strong></p>")
             .join("");
-          const sections = Array.from(document.querySelectorAll("main > section"))
+          const sections = Array.from(document.querySelectorAll("main > section:not([data-no-notion])"))
             .map((section) => {{
               const content = section.querySelector(".content") || section;
               return cleanClone(content).innerHTML;
@@ -839,6 +1296,8 @@ def render_page(
           }}
         }};
         exportNotionButton.addEventListener("click", exportNotion);
+{TOKENOMICS_SIMULATOR_JS}
+        initTokenomicsSimulator();
         setTheme(getSavedTheme() || "executive");
       }})();
     </script>
