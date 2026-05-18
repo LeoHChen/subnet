@@ -155,6 +155,12 @@ stake_multiplier = min(1.25, 1 + 0.25 x contributor_stake / 10,000)
 
 The multiplier should apply only after data passes quality, rights, and duplicate checks. This prevents wealthy contributors from buying rewards with low-quality data.
 
+## Incentive and Emission Schedule
+
+This section is the canonical incentive schedule. The CPVSS stage incentives and the emission budget should be read together: each stage has an incentive mechanism, a weekly emission cap, a lock-up or penalty rule, and a path to reduce emissions as marketplace fees grow.
+
+The detailed CPVSS stage designs later in this document provide implementation options inside this schedule. They should not be treated as separate budgets.
+
 ### Emission Philosophy
 
 The network should minimize emissions by default and use them only where they create durable supply-side or demand-side liquidity.
@@ -168,7 +174,7 @@ Recommended principles:
 - Move from emission-funded rewards to fee-funded rewards as soon as a subnet has real buyer demand.
 - Use staking locks to reduce circulating supply while forcing participants to internalize the cost of bad behavior.
 
-### Emission Design
+### Canonical Emission Schedule
 
 The emission design should bootstrap the network without making emissions the permanent business model. With a 1,000,000,000 $POS supply, the recommended starting point is to reserve 120,000,000 $POS, or 12% of supply, for a four-year network incentive program. This is a maximum cap, not an obligation to emit.
 
@@ -192,20 +198,22 @@ Recommended epoch structure:
 | Year 4 | 15,000,000 $POS | 1.5% | 288,462 $POS per week | Maintain strategic incentives only |
 | Total | 120,000,000 $POS | 12.0% | N/A | Four-year maximum emission budget |
 
-#### Year 1 Weekly Emission Allocation
+#### Year 1 CPVSS Incentive and Emission Schedule
 
-Assuming Year 1 weekly emission cap of 865,385 $POS:
+Assuming Year 1 weekly emission cap of 865,385 $POS and four mainnet launch subnets, rounded to the nearest whole token:
 
-| Pool | Allocation | Weekly Network Cap | With 4 Mainnet Launch Subnets | Per-Agent or Per-Role Baseline |
+| CPVSS Stage or Network Pool | Year 1 Allocation | Weekly Network Cap | Four-Subnet Launch Baseline | Incentive Mechanism and Penalty Rule |
 |---|---:|---:|---:|---|
-| Contributor rewards and airdrops | 35% | 302,885 $POS | 75,721 $POS per subnet | Distributed by quality, uniqueness, rights clarity, and optional stake multiplier |
-| Miner agent rewards | 25% | 216,346 $POS | 54,087 $POS per subnet | With 16 miner agents per subnet: up to 3,380 $POS per miner agent per week before quality weighting |
-| Validation agent rewards | 15% | 129,808 $POS | 32,452 $POS per subnet | With 16 validation agents per subnet: up to 2,028 $POS per validation agent per week before quality weighting |
-| Subnet owner quality rewards | 10% | 86,538 $POS | 21,635 $POS per subnet | Paid only when subnet outputs pass owner, validation, and marketplace quality thresholds |
-| Marketplace demand and curation incentives | 10% | 86,538 $POS | Network-level pool | Used for demand bootstrapping, curated datasets, and buyer activation with anti-wash checks |
-| Security, audits, and challenge rewards | 5% | 43,269 $POS | Network-level pool | Funds successful challenges, fraud reports, red-herring creation, and emergency review |
+| Collection | 35% | 302,885 $POS | 75,721 $POS per subnet | Quality-weighted rewards after parsing, validation, and owner score. Optional contributor stake can add a capped multiplier. Duplicate, fake, or rights-invalid data loses rewards and may trigger clawback or campaign-bond loss. |
+| Parsing | 25% | 216,346 $POS | 54,087 $POS per subnet; up to 3,380 $POS per miner agent per week with 16 miner agents | Fixed bounty with quality multiplier for beta. Mainnet can evolve to competitive miner-agent markets. Failed validation reduces payout; fraudulent output, missed reveal, or repeated low-quality work can slash stake. |
+| Validation | 15% | 129,808 $POS | 32,452 $POS per subnet; up to 2,028 $POS per validation agent per week with 16 validation agents | Majority consensus with red-herring tasks for beta. Mainnet can add reputation weighting and challenge windows. Failed red herrings, lazy validation, or collusion reduce rewards and can slash stake. |
+| Score | 10% | 86,538 $POS | 21,635 $POS per subnet owner | Subnet-owner quality rewards are paid only when score batches pass validation, marketplace quality thresholds, and dispute windows. Scoring abuse can trigger challenge penalties, reputation loss, or launch-bond risk. |
+| Search and Marketplace Demand | 10% | 86,538 $POS | Network-level pool | Marketplace fee splits and capped demand incentives bootstrap buyer activity and curation. Wash demand, self-dealing, or bad curation delays rewards and can slash optional curator stake. |
+| Network Security and Challenges | 5% | 43,269 $POS | Network-level pool | Funds audits, red-herring creation, successful challenges, fraud reports, and emergency reviews. Correct challengers can earn part of penalties; failed or spam challenges lose challenge bonds. |
 
 These numbers are upper bounds. If a subnet does not produce useful validated work in an epoch, its unused emission should roll back to the reserve or be reallocated by governance or Poseidon-level policy. It should not be emitted just because a budget exists.
+
+The table above replaces the separate incentive design summary: incentive mechanism, penalty design, and emission budget must be changed together.
 
 #### Reward Formula by Epoch
 
@@ -302,18 +310,6 @@ The beta does not need to finalize every sink. It should define the accounting s
 | Validation | Check parsing quality and detect bad or lazy work | Strong fit for decentralized consensus through redundant validation agents | Validation agent staking, red-herring tasks, slashing, reputation, and proof-of-usefulness | Multi-agent review, consensus threshold, red-herring detection |
 | Score | Assign final quality score and determine reward allocation | Should be centralized by the subnet owner | Crypto makes the score auditable and payout-linked, while authority remains with the owner | Owner scoring service, signed score batches, reward distribution output |
 | Search | Enable dataset discovery, access, transactions, and monetization | Should be centralized at the Poseidon network level | Payments, revenue splits, contributor royalties, and provenance-backed marketplace access | Poseidon portal with searchable voice and video datasets |
-
-## Incentive Design Summary
-
-Every CPVSS stage touches incentives, but each stage has a different failure mode. The beta should not overfit to one perfect mechanism. It should launch with a simple mechanism, measure behavior, and keep a decision log for when incentives need to evolve.
-
-| Stage | Main Incentive Problem | Conservative Beta Design | More Advanced Design |
-|---|---|---|---|
-| Collection | Prevent spam, duplicates, and unclear rights while attracting useful supply | Quality-weighted rewards after validation and owner score | Contributor bond plus curated campaigns |
-| Parsing | Pay miner agents for useful work without rewarding low-quality volume | Fixed bounty with quality multiplier and slashable stake | Competitive miner agent market with commit-reveal and spot audits |
-| Validation | Stop lazy validation agents and collusion | Majority consensus with red-herring tasks | Reputation-weighted consensus with adjudication and challenge windows |
-| Score | Preserve owner authority while avoiding opaque favoritism | Owner-signed score batches with audit trail | Score committee or model-assisted rubric with owner veto |
-| Search | Bootstrap demand without wasting emissions | Marketplace fee split funded by real transactions | Capped demand incentives with anti-wash safeguards |
 
 ## C: Collection
 
