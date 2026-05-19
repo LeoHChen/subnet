@@ -1,8 +1,6 @@
 # Poseidon Subnet Design and Tokenomics Proposal
 
 Date: May 15, 2026
-Roadmap targets: Testnet 1 by June 30, 2026; Beta Testnet by September 30, 2026; Mainnet Launch by December 31, 2026
-Scope: Testnet 1 with two subnets, Beta Testnet with four launch-candidate subnets, and Mainnet Launch with a two-subnet minimum plus a four-subnet target that is conditional on signed launch partners
 
 ## Table of Contents
 
