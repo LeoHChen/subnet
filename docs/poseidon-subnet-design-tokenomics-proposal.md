@@ -10,8 +10,7 @@ Scope: Testnet 1 with two subnets, Beta Testnet with four launch-candidate subne
 |---|---|
 | [Executive Summary](#executive-summary) | Poseidon background, subnet definition, CPVSS context, and launch scope |
 | [Design Principles](#design-principles) | The decentralization, centralization, and token-design principles that constrain the proposal |
-| [$PSDN Single Token Model](#psdn-single-token-model) | Token utility, role-based staking, agent pool sizing, slashing, and contributor alignment |
-| [Incentive and Emission Schedule](#incentive-and-emission-schedule) | Emission caps, canonical CPVSS allocation, revenue pressure model, lock-ups, and fee offsets |
+| [$PSDN Single Token Model](#psdn-single-token-model) | Token utility, role-based staking, [incentive and emission schedule](#incentive-and-emission-schedule), revenue pressure model, lock-ups, slashing, and token sinks |
 | [CPVSS Overview](#cpvss-overview) | [Stage summary](#stage-summary), [IP registry](#ip-and-licensing-registry-integration), [Collection](#collection-stage), [Parsing](#parsing-stage), [Validation](#validation-stage), [Score](#score-stage), [Search](#search-stage), [beta flow](#end-to-end-beta-flow), and [testnet architecture](#recommended-testnet-architecture) |
 | [Open Design Decisions](#open-design-decisions) | Items that should remain flexible until testnet data is available |
 | [Milestone Roadmap](#milestone-roadmap) | Monthly gates, launch-partner blockers, campaign plan, and measurable milestone metrics |
@@ -253,13 +252,13 @@ stake_multiplier = min(1.25, 1 + 0.25 x contributor_stake / 10,000)
 
 The multiplier should apply only after data passes quality, rights, and duplicate checks. This prevents wealthy contributors from buying rewards with low-quality data.
 
-## Incentive and Emission Schedule
+### Incentive and Emission Schedule
 
 This section is the canonical incentive schedule. The CPVSS stage incentives and the emission budget should be read together: each stage has an incentive mechanism, a weekly emission cap, a lock-up or penalty rule, and a path to reduce emissions as marketplace fees grow.
 
 The detailed CPVSS stage designs later in this document provide implementation options inside this schedule. They should not be treated as separate budgets.
 
-### Emission Philosophy
+#### Emission Philosophy
 
 The network should minimize emissions by default and use them only where they create durable supply-side or demand-side liquidity.
 
@@ -277,13 +276,13 @@ Recommended principles:
 - Use staking locks to reduce circulating supply while forcing participants to internalize the cost of bad behavior.
 - Treat role APY as a risk signal. If implied cap APY is too high relative to the stake at risk, the protocol should raise stake requirements, lower emissions, reduce utilization, or route excess to reserve.
 
-### Canonical Emission Schedule
+#### Canonical Emission Schedule
 
 The emission design should bootstrap the network without making emissions the permanent business model. With a 1,000,000,000 $PSDN supply, the recommended starting point is to reserve 120,000,000 $PSDN, or 12% of supply, for a four-year network incentive program. This is a maximum cap, not an obligation to emit.
 
 The operating rule should be "no job, no emission." Weekly epochs are settlement windows, not an automatic inflation clock. If a subnet has idle agents, no accepted jobs, failed validation, unresolved rights issues, or no useful scored output, the corresponding epoch budget should stay in reserve.
 
-#### Epoch Design
+##### Epoch Design
 
 Recommended epoch structure:
 
@@ -293,7 +292,7 @@ Recommended epoch structure:
 - Challenge window: 14 days after each epoch before rewards become final.
 - Emission decay: emissions decline each year and should be reduced faster when marketplace fees can fund rewards.
 
-#### Four-Year Emission Cap
+##### Four-Year Emission Cap
 
 | Period | Annual Emission Cap | Percent of 1B Supply | Weekly Epoch Cap | Design Purpose |
 |---|---:|---:|---:|---|
@@ -305,7 +304,7 @@ Recommended epoch structure:
 
 The CPVSS allocation vector should default to the same 35/25/15/10/10/5 split in Years 2-4 unless governance or Poseidon policy explicitly changes it before the relevant year starts. The annual cap declines each year, but the stage mix remains constant by default so the reward model does not drift silently. Any future shift, such as reducing parsing subsidies as fee revenue grows or increasing security/challenge funding after observed attacks, should be published as an updated allocation table.
 
-#### Canonical CPVSS Incentive, Emission, and Revenue-Sharing Schedule
+##### Canonical CPVSS Incentive, Emission, and Revenue-Sharing Schedule
 
 The same top-level CPVSS allocation should govern both emission-funded incentives and fee-funded marketplace revenue. This avoids two competing reward systems. Emissions bootstrap the pool when buyer revenue is not yet sufficient; marketplace revenue later offsets or replaces the matching emission pool.
 
@@ -326,7 +325,7 @@ These numbers are upper bounds. If a subnet does not produce useful validated wo
 
 The "up to" per-agent figures are cap diagnostics, not expected yields. They are anchored to the registered 16-agent capacity target. If only 70% of agents are active, the unused capacity should lower actual utilization rather than redistribute the full pool across 11 active agents.
 
-#### Cap APY Diagnostic
+##### Cap APY Diagnostic
 
 The previous beta-floor stakes of 50,000 $PSDN for miner agents and 20,000 $PSDN for validation agents are too low if the Year 1 emission cap is interpreted as expected annual yield. They should therefore be treated as beta/testnet floors. For mainnet, agent stakes should be raised, emissions should be utilization-gated, and fee-funded revenue should offset emissions rather than stack on top of the full emission cap.
 
@@ -349,7 +348,7 @@ Recommended APY guardrails:
 
 The table above replaces separate incentive and revenue-share summaries: incentive mechanism, penalty design, emission budget, and fee-funded revenue split must be changed together.
 
-#### Reward Formula by Epoch
+##### Reward Formula by Epoch
 
 For each role:
 
@@ -373,7 +372,7 @@ Quality points should include:
 - Active availability versus registered capacity.
 - Role APY guardrails.
 
-#### Lock-Up and Vesting
+##### Lock-Up and Vesting
 
 | Role | Liquid at Epoch Settlement | Locked Reward | Lock-Up / Challenge Logic |
 |---|---:|---:|---|
@@ -387,7 +386,7 @@ Quality points should include:
 
 The 14-day challenge window and the role lock-up periods are separate mechanisms. The 14-day window gates finality for the liquid portion of each epoch reward: if a challenge succeeds, the liquid portion can be delayed, reduced, or clawed back before release. The longer 30-day to 12-month lock-up applies to the locked portion after the challenge window and exists to catch late rights disputes, marketplace quality failures, or delayed fraud evidence.
 
-#### Fee Offset Rule
+##### Fee Offset Rule
 
 Emissions should decline as marketplace revenue grows.
 
@@ -407,7 +406,7 @@ Where:
 
 This prevents the network from overpaying with new emissions when real buyer demand can cover participant costs.
 
-#### Revenue, Buying Pressure, and Selling Pressure
+##### Revenue, Buying Pressure, and Selling Pressure
 
 Marketplace revenue should be modeled as external demand for $PSDN. Buyers should not be forced to hold crypto for enterprise procurement. The default policy should allow buyers to pay in fiat, stablecoin, or $PSDN, while Poseidon routes a policy-defined share of net marketplace revenue through $PSDN settlement, reward funding, buyback, burn, insurance, or treasury operations.
 
@@ -458,7 +457,7 @@ net_pressure_year_1 = -1,837,500 $PSDN
 
 This is acceptable for bootstrap if emissions are capped, locked, and tied to useful work. The design goal is for revenue growth, fee routing, and reduced emissions to move net pressure positive over time.
 
-#### Revenue Sharing Rules
+##### Revenue Sharing Rules
 
 Marketplace revenue should use the canonical CPVSS allocation table above. Revenue sharing is therefore not a separate schedule; it is the fee-funded version of the same Collection, Parsing, Validation, Score, Search, and Security pools.
 
@@ -485,7 +484,7 @@ Open questions:
 - Should internal revenue sub-splits be dataset-specific, subnet-specific, or network-standard with limited overrides?
 - Should burn/buyback policy be automatic, or discretionary during the first year to preserve operational flexibility?
 
-### Bootstrap Phases
+#### Bootstrap Phases
 
 | Phase | Goal | $PSDN Use | Emission Posture |
 |---|---|---|---|
@@ -495,7 +494,7 @@ Open questions:
 | Growth | Expand subnet count and marketplace demand | Buyer-funded rewards, subnet owner staking, marketplace fee routing | Declining emissions with demand-based rewards |
 | Mature Network | Preserve token value and quality | Fee-funded payouts, staking, burns or insurance routing | Minimal emissions, mostly market-funded |
 
-### Game-Theory Threats
+#### Game-Theory Threats
 
 The tokenomics must assume rational adversarial behavior.
 
@@ -517,7 +516,7 @@ The table above is a design checklist, not a claim that every defense already ex
 - Reputation decay: old good behavior should not permanently protect an agent from current bad behavior; recent failures should carry heavier weight.
 - Anti-self-dealing: buyer, curator, contributor, miner-agent, and validation-agent relationships should be checked for common ownership before demand incentives are finalized.
 
-### Token Sink Options
+#### Token Sink Options
 
 To reduce unnecessary emissions and support $PSDN value capture, Poseidon can combine several sinks:
 

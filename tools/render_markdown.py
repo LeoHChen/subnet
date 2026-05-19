@@ -963,7 +963,7 @@ def render_page(
     body = inject_tokenomics_simulator(str(document["body"]))
     if ("Tokenomics Simulator", "tokenomics-simulator") not in nav:
         insert_at = next(
-            (index + 1 for index, (_, slug) in enumerate(nav) if slug == "incentive-and-emission-schedule"),
+            (index + 1 for index, (_, slug) in enumerate(nav) if slug == "psdn-single-token-model"),
             len(nav),
         )
         nav.insert(insert_at, ("Tokenomics Simulator", "tokenomics-simulator"))
