@@ -616,10 +616,9 @@
       <main>
         <header class="hero" id="summary">
           <div class="hero-inner">
-            <div class="meta-row"><span class="pill">Date: May 15, 2026</span></div>
             <h2>Poseidon Subnet Design and Tokenomics Proposal</h2>
             <p>Generated from the Markdown source. Edit the Markdown and run <code>make html</code> to rebuild this page.</p>
-            <div class="release-banner"><span>Major release: <strong>v1.2</strong></span><span>Source commit: <code>e3161c3</code></span><span>Release date: 2026-05-18</span><span>Snapshot: <a href="releases/v1.2.html">releases/v1.2.html</a></span><span>Doc archive: <a href="releases/v1.2.md">releases/v1.2.md</a></span></div>
+            <div class="release-banner"><span data-document-date>Date: May 15, 2026</span><span>Major release: <strong>v1.2</strong></span><span>Source commit: <code>e3161c3</code></span><span>Release date: 2026-05-18</span><span>Snapshot: <a href="releases/v1.2.html">releases/v1.2.html</a></span><span>Doc archive: <a href="releases/v1.2.md">releases/v1.2.md</a></span></div>
           </div>
         </header>
         <section id="table-of-contents"><div class="content">
@@ -1208,7 +1207,7 @@ emission_offset_ratio_year_n = min(100%, fee_funded_rewards_year_n / planned_emi
         };
         const notionHtml = () => {
           const title = document.querySelector(".hero h2")?.textContent?.trim() || document.title;
-          const metadata = Array.from(document.querySelectorAll(".meta-row .pill"))
+          const metadata = Array.from(document.querySelectorAll("[data-document-date], .meta-row .pill"))
             .map((item) => "<p><strong>" + htmlEscape(item.textContent.trim()) + "</strong></p>")
             .join("");
           const sections = Array.from(document.querySelectorAll("main > section:not([data-no-notion])"))

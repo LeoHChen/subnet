@@ -906,15 +906,30 @@ def parse_document(markdown: str) -> dict[str, object]:
     return {"title": title, "metadata": metadata, "nav": nav, "body": body, "source_markdown": markdown}
 
 
-def release_banner(release_info: dict[str, str] | None) -> str:
-    if not release_info:
+def release_banner(release_info: dict[str, str] | None, document_date: str | None = None) -> str:
+    if not release_info and not document_date:
         return ""
 
-    release = html.escape(release_info.get("release", "unreleased"))
-    commit = html.escape(release_info.get("commit", "unknown"))
-    release_date = html.escape(release_info.get("release_date", "unknown"))
-    release_page = html.escape(release_info.get("release_page", ""), quote=True)
-    release_doc = html.escape(release_info.get("release_doc", ""), quote=True)
+    date_html = ""
+    if document_date:
+        date_html = f'<span data-document-date>Date: {html.escape(document_date)}</span>'
+
+    release_html = ""
+    if release_info:
+        release = html.escape(release_info.get("release", "unreleased"))
+        commit = html.escape(release_info.get("commit", "unknown"))
+        release_date = html.escape(release_info.get("release_date", "unknown"))
+        release_page = html.escape(release_info.get("release_page", ""), quote=True)
+        release_doc = html.escape(release_info.get("release_doc", ""), quote=True)
+        release_html = (
+            f"<span>Major release: <strong>{release}</strong></span>"
+            f"<span>Source commit: <code>{commit}</code></span>"
+            f"<span>Release date: {release_date}</span>"
+        )
+    else:
+        release_page = ""
+        release_doc = ""
+
     page_link = ""
     if release_page:
         page_link = (
@@ -932,9 +947,8 @@ def release_banner(release_info: dict[str, str] | None) -> str:
 
     return (
         '<div class="release-banner">'
-        f"<span>Major release: <strong>{release}</strong></span>"
-        f"<span>Source commit: <code>{commit}</code></span>"
-        f"<span>Release date: {release_date}</span>"
+        f"{date_html}"
+        f"{release_html}"
         f"{page_link}"
         f"{doc_link}"
         "</div>"
@@ -967,16 +981,25 @@ def render_page(
             len(nav),
         )
         nav.insert(insert_at, ("Tokenomics Simulator", "tokenomics-simulator"))
+    metadata_items = list(metadata)  # type: ignore[arg-type]
+    document_date = next(
+        (value for key, value in metadata_items if key.strip().lower() == "date"),
+        None,
+    )
+    visible_metadata = [
+        (key, value) for key, value in metadata_items if key.strip().lower() != "date"
+    ]
     meta_html = "".join(
         f'<span class="pill">{html.escape(key)}: {html.escape(value)}</span>'
-        for key, value in metadata  # type: ignore[misc]
+        for key, value in visible_metadata
     )
+    meta_row_html = f'            <div class="meta-row">{meta_html}</div>\n' if meta_html else ""
     nav_html = "".join(
         f'<a href="#{slug}">{html.escape(text)}</a>' for text, slug in nav
     )
     source_href = html.escape(source_path.as_posix(), quote=True)
     notion_markdown = json.dumps(str(document.get("source_markdown", ""))).replace("</", "<\\/")
-    release_html = release_banner(release_info)
+    release_html = release_banner(release_info, document_date)
 
     return f"""<!doctype html>
 <html lang="en">
@@ -1392,8 +1415,7 @@ def render_page(
       <main>
         <header class="hero" id="summary">
           <div class="hero-inner">
-            <div class="meta-row">{meta_html}</div>
-            <h2>{html.escape(title)}</h2>
+{meta_row_html}            <h2>{html.escape(title)}</h2>
             <p>Generated from the Markdown source. Edit the Markdown and run <code>make html</code> to rebuild this page.</p>
             {release_html}
           </div>
@@ -1456,7 +1478,7 @@ def render_page(
         }};
         const notionHtml = () => {{
           const title = document.querySelector(".hero h2")?.textContent?.trim() || document.title;
-          const metadata = Array.from(document.querySelectorAll(".meta-row .pill"))
+          const metadata = Array.from(document.querySelectorAll("[data-document-date], .meta-row .pill"))
             .map((item) => "<p><strong>" + htmlEscape(item.textContent.trim()) + "</strong></p>")
             .join("");
           const sections = Array.from(document.querySelectorAll("main > section:not([data-no-notion])"))
